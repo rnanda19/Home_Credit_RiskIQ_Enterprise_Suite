@@ -1,0 +1,34 @@
+# Mega Project 1 — real deployable scoring services (4 problems, 1 shared image).
+# Run from the suite root: docker compose -f mega_project_1_underwriting_approval/docker/docker-compose.yml up --build
+services:
+  credit-default-prediction:      # Problem 1
+    build:
+      context: ../../
+      dockerfile: mega_project_1_underwriting_approval/docker/Dockerfile
+    command: ["uvicorn", "credit_default_scoring_service:app", "--host", "0.0.0.0", "--port", "8001"]
+    ports:
+      - "8001:8001"
+
+  loan-application-approval:      # Problem 3
+    build:
+      context: ../../
+      dockerfile: mega_project_1_underwriting_approval/docker/Dockerfile
+    command: ["uvicorn", "loan_approval_scoring_service:app", "--host", "0.0.0.0", "--port", "8002"]
+    ports:
+      - "8002:8002"
+
+  credit-score-estimation:        # Problem 4
+    build:
+      context: ../../
+      dockerfile: mega_project_1_underwriting_approval/docker/Dockerfile
+    command: ["uvicorn", "credit_score_service:app", "--host", "0.0.0.0", "--port", "8003"]
+    ports:
+      - "8003:8003"
+
+  repayment-capacity-analysis:    # Problem 11
+    build:
+      context: ../../
+      dockerfile: mega_project_1_underwriting_approval/docker/Dockerfile
+    command: ["uvicorn", "repayment_capacity_service:app", "--host", "0.0.0.0", "--port", "8004"]
+    ports:
+      - "8004:8004"

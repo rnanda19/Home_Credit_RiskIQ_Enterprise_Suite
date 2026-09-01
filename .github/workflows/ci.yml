@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  notebook-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install nbformat
+        run: pip install nbformat
+      - name: Validate every notebook is well-formed (nbformat schema)
+        run: |
+          python - <<'EOF'
+          import glob, sys
+          import nbformat
+          failed = []
+          for path in glob.glob("**/*.ipynb", recursive=True):
+              try:
+                  nb = nbformat.read(path, as_version=4)
+                  nbformat.validate(nb)
+                  print(f"OK   {path}")
+              except Exception as e:
+                  failed.append((path, e))
+                  print(f"FAIL {path}: {e}")
+          if failed:
+              sys.exit(1)
+          EOF
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install serving + test dependencies
+        run: |
+          pip install -r mega_project_1_underwriting_approval/services/requirements-services.txt
+          pip install pytest httpx
+      - name: Run scoring-service tests
+        run: |
+          cd mega_project_1_underwriting_approval
+          pytest tests/ -v
+        # Tests that need a real trained model bundle (notebook_01/02's own
+        # .joblib -- gitignored, produced only by running those notebooks on
+        # real data) are marked skip-if-missing rather than failing CI on a
+        # fresh clone with no bundle present yet -- see tests/test_scoring_services.py.

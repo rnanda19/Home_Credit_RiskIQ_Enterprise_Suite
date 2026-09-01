@@ -1,0 +1,35 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install lint tools
+        run: pip install pyflakes black
+      - name: pyflakes (advisory - does not fail the build)
+        run: pyflakes src/ mega_project_1_underwriting_approval/services/ mega_project_1_underwriting_approval/tests/ || true
+      - name: black --check (advisory - repo-wide reformat deliberately deferred)
+        run: black --check --diff src/ mega_project_1_underwriting_approval/services/ mega_project_1_underwriting_approval/tests/ || true
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install bandit
+        run: pip install bandit
+      - name: bandit security scan of src/ and services/ (BLOCKING - excludes tests/ to
+          avoid false positives on test fixtures/assertions)
+        run: bandit -r src/ mega_project_1_underwriting_approval/services/ -ll

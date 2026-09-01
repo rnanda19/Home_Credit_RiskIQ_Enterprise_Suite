@@ -1,0 +1,39 @@
+# machine-specific config - contains local absolute paths
+project_config.json
+
+# raw and processed data - never committed (large, and Kaggle competition data
+# should be downloaded by each user from Kaggle directly, not redistributed)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# notebook checkpoints / caches
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.pytest_cache/
+catboost_info/
+_catboost_info/
+
+# Parquet read cache (WARP) - large, regenerated automatically on first real
+# run of any notebook; never needs to be committed. (Gap found and fixed
+# during the hardening pass - this was previously missing.)
+**/_parquet_cache/
+
+# generated artifacts (regenerate by re-running notebooks; keep repo light, and
+# never ship real output derived from your actual data in a public repo).
+# Ignore the entire directories, not just a few extensions -- found during the
+# hardening pass that per-extension rules (*.joblib, *.png, ...) still let
+# generated .csv report files through (e.g. notebook_01_holdout_predictions.csv,
+# notebook_05_previous_application_outcomes.csv) that had been left over in this
+# staging copy from earlier synthetic-fixture verification runs.
+**/decision_engine/artifacts/
+**/decision_engine/reports/
+
+# local virtualenvs / build artifacts
+.venv/
+venv/
+*.egg-info/
+build/
+dist/

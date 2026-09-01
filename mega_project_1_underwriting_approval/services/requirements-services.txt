@@ -1,0 +1,15 @@
+# Lean runtime dependencies for the 4 deployable scoring services only --
+# deliberately NOT the full notebook/EDA/reporting stack (polars, jupyter,
+# matplotlib, python-docx, openpyxl, shap, lime, etc. are not needed here).
+# Version ranges (not exact pins) to match the suite root's own
+# requirements.txt convention -- scikit-learn/xgboost/pandas/numpy/joblib
+# ranges are copied verbatim from there so a model bundle you trained with
+# the main requirements.txt unpickles correctly here too.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+scikit-learn>=1.4
+xgboost>=2.0
+pandas>=2.0
+numpy>=1.26
+joblib>=1.3

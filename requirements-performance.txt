@@ -1,0 +1,32 @@
+# WARP Performance & Resource Governance additions to requirements.txt
+# Install with: pip install -r requirements-performance.txt
+# (or: pip install -r requirements.txt -r requirements-performance.txt)
+#
+# Every package below is a genuine, independently-maintained, widely-used library — nothing
+# here is invented. Versions are floors (>=), matching the style of the suite's existing
+# requirements.txt, not exact pins, so security/perf patches are picked up automatically.
+
+# --- Thread-pool introspection & control -----------------------------------------------
+threadpoolctl>=3.5        # runtime BLAS thread-pool control (the C-level "second guard" used
+                           # by threadpool_guard() in src/utils/performance_setup.py)
+
+# --- JIT compilation for any loop that genuinely cannot be vectorized -------------------
+numba>=0.60                # @njit(parallel=True) — WARP standard for the rare loop that
+                            # Polars vectorization alone cannot express
+
+# --- Fast numerical expression evaluation & NaN-aware array ops ------------------------
+numexpr>=2.10               # used internally by pandas for large elementwise expressions;
+                             # also directly usable for custom vectorized formulas
+bottleneck>=1.4              # fast NaN-aware numpy reductions (nanmean/nanstd/etc.), a
+                              # drop-in speed-up pandas will pick up automatically once installed
+
+# --- Progress feedback (prevents "is this frozen?" uncertainty on long real-data cells) -
+tqdm>=4.66
+
+# --- Already required elsewhere in this suite (listed here again for a one-command install
+#     of everything performance-relevant; no version conflicts with requirements.txt) ----
+psutil>=5.9                # hardware detection + live RAM/CPU headroom checks
+joblib>=1.3                 # scikit-learn's own parallel backend + on-disk memoization cache
+polars>=1.20                 # WARP's primary dataframe engine — multi-threaded, supports
+                              # scan_csv(...).collect(streaming=True) for out-of-core loads
+                              # of this suite's largest real files (up to 27.3M rows)
