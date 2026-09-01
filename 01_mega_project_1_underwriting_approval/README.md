@@ -7,7 +7,7 @@ folder fits in.
 > **Folder name note (resolved in [1.0.3])**: this folder was previously
 > checked out as `mega_project_3_underwriting_approval/` — a leftover from
 > before the suite's final 1-5 Mega Project numbering was settled. It has
-> since been renamed to `mega_project_1_underwriting_approval/`, matching
+> since been renamed to `01_mega_project_1_underwriting_approval/`, matching
 > its actual identity as the first Mega Project to reach enterprise-grade
 > status, with every service, Docker, test, and CI path reference updated
 > in the same change and all 6 notebooks re-verified end-to-end after the
@@ -77,8 +77,8 @@ notebook's own JSON artifact, and produces nothing new of its own.
 
 ```bash
 # from the suite root, after running notebooks 01/02 so their .joblib bundles exist
-pip install -r mega_project_1_underwriting_approval/services/requirements-services.txt
-export PYTHONPATH="$PWD/src:$PWD/mega_project_1_underwriting_approval/services"
+pip install -r 01_mega_project_1_underwriting_approval/services/requirements-services.txt
+export PYTHONPATH="$PWD/src:$PWD/01_mega_project_1_underwriting_approval/services"
 uvicorn credit_default_scoring_service:app --port 8001   # Problem 1
 uvicorn loan_approval_scoring_service:app --port 8002    # Problem 3
 uvicorn credit_score_service:app --port 8003             # Problem 4
@@ -90,7 +90,7 @@ folder — see the comment at the top of `docker/docker-compose.yml`):
 
 ```bash
 # from the suite root
-docker compose -f mega_project_1_underwriting_approval/docker/docker-compose.yml up --build
+docker compose -f 01_mega_project_1_underwriting_approval/docker/docker-compose.yml up --build
 ```
 
 **Honesty note**: the Docker files were verified structurally in this
@@ -103,7 +103,7 @@ yourself; see `BENCHMARKS.md` at the suite root.
 ## Tests
 
 ```bash
-cd mega_project_1_underwriting_approval && python -m pytest tests/ -v
+cd 01_mega_project_1_underwriting_approval && python -m pytest tests/ -v
 ```
 
 5 tests in `tests/test_scoring_services.py` check each service's output
@@ -115,7 +115,7 @@ corresponding notebook.
 ## Folder structure
 
 ```
-mega_project_1_underwriting_approval/
+01_mega_project_1_underwriting_approval/
 ├── notebooks/         # 01-05 problem notebooks + 06 executive rollup
 ├── model_cards/        # one MODEL_CARD.md per problem
 ├── services/           # FastAPI scoring services (thin wrappers over src/serving/)

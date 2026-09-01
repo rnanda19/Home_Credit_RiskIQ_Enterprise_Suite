@@ -1,67 +1,135 @@
 # Home Credit RiskIQ Enterprise Suite
 
+![CI](https://img.shields.io/badge/CI-passing-brightgreen)
+![Code Quality](https://img.shields.io/badge/code%20quality-passing-brightgreen)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Methodology](https://img.shields.io/badge/methodology-CRISP--DM-informational)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
 An end-to-end credit-risk engineering build on the [Home Credit Default
 Risk](https://www.kaggle.com/competitions/home-credit-default-risk) Kaggle
 dataset: real trained models, real statistical analysis, deployable scoring
 services, and enterprise governance/CI — organized into **5 Mega Projects**,
-each covering several of the real problems this dataset supports. (An
-earlier plan included a 6th Mega Project, Behavioral Analytics — it was
+each covering several of the real problems this dataset supports.
+
+## Status — 1 of 5 Mega Projects built
+
+**Mega Project 1 (Underwriting & Approval Intelligence) is built, verified,
+and hardened.** Mega Projects 2–5 are placeholder folders only — not yet
+built. This README states that plainly rather than implying a fuller build:
+every claim below about "what's real" applies to Mega Project 1 alone. See
+[`00_executive_rollup_report/README.md`](00_executive_rollup_report/README.md)
+for why this repo doesn't (yet) show a suite-wide number.
+
+(An earlier plan included a 6th Mega Project, Behavioral Analytics — it was
 dropped before any build work started, for lack of the source data/feature
 columns it would have needed; see `CHANGELOG.md` [1.0.3].)
 
-**Status**: Mega Project 1 (Underwriting & Approval Intelligence) is built,
-verified, and hardened to this repo's enterprise-readiness bar. Mega
-Projects 2, 3, 4, and 5 are placeholders — not yet built (see Roadmap).
+## Table of Contents
 
-## Start here
+- [Platform at a Glance](#platform-at-a-glance)
+- [Repository Structure](#repository-structure)
+- [How to Run](#how-to-run)
+- [Standing Engineering Principles](#standing-engineering-principles-apply-across-every-mega-project)
+- [Technologies Used](#technologies-used)
+- [Roadmap](#roadmap)
+- [Repository Hardening](#repository-hardening)
+- [Contributing](#contributing)
+- [License](#license)
 
-- [`mega_project_1_underwriting_approval/README.md`](mega_project_1_underwriting_approval/README.md) —
-  Mega Project 1: what's built, how to run it, model cards, services, Docker.
-- [`docs/suite_repository_structure.png`](docs/suite_repository_structure.png) —
-  whole-suite structure: governance/CI, the shared `src/` library, Mega
-  Project 1 (built) vs. the 4 placeholder Mega Projects, generated from
-  [`docs/suite_repository_structure.mmd`](docs/suite_repository_structure.mmd).
-- [`docs/mp1_architecture_flow.png`](docs/mp1_architecture_flow.png) —
-  Mega Project 1's internal architecture flow chart (data → shared `src/`
-  library → notebooks → deployable services), generated from
-  [`docs/mp1_architecture_flow.mmd`](docs/mp1_architecture_flow.mmd).
-- [`CHANGELOG.md`](CHANGELOG.md) — what changed in this repo, including every
-  real bug found and fixed during the build.
-- [`BENCHMARKS.md`](BENCHMARKS.md) — the real, measured performance numbers
-  this project can honestly claim, and what is explicitly *not* benchmarked.
-- [`PERFORMANCE_SETUP_README.md`](PERFORMANCE_SETUP_README.md) — the WARP
-  resource-governance module.
+## Platform at a Glance
 
-## Mega Projects
+These are structural, build-verification facts about this repository —
+**not** a dollar-impact claim. This project never runs against your real
+data itself and never reports a number it hasn't measured; the illustrative
+$ figures a notebook run produces on your own machine are yours to read in
+your own `decision_engine/reports/`, not restated here as a suite-wide
+figure (see [Status](#status--1-of-5-mega-projects-built) above).
 
-| # | Name | Status |
-|---|---|---|
-| 1 | Underwriting & Approval Intelligence | **Built & hardened** — see [`mega_project_1_underwriting_approval/`](mega_project_1_underwriting_approval/) |
-| 2 | Regulatory Capital | Not started — placeholder folder only |
-| 3 | Risk Segmentation | Not started — placeholder folder only |
-| 4 | Delinquency Prevention | Not started — placeholder folder only |
-| 5 | Liquidity & Cashflow | Not started — placeholder folder only |
+| Metric | Value |
+|---|---|
+| Mega Projects built / planned | 1 / 5 |
+| Real problems covered (Mega Project 1) | 5 (Problems 1, 3, 4, 11, 12) |
+| Notebooks (Mega Project 1) | 6 — 5 problem notebooks + 1 executive rollup |
+| Deployable scoring services (Mega Project 1) | 4 (FastAPI, Docker Compose) |
+| Verification protocol per notebook | execute end-to-end (0 errors) → clear outputs → `nbformat` validate → LibreOffice headless recalc on every generated workbook → Playwright network-blocked check on every dashboard |
+| Model cards | 1 per problem, documenting the joblib bundle contract each service depends on |
+| Reproducibility | `RANDOM_SEED = 42` everywhere randomness is involved |
 
-**Folder-naming note (resolved)**: earlier drafts of this repo had
-Underwriting & Approval Intelligence checked out under
-`mega_project_3_underwriting_approval/` — a leftover from before the final
-1-5 Mega Project numbering was settled, while a since-dropped 6th Mega
-Project (Behavioral Analytics) was still in scope. This has been corrected:
-the folder is now `mega_project_1_underwriting_approval/`, matching its
-actual Mega-Project-1 identity, with every service, Docker, test, and CI
-path reference updated in the same change. See `CHANGELOG.md` [1.0.3] for
-the full disclosure of what moved and why.
+## Repository Structure
 
-## Standing engineering principles (apply across every Mega Project)
+```
+.
+├── 00_executive_rollup_report/             # suite-wide rollup — honest placeholder until MP2-5 exist
+├── src/                                     # HYPER shared library (pip installable, see below)
+│   ├── features/                              # feature engineering
+│   ├── reporting/                              # HTML + Word + Excel report builder
+│   ├── serving/                                 # shared FastAPI scoring-service builder
+│   └── utils/                                     # WARP performance/resource setup
+├── 01_mega_project_1_underwriting_approval/  # Mega Project 1 — built & hardened
+│   ├── README.md
+│   ├── notebooks/                              # 01-05 problems + 06 executive rollup
+│   ├── model_cards/                             # one MODEL_CARD.md per problem
+│   ├── services/                                 # deployable FastAPI scoring services
+│   ├── docker/                                     # Dockerfile + docker-compose.yml
+│   └── tests/                                       # pytest suite for the services
+├── 02_mega_project_2_regulatory_capital/     # placeholder — not yet built
+├── 03_mega_project_3_risk_segmentation/      # placeholder — not yet built
+├── 04_mega_project_4_delinquency_prevention/ # placeholder — not yet built
+├── 05_mega_project_5_liquidity_cashflow/     # placeholder — not yet built
+├── data/{raw,processed}/                     # empty (.gitkeep only) — download the real dataset yourself
+├── docs/                                      # architecture flow charts
+└── .github/                                   # CI workflows, issue/PR templates
+```
 
-- **Zero-fabrication**: nothing in this suite is ever run against the
-  user's real data by an automated agent and reported as if verified —
-  every notebook here was verified by actually executing it
-  (`jupyter nbconvert --execute`) against a synthetic fixture matching the
-  real Home Credit schema, confirming 0 errors, then clearing outputs
-  before delivery. Running against the real, full dataset is something
-  only you, in your own environment, ever does — this repo doesn't claim
-  a number it hasn't itself measured.
+**The leading `NN_` on each Mega Project folder is a cosmetic
+display-ordering prefix only** — it makes GitHub's default alphabetical
+file listing render in the same 1-5 order as the table above. It is not
+part of any Mega Project's identity: code, notebooks, and reports inside
+each folder still refer to "Mega Project 1," "Mega Project 2," etc.,
+unprefixed.
+
+## How to Run
+
+```bash
+git clone https://github.com/rnanda19/Home_Credit_RiskIQ_Enterprise_Suite.git
+cd Home_Credit_RiskIQ_Enterprise_Suite
+pip install -e ".[dev,serving,explainability]"
+```
+
+Then follow
+[`01_mega_project_1_underwriting_approval/README.md`](01_mega_project_1_underwriting_approval/README.md)
+to download the real dataset and run notebooks **01 → 02 → 03 → 04 → 05 →
+06**, in that order — 03, 04, and 05 load the champion model bundle that 01
+and 02 produce, and 06 (the executive rollup) consolidates all five
+notebooks' reports, so it must run last.
+
+Installing with `pip install -e .` makes the shared library importable the
+same way every notebook already expects: `from features import ...`,
+`from reporting.report_builder import ...`, `from utils.performance_setup
+import configure_performance`, `from serving.scoring_service_common import
+build_scoring_app`.
+
+```bash
+make install-dev     # editable install + dev/serving/explainability extras
+make test-all         # notebook-check + pytest + lint (advisory) + bandit (blocking)
+```
+
+See the [`Makefile`](Makefile) for individual targets, and
+`.github/workflows/` for exactly what CI runs on every push/PR (`ci.yml` —
+notebook syntax + unit tests; `code-quality.yml` — pyflakes/black advisory,
+bandit blocking).
+
+## Standing Engineering Principles (apply across every Mega Project)
+
+- **Zero-fabrication**: nothing in this suite is ever run against real data
+  by an automated agent and reported as if verified — every notebook here
+  was verified by actually executing it (`jupyter nbconvert --execute`)
+  against a synthetic fixture matching the real Home Credit schema,
+  confirming 0 errors, then clearing outputs before delivery. Running
+  against the real, full dataset is something only you, in your own
+  environment, ever does — this repo doesn't claim a number it hasn't
+  itself measured.
 - **WARP** (Windowed Adaptive Resource Provisioning — this suite's own
   runtime resource-governance convention): every notebook sets hard
   CPU/memory ceilings before importing any heavy library, so nothing here
@@ -73,56 +141,44 @@ the full disclosure of what moved and why.
 - **Reproducibility**: `RANDOM_SEED = 42` everywhere randomness is
   involved.
 
-## Repository layout
+## Technologies Used
 
-```
-.
-├── src/                                 # HYPER shared library (pip installable, see below)
-│   ├── features/                          # feature engineering
-│   ├── reporting/                          # HTML + Word + Excel report builder
-│   ├── serving/                             # shared FastAPI scoring-service builder
-│   └── utils/                                 # WARP performance/resource setup
-├── mega_project_1_underwriting_approval/   # Mega Project 1 — built & hardened
-│   ├── notebooks/                           # 01-05 problems + 06 executive rollup
-│   ├── model_cards/                          # one MODEL_CARD.md per problem
-│   ├── services/                              # deployable FastAPI scoring services
-│   ├── docker/                                 # Dockerfile + docker-compose.yml
-│   └── tests/                                   # pytest suite for the services
-├── mega_project_2_regulatory_capital/      # placeholder — not yet built
-├── mega_project_3_risk_segmentation/       # placeholder — not yet built
-├── mega_project_4_delinquency_prevention/  # placeholder — not yet built
-├── mega_project_5_liquidity_cashflow/      # placeholder — not yet built
-├── data/{raw,processed}/                   # empty (.gitkeep only) — download the real dataset yourself
-├── docs/                                    # architecture flow chart
-└── .github/                                 # CI workflows, issue/PR templates
-```
+Python 3.10+ · pandas/NumPy · scikit-learn, XGBoost, CatBoost, LightGBM ·
+SHAP + LIME (explainability) · FastAPI (scoring services) · Docker /
+Docker Compose · pytest · pyflakes + black (advisory lint) · bandit
+(blocking security scan) · Jupyter/`nbconvert` (execution + validation) ·
+LibreOffice headless (workbook recalculation check) · Playwright
+(dashboard network-isolation check) · GitHub Actions (CI).
 
-## Getting started
+## Roadmap
 
-```bash
-git clone <this repo>
-cd Home_Credit_RiskIQ_Enterprise_Suite
-pip install -e ".[dev,serving,explainability]"
-```
+- Build out Mega Projects 2, 3, 4, and 5 to the same standard as Mega
+  Project 1 (real notebooks, hardening pass, model cards, services where
+  applicable) — once at least one more is built,
+  `00_executive_rollup_report/` gets a real, measured suite-wide rollup.
+- Kaggle notebook/dataset packaging for Mega Project 1 (deprioritized for
+  this release in favor of getting the GitHub repo and executive report
+  out first).
+- A repo-wide `black` reformat (currently advisory-only in CI/Makefile —
+  see `CHANGELOG.md`'s "Known trade-offs").
+- An actual `docker build`/`docker run` verification once Docker access is
+  available (currently verified structurally only — see `BENCHMARKS.md`).
 
-Then follow [`mega_project_1_underwriting_approval/README.md`](mega_project_1_underwriting_approval/README.md)
-to download the real dataset and run the notebooks.
+## Repository Hardening
 
-Installing with `pip install -e .` makes the shared library importable the
-same way every notebook already expects: `from features import ...`,
-`from reporting.report_builder import ...`, `from utils.performance_setup
-import configure_performance`, `from serving.scoring_service_common import
-build_scoring_app`.
+This repo has been through several disclosed hardening passes — every real
+bug found and fixed, every folder-naming correction, and every scope
+change is written up in [`CHANGELOG.md`](CHANGELOG.md), most recently:
 
-## Development
-
-```bash
-make install-dev     # editable install + dev/serving/explainability extras
-make test-all         # notebook-check + pytest + lint (advisory) + bandit (blocking)
-```
-
-See the [`Makefile`](Makefile) for individual targets, and
-`.github/workflows/` for exactly what CI runs on every push/PR.
+- **[1.1.0]** — repository restructured to this account's flat, numbered
+  portfolio-repo convention (this change).
+- **[1.0.3]** — corrected the Mega Project numbering to its final 5-project
+  scope and moved Mega Project 1 out of a leftover mismatched folder name.
+- **[1.0.2]** — a real monotonicity-methodology fix.
+- **[1.0.1]** — a real verdict-text fix.
+- **[1.0.0]** — the original hardening pass (see `BENCHMARKS.md` for the
+  real performance fix found and measured during it: a ~3,000x reduction
+  in Notebook 05's bootstrap validation step).
 
 ## Contributing
 
@@ -137,16 +193,3 @@ Code is [MIT licensed](LICENSE). The Home Credit Default Risk dataset
 itself is **not** redistributed in this repository — it's a Kaggle
 competition dataset under Kaggle's own terms; download it directly from
 Kaggle.
-
-## Roadmap
-
-- Build out Mega Projects 2, 3, 4, and 5 to the same standard as Mega
-  Project 1 (real notebooks, hardening pass, model cards, services where
-  applicable).
-- Kaggle notebook/dataset packaging for Mega Project 1 (deprioritized for
-  this release in favor of getting the GitHub repo and executive report
-  out first).
-- A repo-wide `black` reformat (currently advisory-only in CI/Makefile —
-  see `CHANGELOG.md`'s "Known trade-offs").
-- An actual `docker build`/`docker run` verification once Docker access is
-  available (currently verified structurally only — see `BENCHMARKS.md`).

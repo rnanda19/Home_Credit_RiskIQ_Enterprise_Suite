@@ -43,11 +43,11 @@ jobs:
           python-version: "3.11"
       - name: Install serving + test dependencies
         run: |
-          pip install -r mega_project_1_underwriting_approval/services/requirements-services.txt
+          pip install -r 01_mega_project_1_underwriting_approval/services/requirements-services.txt
           pip install pytest httpx
       - name: Run scoring-service tests
         run: |
-          cd mega_project_1_underwriting_approval
+          cd 01_mega_project_1_underwriting_approval
           pytest tests/ -v
         # Tests that need a real trained model bundle (notebook_01/02's own
         # .joblib -- gitignored, produced only by running those notebooks on

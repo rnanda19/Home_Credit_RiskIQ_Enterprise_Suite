@@ -3,6 +3,65 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.0] - 2026-09-01
+
+### Changed — restructured the repository to match this account's portfolio-repo conventions (flat, numbered, self-contained project folders)
+
+**What prompted this**: to keep this repo organized the same way as this
+account's other portfolio repos — flat, numbered top-level project folders
+instead of nested ones, so GitHub's default alphabetical file listing
+renders in logical numeric order at a glance.
+
+**What changed**:
+
+- All 5 Mega Project folders moved to the repo root with a numeric prefix
+  (purely a cosmetic display-ordering prefix — the underlying Mega Project
+  identity and every internal path/code reference stays the same, just
+  relocated):
+  `mega_project_1_underwriting_approval/` → `01_mega_project_1_underwriting_approval/`,
+  `mega_project_2_regulatory_capital/` → `02_mega_project_2_regulatory_capital/`,
+  `mega_project_3_risk_segmentation/` → `03_mega_project_3_risk_segmentation/`,
+  `mega_project_4_delinquency_prevention/` → `04_mega_project_4_delinquency_prevention/`,
+  `mega_project_5_liquidity_cashflow/` → `05_mega_project_5_liquidity_cashflow/`.
+- Every reference to the Mega Project 1 path was updated in the same
+  change — `Makefile`, `.github/workflows/ci.yml`,
+  `.github/workflows/code-quality.yml`, `docker/Dockerfile`,
+  `docker/docker-compose.yml`, this project's own `README.md`, and the
+  `ARTIFACTS_DIR`/`REPORTS_DIR`/`PARQUET_CACHE_DIR`/`MP1_DIR` path
+  constants inside all 6 notebooks (01-06) — the same functional-path
+  discipline as [1.0.3]: since these are runtime path references (not just
+  cosmetic text), all 6 notebooks were re-executed end-to-end against the
+  synthetic fixture after the change (0 errors), had outputs cleared, were
+  `nbformat`-validated, and had their regenerated
+  `decision_engine/reports/*.xlsx` outputs recalculated cleanly under
+  LibreOffice headless and their `*_dashboard.html` outputs checked under
+  Playwright with all network requests blocked (0 external requests, 0
+  page errors).
+- Added `00_executive_rollup_report/` at the repo root as the intended home
+  for a future suite-wide executive rollup. It is an honest placeholder,
+  not a data folder: with only 1 of 5 Mega Projects built, a suite-wide
+  number would have to average in 4 unbuilt Mega Projects, which this repo
+  will not fabricate. It currently just points to Mega Project 1's own real
+  rollup and states plainly what's built and what isn't.
+- Root `README.md` rewritten to this account's standard portfolio-repo
+  README pattern (badges, a status-first headline, table of contents,
+  platform-at-a-glance, repository structure, how-to-run, technologies,
+  roadmap, repository hardening summary, license) — see the README itself
+  for the honesty caveats this rewrite kept: it reports 1-of-5 status
+  plainly rather than implying a fuller build, and does not carry any
+  suite-wide dollar figure, since none has been measured on real data.
+- License intentionally **left as MIT** (not changed to a more restrictive
+  license) — this was a deliberate choice, not an oversight, made when
+  aligning this repo's conventions with the rest of the portfolio.
+- A "Live Dashboards" README section (GitHub Pages links) was intentionally
+  **not added** — this repo doesn't have GitHub Pages configured, and a
+  link to a page that doesn't exist would be worse than no section.
+
+**What did NOT change**: no notebook's computed results, statistics,
+model, or check logic changed — this entry is a folder-layout and
+documentation-format change, not a methodology or data change like
+[1.0.2].
+
 ## [1.0.3] - 2026-09-01
 
 ### Changed — corrected the Mega Project numbering to its final 5-project scope, and completed the Mega Project 1 folder rename

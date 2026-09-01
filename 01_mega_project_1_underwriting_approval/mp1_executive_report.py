@@ -71,7 +71,7 @@ if SUITE_ROOT is None:
         "run once (to create the suite root's expected layout), or set HC_SUITE_ROOT."
     )
 
-MP1_DIR = SUITE_ROOT / "mega_project_1_underwriting_approval"  # renumbered - Mega Project 1 is now the correct, final folder name
+MP1_DIR = SUITE_ROOT / "01_mega_project_1_underwriting_approval"  # renumbered - Mega Project 1 is now the correct, final folder name
 ARTIFACTS_DIR = MP1_DIR / "decision_engine" / "artifacts"
 REPORTS_DIR = MP1_DIR / "decision_engine" / "reports"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)

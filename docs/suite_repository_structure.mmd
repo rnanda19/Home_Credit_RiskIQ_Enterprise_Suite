@@ -1,13 +1,15 @@
 flowchart TB
-    subgraph ROOT["Home Credit RiskIQ Enterprise Suite (repo root)"]
+    subgraph ROOT["Home Credit RiskIQ Enterprise Suite (repo root - flat, numbered, GitHub-alphabetical)"]
         direction TB
+
+        ROLLUP["00_executive_rollup_report/\nsuite-wide rollup - honest placeholder\nuntil MP2-5 are built"]
 
         subgraph GOV["Governance & CI (applies suite-wide)"]
             LIC["LICENSE (MIT)"]
             CHLOG["CHANGELOG.md\nfull disclosure of every fix"]
             BENCH["BENCHMARKS.md\nreal, measured numbers only"]
             MAKE["Makefile\ninstall / test / lint / security"]
-            GH[".github/\nCI workflows + issue/PR templates"]
+            GH[".github/\nCI: ci.yml (notebook+unit tests),\ncode-quality.yml (lint+bandit)"]
         end
 
         subgraph HYPER["src/ - HYPER shared library (written once, imported everywhere)"]
@@ -19,7 +21,7 @@ flowchart TB
 
         DATA[("data/raw/, data/processed/\ngitignored - never committed")]
 
-        subgraph MP1["mega_project_1_underwriting_approval/\nBUILT & HARDENED"]
+        subgraph MP1["01_mega_project_1_underwriting_approval/\nBUILT & HARDENED"]
             MP1NB["notebooks/ 01-06"]
             MP1MC["model_cards/"]
             MP1SVC["services/ (FastAPI x4)"]
@@ -29,10 +31,10 @@ flowchart TB
         end
 
         subgraph PLACEHOLDERS["Placeholders - not yet built to this standard"]
-            MP2["mega_project_2_regulatory_capital/"]
-            MP3["mega_project_3_risk_segmentation/"]
-            MP4["mega_project_4_delinquency_prevention/"]
-            MP5["mega_project_5_liquidity_cashflow/"]
+            MP2["02_mega_project_2_regulatory_capital/"]
+            MP3["03_mega_project_3_risk_segmentation/"]
+            MP4["04_mega_project_4_delinquency_prevention/"]
+            MP5["05_mega_project_5_liquidity_cashflow/"]
         end
 
         DOCS["docs/\narchitecture diagrams"]
@@ -48,9 +50,11 @@ flowchart TB
     GOV -.governs.-> MP1
     GOV -.governs.-> PLACEHOLDERS
     DOCS -.documents.-> MP1
+    MP1DE -.will feed, once MP2-5 exist.-> ROLLUP
 
     style GOV fill:#f4f4f4,stroke:#888
     style HYPER fill:#eef5ff,stroke:#4a7fd6
     style MP1 fill:#fff8ee,stroke:#d69a4a
     style PLACEHOLDERS fill:#f9f0f0,stroke:#c98a8a,stroke-dasharray: 5 5
     style DATA fill:#eaeaea,stroke:#666
+    style ROLLUP fill:#f0f0ff,stroke:#7a7ad6,stroke-dasharray: 3 3

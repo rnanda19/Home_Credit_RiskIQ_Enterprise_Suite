@@ -50,7 +50,16 @@ param(
     [switch]$Public
 )
 
-$ErrorActionPreference = "Stop"
+# NOTE: deliberately NOT "Stop" globally. git.exe routinely writes normal,
+# successful-operation info to stderr (progress, "Switched to branch", remote
+# messages on push, etc.) -- with $ErrorActionPreference = "Stop", PowerShell
+# can turn that stderr text into a terminating error even when redirected
+# with 2>$null, which would abort the script (or make a SUCCESSFUL push look
+# like a failure). Native git commands below are checked explicitly via
+# $LASTEXITCODE instead; the two GitHub API calls (Invoke-RestMethod, real
+# PowerShell cmdlets that don't have this quirk) opt into Stop individually
+# via -ErrorAction Stop so their try/catch blocks work correctly.
+$ErrorActionPreference = "Continue"
 
 function Write-Step($msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
 function Write-Ok($msg)   { Write-Host "    $msg" -ForegroundColor Green }
@@ -120,6 +129,10 @@ Write-Warn2 "so this should still be fast in practice."
 Write-Step "Setting up the local git repo"
 if (-not (Test-Path ".git")) {
     git init | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Err2 "git init failed (exit code $LASTEXITCODE)."
+        exit 1
+    }
     Write-Ok "git init done"
 } else {
     Write-Ok "Already a git repo"
@@ -162,6 +175,10 @@ if ([string]::IsNullOrWhiteSpace($staged)) {
     Write-Step "Committing"
     $commitMsg = "Enterprise hardening pass: Mega Project 1 (Underwriting & Approval Intelligence) built and verified; suite corrected to its final 5-Mega-Project scope. See CHANGELOG.md for full disclosure of every fix."
     git commit -m "$commitMsg" | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Err2 "git commit failed (exit code $LASTEXITCODE)."
+        exit 1
+    }
     Write-Ok "Committed."
 }
 
@@ -170,7 +187,7 @@ Write-Step "Checking if the GitHub repo already exists"
 $repoApiUrl = "https://api.github.com/repos/$ghUser/$RepoName"
 $repoExists = $false
 try {
-    Invoke-RestMethod -Uri $repoApiUrl -Headers $authHeader -Method Get | Out-Null
+    Invoke-RestMethod -Uri $repoApiUrl -Headers $authHeader -Method Get -ErrorAction Stop | Out-Null
     $repoExists = $true
     Write-Ok "Repo already exists: https://github.com/$ghUser/$RepoName"
 } catch {
@@ -194,7 +211,7 @@ if (-not $repoExists) {
     } | ConvertTo-Json
 
     try {
-        $created = Invoke-RestMethod -Uri "https://api.github.com/user/repos" -Headers $authHeader -Method Post -Body $body -ContentType "application/json"
+        $created = Invoke-RestMethod -Uri "https://api.github.com/user/repos" -Headers $authHeader -Method Post -Body $body -ContentType "application/json" -ErrorAction Stop
         Write-Ok "Created $visibilityText repo: $($created.html_url)"
     } catch {
         Write-Err2 "Failed to create repo: $($_.Exception.Message)"
@@ -207,8 +224,11 @@ Write-Step "Pushing to GitHub"
 
 # Remote is set to the plain (token-free) URL for normal future use...
 $plainRemote = "https://github.com/$ghUser/$RepoName.git"
-$existingRemote = git remote get-url origin 2>$null
-if ($existingRemote) {
+# `git remote` (no args) just lists remote names -- simpler and safer here
+# than `git remote get-url origin`, which writes to stderr and exits
+# non-zero when there's no such remote yet.
+$remoteNames = git remote
+if ($remoteNames -contains "origin") {
     git remote set-url origin $plainRemote
 } else {
     git remote add origin $plainRemote
@@ -218,15 +238,19 @@ if ($existingRemote) {
 # written into .git/config on disk.
 $authedRemote = "https://$($ghUser):$($ghToken)@github.com/$ghUser/$RepoName.git"
 
-try {
-    git push $authedRemote main
-    Write-Ok "Pushed to https://github.com/$ghUser/$RepoName"
-} catch {
-    Write-Err2 "Push failed: $($_.Exception.Message)"
+# Checked via $LASTEXITCODE, not try/catch: git routinely writes normal
+# progress/remote messages to stderr on a SUCCESSFUL push too, and with
+# $ErrorActionPreference = "Continue" that text no longer throws -- but a
+# try/catch here would still catch nothing useful either way. $LASTEXITCODE
+# is the actual, reliable signal of whether the push succeeded.
+git push $authedRemote main
+if ($LASTEXITCODE -ne 0) {
+    Write-Err2 "Push failed (exit code $LASTEXITCODE) -- see the git output above for the real reason."
     Write-Err2 "If this is 'main' vs an existing default branch, try:"
     Write-Err2 "  git push $plainRemote main --force-with-lease   (only if you're SURE the remote is empty/yours)"
     exit 1
 }
+Write-Ok "Pushed to https://github.com/$ghUser/$RepoName"
 
 # Clear the token from this process's memory as soon as we're done with it.
 $ghToken = $null
