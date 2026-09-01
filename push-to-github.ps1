@@ -23,6 +23,11 @@
      by default -- pass -Public to make it public instead). If the repo
      already exists and you pass -Public, it flips an existing private
      repo to public too.
+  6b. Sets the repo's description, topics, and (once Pages is live)
+      homepage URL via the API every run -- these are what a recruiter
+      or hiring manager actually sees first on your GitHub profile and
+      in GitHub search results, so they're kept in sync automatically
+      rather than left blank or stale.
   7. If -Public was passed, enables GitHub Pages (source: main / docs) via
      the API -- this is what makes the HTML dashboards in docs/dashboards/
      openable as real, live, rendered pages instead of raw source (GitHub
@@ -181,7 +186,8 @@ if ([string]::IsNullOrWhiteSpace($staged)) {
     }
 
     Write-Step "Committing"
-    $commitMsg = "Enterprise hardening pass: Mega Project 1 (Underwriting & Approval Intelligence) built and verified; suite corrected to its final 5-Mega-Project scope. See CHANGELOG.md for full disclosure of every fix."
+    $commitDate = Get-Date -Format "yyyy-MM-dd"
+    $commitMsg = "Sync suite state as of $commitDate. Mega Projects 1-3 built and hardened (real notebooks, deployable FastAPI services, Docker, tests, sample reports); Mega Projects 4-5 scoped, not yet built. See CHANGELOG.md for the full, itemized history of every fix and scope change, or ROADMAP.md for current status and next steps."
     git commit -m "$commitMsg" | Out-Null
     if ($LASTEXITCODE -ne 0) {
         Write-Err2 "git commit failed (exit code $LASTEXITCODE)."
@@ -266,6 +272,42 @@ if ($Public) {
             Write-Err2 "You can do this manually: repo -> Settings -> Pages -> Source: main / docs."
         }
     }
+}
+
+# ---------------------------------------------------------------------------
+Write-Step "Setting repo description, topics, and homepage (recruiter-facing metadata)"
+# This is what actually shows up on your GitHub profile and in search
+# results -- a blank description/no topics is the #1 reason a strong repo
+# gets scrolled past. Safe to re-run every time; this just overwrites with
+# the current, accurate values.
+$repoDescription = "Enterprise-grade credit risk platform on the real Home Credit Default Risk (Kaggle) dataset -- 3 hardened Mega Projects, 18 real verified notebooks, 10 deployable FastAPI services, real statistical validation and explainability throughout. Zero fabrication: every number is computed live, never asserted."
+$repoTopics = @(
+    "credit-risk", "credit-scoring", "risk-management", "regulatory-capital",
+    "basel-iii", "model-risk-management", "machine-learning", "data-science",
+    "python", "fastapi", "docker", "mlops", "explainable-ai", "shap",
+    "xgboost", "clustering", "jupyter-notebook", "kaggle", "portfolio-project"
+)
+try {
+    $metaBody = @{ description = $repoDescription } | ConvertTo-Json
+    if ($Public) {
+        $metaBody = @{
+            description = $repoDescription
+            homepage    = "https://$($ghUser.ToLower()).github.io/$RepoName/"
+        } | ConvertTo-Json
+    }
+    Invoke-RestMethod -Uri $repoApiUrl -Headers $authHeader -Method Patch -Body $metaBody -ContentType "application/json" -ErrorAction Stop | Out-Null
+    Write-Ok "Description set."
+    if ($Public) { Write-Ok "Homepage set to the live GitHub Pages dashboard." }
+
+    # Topics use a dedicated endpoint with its own required preview Accept header.
+    $topicsHeader = $authHeader.Clone()
+    $topicsHeader["Accept"] = "application/vnd.github+json"
+    $topicsBody = @{ names = $repoTopics } | ConvertTo-Json
+    Invoke-RestMethod -Uri "$repoApiUrl/topics" -Headers $topicsHeader -Method Put -Body $topicsBody -ContentType "application/json" -ErrorAction Stop | Out-Null
+    Write-Ok "Topics set ($($repoTopics.Count)): $($repoTopics -join ', ')"
+} catch {
+    Write-Err2 "Couldn't set repo description/topics/homepage: $($_.Exception.Message)"
+    Write-Err2 "You can do this manually: repo -> the gear icon next to About -> Description/Topics/Website."
 }
 
 # ---------------------------------------------------------------------------

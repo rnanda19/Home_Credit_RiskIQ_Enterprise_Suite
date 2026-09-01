@@ -3,6 +3,38 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.8.4] - 2026-09-01
+
+### Fixed the actual GitHub Actions CI failure on Mega Project 3
+
+The `unit-tests (03_mega_project_3_risk_segmentation)` CI job was genuinely
+red on GitHub (exit code 2 -- a pytest *collection* error, not a test
+failure): `03_mega_project_3_risk_segmentation/tests/test_scoring_services.py`
+does `import polars as pl` (used to read the synthetic fixture CSVs and
+build independent reference rows for 8 of its assertions), but
+`03_mega_project_3_risk_segmentation/services/requirements-services.txt` --
+CI's only install step before `pytest tests/` -- deliberately excludes
+`polars` as unneeded by the production services themselves, so the import
+failed before a single test could run. Mega Project 2 already carries the
+identical `polars` line in its own `requirements-services.txt` with the
+same documented rationale (its `regulatory_capital_features.py` has a
+module-level `import polars as pl` even though its services don't touch a
+DataFrame either); Mega Project 3's file was simply missing the equivalent
+line for its test module. Added `polars>=0.20` there with a comment
+explaining why, and re-verified all 3 unit-tests matrix jobs (MP1, MP2,
+MP3) plus the `notebook-syntax` job in fresh, isolated virtualenvs that
+install only what each job's own workflow step installs -- matching CI
+exactly rather than trusting the sandbox's pre-existing environment. MP1:
+10 passed. MP2: 5 passed. MP3: 4 skipped (correct -- no locally-trained
+`.joblib`/segment-model bundle in this environment, which is the documented
+skip-if-missing behavior, not a failure) after the collection error was
+gone. `notebook-syntax`: 18/18 notebooks valid. This is the first time this
+suite's CI status was checked against the *actual* GitHub Actions run
+rather than only the local build-sandbox verification protocol -- the gap
+existed because `pytest` was previously only ever run inside this sandbox's
+already-populated environment, which had `polars` installed for unrelated
+reasons and so never surfaced the missing dependency.
+
 ## [1.8.3] - 2026-09-01
 
 ### Adopted AMEX RiskIQ Platform documentation conventions (root-level, non-structural)

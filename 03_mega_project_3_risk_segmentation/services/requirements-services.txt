@@ -1,5 +1,5 @@
 # Lean runtime dependencies for the 4 deployable scoring services only —
-# deliberately NOT the full notebook/EDA/reporting stack (polars, jupyter,
+# deliberately NOT the full notebook/EDA/reporting stack (jupyter,
 # matplotlib, python-docx, openpyxl, etc. are not needed here).
 fastapi>=0.110
 uvicorn[standard]>=0.29
@@ -7,3 +7,9 @@ pydantic>=2.6
 scikit-learn>=1.4
 numpy>=1.26
 joblib>=1.3
+# tests/test_scoring_services.py reads the synthetic fixture CSVs with
+# `polars` to build its independent reference rows (see NB01_CSV / bureau /
+# installments / POS_CASH / credit_card reads there) even though the
+# services themselves never touch a DataFrame -- same reasoning as Mega
+# Project 2's requirements-services.txt. Needed for CI's `pytest tests/` step.
+polars>=0.20
