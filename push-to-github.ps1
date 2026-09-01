@@ -20,8 +20,15 @@
   5. Shows you EXACTLY what will be committed and asks you to confirm
      before anything is pushed -- nothing goes to GitHub silently.
   6. Creates the GitHub repo via the API if it doesn't exist yet (private
-     by default -- pass -Public to make it public instead).
-  7. Pushes to `main`.
+     by default -- pass -Public to make it public instead). If the repo
+     already exists and you pass -Public, it flips an existing private
+     repo to public too.
+  7. If -Public was passed, enables GitHub Pages (source: main / docs) via
+     the API -- this is what makes the HTML dashboards in docs/dashboards/
+     openable as real, live, rendered pages instead of raw source (GitHub
+     Pages requires a public repo on the free plan, which is why this is
+     tied to -Public).
+  8. Pushes to `main`.
 
 .USAGE
   Open PowerShell (Run as Administrator is fine but not required -- this
@@ -30,7 +37,8 @@
       cd "C:\Users\rnand\Downloads\home-credit-enterprise-suite"
       powershell -ExecutionPolicy Bypass -File .\push-to-github.ps1
 
-  To make the GitHub repo public instead of private:
+  To make the GitHub repo public (needed for recruiters to see it, and for
+  the live dashboard links to work) and turn on GitHub Pages:
 
       powershell -ExecutionPolicy Bypass -File .\push-to-github.ps1 -Public
 
@@ -216,6 +224,47 @@ if (-not $repoExists) {
     } catch {
         Write-Err2 "Failed to create repo: $($_.Exception.Message)"
         exit 1
+    }
+} elseif ($Public) {
+    # Repo already existed (created private in an earlier run, most likely)
+    # and -Public was passed this time -- sync its visibility to public.
+    Write-Step "Syncing repo visibility to public (you passed -Public)"
+    try {
+        $currentRepo = Invoke-RestMethod -Uri $repoApiUrl -Headers $authHeader -Method Get -ErrorAction Stop
+        if ($currentRepo.private) {
+            $visBody = @{ private = $false } | ConvertTo-Json
+            Invoke-RestMethod -Uri $repoApiUrl -Headers $authHeader -Method Patch -Body $visBody -ContentType "application/json" -ErrorAction Stop | Out-Null
+            Write-Ok "Repo is now public: https://github.com/$ghUser/$RepoName"
+        } else {
+            Write-Ok "Repo is already public."
+        }
+    } catch {
+        Write-Err2 "Couldn't change repo visibility: $($_.Exception.Message)"
+        Write-Err2 "You can do this manually: repo -> Settings -> Danger Zone -> Change visibility."
+    }
+}
+
+# ---------------------------------------------------------------------------
+if ($Public) {
+    Write-Step "Enabling GitHub Pages (source: main branch, /docs folder)"
+    # GitHub Pages on the free plan only works for PUBLIC repos, which is why
+    # this whole block is gated on -Public. Safe to re-run: a 409 here just
+    # means Pages is already enabled, which is treated as success, not an error.
+    $pagesBody = @{
+        source = @{ branch = "main"; path = "/docs" }
+    } | ConvertTo-Json
+    try {
+        Invoke-RestMethod -Uri "https://api.github.com/repos/$ghUser/$RepoName/pages" -Headers $authHeader -Method Post -Body $pagesBody -ContentType "application/json" -ErrorAction Stop | Out-Null
+        Write-Ok "GitHub Pages enabled. It can take a minute or two to go live at:"
+        Write-Ok "  https://$($ghUser.ToLower()).github.io/$RepoName/"
+    } catch {
+        if ($_.Exception.Response.StatusCode.value__ -eq 409) {
+            Write-Ok "GitHub Pages was already enabled -- nothing to do."
+            Write-Ok "  https://$($ghUser.ToLower()).github.io/$RepoName/"
+        } else {
+            Write-Err2 "Couldn't enable GitHub Pages automatically: $($_.Exception.Message)"
+            Write-Err2 "You can do this manually: repo -> Settings -> Pages -> Source: main / docs."
+        }
     }
 }
 

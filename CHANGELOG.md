@@ -3,6 +3,107 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-09-01
+
+### Changed — README and documentation rewritten for a hiring-manager/recruiter audience; no code or notebook content changed
+
+**What prompted this**: this repo is a portfolio piece as well as an
+engineering project — the documentation needed to read that way without
+weakening the zero-fabrication standard the rest of this repo is held to.
+
+**What changed**:
+
+- Root `README.md`: added a **Skills Demonstrated** table mapping this
+  repo's real techniques (statistical rigor, explainability, model risk
+  and governance, MLOps, software engineering discipline) to where they're
+  evidenced; added a **Model Risk & Governance** section describing the
+  real dual-check pattern (structural integrity checks vs. statistical
+  robustness gates) every notebook already runs, and how a model can pass
+  integrity checks yet still be honestly reported "not recommended for
+  production yet" when a robustness gate fails — framed in the language a
+  regulated financial institution's model-risk function would use (SR
+  11-7-style discipline), without claiming formal compliance with any
+  framework this repo hasn't been assessed against.
+- Added `docs/mp1_executive_dashboard_preview.png` — a screenshot of the
+  real Mega Project 1 executive dashboard, embedded directly in the root
+  README so a reader doesn't have to clone the repo or open a raw HTML
+  file in GitHub's browser to see real output. Captioned explicitly as
+  generated from the synthetic verification fixture, not the real Home
+  Credit dataset — the same honesty standard applied everywhere else in
+  this repo.
+- CI badges switched from static "passing" images to GitHub's own live
+  workflow-status badges (`.../actions/workflows/ci.yml/badge.svg`), so
+  the badge reflects the actual, current state of CI rather than an
+  unverifiable claim.
+- Mega Projects 2-5 `README.md` files expanded from a one-line "not yet
+  built" stub to include the real business problem each is scoped to
+  cover and its planned approach — still explicit that no notebooks,
+  models, or services exist for them yet; no new capability is claimed.
+
+**What did NOT change**: no notebook, model, service, or check logic
+changed — this entry is a documentation and presentation change only.
+
+## [1.2.1] - 2026-09-01
+
+### Added — full sample reports (HTML/Word/Excel) for all 5 problems + the executive rollup
+
+**What prompted this**: the images added in [1.2.0] show what the output
+looks like; a hiring manager who wants to open a real, fully-formatted
+deliverable (not a chart crop) needed a real file to open.
+
+**What changed**:
+
+- Added `01_mega_project_1_underwriting_approval/sample_reports/` — 18
+  files: the real HTML dashboard, Word report, and Excel workbook already
+  generated per problem (5 problems) plus the consolidated executive
+  rollup in the same 3 formats. These are the exact files this suite's own
+  notebooks produce when run — copied from `decision_engine/reports/`
+  (gitignored everywhere else in this repo), every filename prefixed
+  `SAMPLE_`, with a folder `README.md` stating plainly that they were
+  generated against the synthetic verification fixture, not the real
+  Kaggle dataset, and linking to where a reader can generate the real
+  version themselves. `.gitignore`'s `**/decision_engine/reports/` rule
+  does not apply here — `sample_reports/` is a distinct, deliberately
+  tracked folder, not a path under `decision_engine/`.
+- Root `README.md`'s "Real Output" section now links to this folder.
+
+**What did NOT change**: no notebook, model, service, or check logic
+changed; the files added are unmodified copies of already-verified
+generated output, only renamed with a `SAMPLE_` prefix for clarity.
+
+## [1.3.0] - 2026-09-01
+
+### Added — GitHub Pages live dashboard hosting; corrected README claims about how GitHub renders linked files
+
+**What prompted this**: a direct question about whether the `.html`/
+`.docx`/`.xlsx` links added in [1.2.0]/[1.2.1] would actually open as
+rendered pages when clicked on GitHub. They don't — GitHub shows raw
+source for `.html` files and a download-only page for Office documents;
+only `.csv` renders natively. That's true of every GitHub repository, not
+a flaw introduced here, but the README needed to say so instead of
+implying otherwise.
+
+**What changed**:
+
+- Added `docs/dashboards/` — copies of the 6 real dashboard HTML files
+  (5 problems + the executive rollup), and `docs/index.html`, a landing
+  page linking to all 6. Both are verified with the same protocol as
+  every other HTML output in this repo (Playwright, all network requests
+  blocked: 0 external requests, 0 page errors).
+- `push-to-github.ps1`: passing `-Public` now also (a) flips an
+  already-existing private repo to public via the API, and (b) enables
+  GitHub Pages (source: `main` / `/docs`) via the API — idempotent, safe
+  to re-run. GitHub Pages requires a public repo on the free plan, which
+  is why this is gated on `-Public` rather than automatic.
+- Root `README.md`: added a **Live Dashboards** section with the real
+  Pages URLs, and corrected the [1.2.1] sample-reports callout to state
+  plainly how GitHub actually opens `.html`/`.docx`/`.xlsx`/`.csv` files
+  when clicked, instead of implying they'd all open cleanly.
+
+**What did NOT change**: no notebook, model, service, or check logic
+changed; `docs/dashboards/` files are unmodified copies of already-
+generated, already-verified output.
+
 ## [1.1.0] - 2026-09-01
 
 ### Changed — restructured the repository to match this account's portfolio-repo conventions (flat, numbered, self-contained project folders)
