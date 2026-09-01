@@ -1,0 +1,34 @@
+# Mega Project 3 — real deployable scoring services (4 problems, 1 shared image).
+# Run from the suite root: docker compose -f 03_mega_project_3_risk_segmentation/docker/docker-compose.yml up --build
+services:
+  risk-tier-assignment:           # Problem 1
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "risk_tier_assignment_service:app", "--host", "0.0.0.0", "--port", "8007"]
+    ports:
+      - "8007:8007"
+
+  bureau-segment-assignment:      # Problem 2
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "bureau_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8008"]
+    ports:
+      - "8008:8008"
+
+  repayment-segment-assignment:   # Problem 3
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "repayment_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8009"]
+    ports:
+      - "8009:8009"
+
+  utilization-segment-assignment: # Problem 4
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "utilization_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8010"]
+    ports:
+      - "8010:8010"

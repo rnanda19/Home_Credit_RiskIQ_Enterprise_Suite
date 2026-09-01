@@ -1,4 +1,4 @@
-# Model Card — Problem 3: Loan Application Approval
+# Model Card — Problem 2: Loan Application Approval
 
 Notebook: `notebooks/02_loan_application_approval.ipynb`
 Service: `services/loan_approval_scoring_service.py` (FastAPI, port 8002)

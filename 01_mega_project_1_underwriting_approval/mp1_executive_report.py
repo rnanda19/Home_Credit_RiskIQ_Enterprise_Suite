@@ -91,10 +91,10 @@ T0 = time.time()
 # ---------------------------------------------------------------------------
 PROBLEM_META = {
     "01": {"label": "Problem 1 — Credit Default Prediction", "file": "notebook_01_summary.json"},
-    "02": {"label": "Problem 3 — Loan Application Approval", "file": "notebook_02_summary.json"},
-    "03": {"label": "Problem 4 — Credit Score Estimation", "file": "notebook_03_summary.json"},
-    "04": {"label": "Problem 11 — Repayment Capacity Analysis", "file": "notebook_04_summary.json"},
-    "05": {"label": "Problem 12 — Previous Application Outcomes", "file": "notebook_05_summary.json"},
+    "02": {"label": "Problem 2 — Loan Application Approval", "file": "notebook_02_summary.json"},
+    "03": {"label": "Problem 3 — Credit Score Estimation", "file": "notebook_03_summary.json"},
+    "04": {"label": "Problem 4 — Repayment Capacity Analysis", "file": "notebook_04_summary.json"},
+    "05": {"label": "Problem 5 — Previous Application Outcomes", "file": "notebook_05_summary.json"},
 }
 
 summaries = {}
@@ -304,7 +304,12 @@ checks = [
     )),
     ("cost_context_never_added_to_benefit_total", True),  # enforced by construction (SECTION 3)
     ("every_available_problem_has_a_story", len(STORIES) == N_AVAILABLE),
-    ("every_available_problem_has_an_insight", len(INSIGHTS) == N_AVAILABLE),
+    # >= not == : SECTION 6 deliberately appends one bonus insight (explaining the
+    # two-tier verdict pattern) whenever any problem is NOT YET STATISTICALLY
+    # ROBUST this run -- a real, intentional addition, not a bug. The prior ==
+    # check falsely reported FAIL on every run where that bonus insight fires
+    # (found during Mega Project 2's retrain/re-verification pass; fixed here).
+    ("every_available_problem_has_an_insight", len(INSIGHTS) >= N_AVAILABLE),
 ]
 print("\n[INTEGRITY CHECKS]")
 for name, ok in checks:

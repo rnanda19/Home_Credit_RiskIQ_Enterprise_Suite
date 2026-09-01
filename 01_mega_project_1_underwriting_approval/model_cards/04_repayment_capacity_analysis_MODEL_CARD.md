@@ -1,4 +1,4 @@
-# Model Card — Problem 11: Repayment Capacity Analysis
+# Model Card — Problem 4: Repayment Capacity Analysis
 
 Notebook: `notebooks/04_repayment_capacity_analysis.ipynb`
 Service: `services/repayment_capacity_service.py` (FastAPI, port 8004) — ratios only, see below

@@ -18,11 +18,16 @@ folder fits in.
 | # | Problem | Notebook | Model card | Service |
 |---|---|---|---|---|
 | 1 | Credit Default Prediction | `notebooks/01_credit_default_prediction.ipynb` | [model card](model_cards/01_credit_default_prediction_MODEL_CARD.md) | `credit_default_scoring_service.py` :8001 |
-| 3 | Loan Application Approval | `notebooks/02_loan_application_approval.ipynb` | [model card](model_cards/02_loan_application_approval_MODEL_CARD.md) | `loan_approval_scoring_service.py` :8002 |
-| 4 | Credit Score Estimation (PDO scorecard) | `notebooks/03_credit_score_estimation.ipynb` | [model card](model_cards/03_credit_score_estimation_MODEL_CARD.md) | `credit_score_service.py` :8003 |
-| 11 | Repayment Capacity Analysis | `notebooks/04_repayment_capacity_analysis.ipynb` | [model card](model_cards/04_repayment_capacity_analysis_MODEL_CARD.md) | `repayment_capacity_service.py` :8004 (ratios only — see model card) |
-| 12 | Previous Application Outcomes | `notebooks/05_previous_application_outcomes.ipynb` | [model card](model_cards/05_previous_application_outcomes_MODEL_CARD.md) | none — portfolio-level analysis, see model card |
-| — | Executive Rollup (all 5 above) | `notebooks/06_mp1_executive_report.ipynb` | n/a — not a model | none |
+| 2 | Loan Application Approval | `notebooks/02_loan_application_approval.ipynb` | [model card](model_cards/02_loan_application_approval_MODEL_CARD.md) | `loan_approval_scoring_service.py` :8002 |
+| 3 | Credit Score Estimation (PDO scorecard) | `notebooks/03_credit_score_estimation.ipynb` | [model card](model_cards/03_credit_score_estimation_MODEL_CARD.md) | `credit_score_service.py` :8003 |
+| 4 | Repayment Capacity Analysis | `notebooks/04_repayment_capacity_analysis.ipynb` | [model card](model_cards/04_repayment_capacity_analysis_MODEL_CARD.md) | `repayment_capacity_service.py` :8004 (ratios only — see model card) |
+| 5 | Previous Application Outcomes | `notebooks/05_previous_application_outcomes.ipynb` | [model card](model_cards/05_previous_application_outcomes_MODEL_CARD.md) | none — portfolio-level analysis, see model card |
+| 6 | Executive Rollup (all 5 above) | `notebooks/06_mp1_executive_report.ipynb` | n/a — not a model | none |
+
+**Renumbered from this suite's original global 1/3/4/11/12 numbering to
+local 1-5 (+ 6 for the rollup) — matching Mega Project 2 and Mega Project
+3's convention.** See the root `CHANGELOG.md` for the full old→new mapping
+and rationale.
 
 All 5 problem notebooks are independently runnable; several also
 cross-validate against Notebook 01's real champion model when its bundle
@@ -80,9 +85,9 @@ notebook's own JSON artifact, and produces nothing new of its own.
 pip install -r 01_mega_project_1_underwriting_approval/services/requirements-services.txt
 export PYTHONPATH="$PWD/src:$PWD/01_mega_project_1_underwriting_approval/services"
 uvicorn credit_default_scoring_service:app --port 8001   # Problem 1
-uvicorn loan_approval_scoring_service:app --port 8002    # Problem 3
-uvicorn credit_score_service:app --port 8003             # Problem 4
-uvicorn repayment_capacity_service:app --port 8004        # Problem 11
+uvicorn loan_approval_scoring_service:app --port 8002    # Problem 2
+uvicorn credit_score_service:app --port 8003             # Problem 3
+uvicorn repayment_capacity_service:app --port 8004        # Problem 4
 ```
 
 Or via Docker Compose (build context is the **suite root**, not this

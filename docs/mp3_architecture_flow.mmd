@@ -1,0 +1,84 @@
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'16px','primaryTextColor':'#1a1a2e','lineColor':'#495057','edgeLabelBackground':'#ffffff'}}}%%
+flowchart TB
+    classDef dataStyle fill:#FFD43B,stroke:#E8590C,stroke-width:2px,color:#1a1a2e,font-weight:bold;
+    classDef hyperStyle fill:#4DABF7,stroke:#1864AB,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef bundleStyle fill:#9775FA,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef mpNodeStyle fill:#20C997,stroke:#0B7285,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef execStyle fill:#845EF7,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef serviceStyle fill:#51CF66,stroke:#2B8A3E,stroke-width:2px,color:#ffffff,font-weight:bold;
+
+    subgraph DATA["📂 Data (real, from Kaggle — never redistributed)"]
+        RAW["bureau.csv / installments_payments.csv\nPOS_CASH_balance.csv / credit_card_balance.csv"]
+    end
+
+    subgraph MP1IN["🔗 Mega Project 1 output (reused, never re-scored)"]
+        BUNDLE01[("notebook_01_champion_model.joblib")]
+    end
+
+    subgraph HYPER["🧩 src/ HYPER shared library (written once, imported everywhere)"]
+        FEAT["features/risk_segmentation_features\nreal per-axis feature engineering"]
+        REPORT["reporting/report_builder\nHTML + Word + Excel"]
+        UTIL["utils/performance_setup\nWARP resource ceilings"]
+        SERVE["serving/segment_assignment_common\nshared FastAPI builder"]
+    end
+
+    RAW --> NB02
+    RAW --> NB03
+    RAW --> NB04
+    BUNDLE01 -->|"loaded, not retrained"| NB01
+    HYPER -.shared by every notebook & service below.-> MP3
+
+    subgraph MP3["🏦 Mega Project 3 — Risk Segmentation"]
+        NB01["01 Data-Driven Risk Tier Construction\n(decision-tree PD thresholds,\nreused Mega Project 1 PD)"]
+        NB02["02 Credit Bureau Behavioral Segmentation\n(K-Means, 16-feature bureau set)"]
+        NB03["03 Repayment Behavior Segmentation\n(K-Means, instalment-loan conduct)"]
+        NB04["04 Revolving Credit Utilization Segmentation\n(K-Means, credit-card usage pattern)"]
+        NB05["05 Cross-Axis Risk-Return Synthesis\n(ranks all 4 axes, population-level, no service)"]
+        NB06["06 Executive Rollup\n(Real Segmentation Power comparison)"]
+    end
+
+    NB01 -->|"risk_tiers.csv"| NB02
+    NB01 -->|"risk_tiers.csv"| NB03
+    NB01 -->|"risk_tiers.csv"| NB04
+    NB01 -.soft dependency.-> NB05
+    NB02 -.soft dependency.-> NB05
+    NB03 -.soft dependency.-> NB05
+    NB04 -.soft dependency.-> NB05
+
+    NB02 -->|"notebook_02_segment_model.joblib"| BUNDLE02[("segment bundle 02")]
+    NB03 -->|"notebook_03_segment_model.joblib"| BUNDLE03[("segment bundle 03")]
+    NB04 -->|"notebook_04_segment_model.joblib"| BUNDLE04[("segment bundle 04")]
+
+    NB01 -->|report| NB06
+    NB02 -->|report| NB06
+    NB03 -->|report| NB06
+    NB04 -->|report| NB06
+    NB05 -->|report| NB06
+    NB06 --> EXEC["Executive report: HTML + Word + Excel\n(Real Segmentation Power)"]
+
+    HYPER -.segment-assignment builder used by 3 services.-> SERVICES
+
+    subgraph SERVICES["🚀 Deployable FastAPI services (Docker Compose)"]
+        SVC1["risk_tier_assignment_service :8007\n(tier boundaries from JSON summary,\nno model to load)"]
+        SVC2["bureau_segment_assignment_service :8008"]
+        SVC3["repayment_segment_assignment_service :8009"]
+        SVC4["utilization_segment_assignment_service :8010"]
+    end
+
+    NB01 -.tier_bin_edges in JSON summary.-> SVC1
+    BUNDLE02 --> SVC2
+    BUNDLE03 --> SVC3
+    BUNDLE04 --> SVC4
+
+    class RAW dataStyle;
+    class BUNDLE01,BUNDLE02,BUNDLE03,BUNDLE04 bundleStyle;
+    class FEAT,REPORT,UTIL,SERVE hyperStyle;
+    class NB01,NB02,NB03,NB04,NB05,NB06 mpNodeStyle;
+    class EXEC execStyle;
+    class SVC1,SVC2,SVC3,SVC4 serviceStyle;
+
+    style DATA fill:#FFF9DB,stroke:#F08C00,stroke-width:2px
+    style MP1IN fill:#F3F0FF,stroke:#7048E8,stroke-width:2px
+    style HYPER fill:#E7F5FF,stroke:#1971C2,stroke-width:2px
+    style MP3 fill:#E6FCF5,stroke:#0B7285,stroke-width:2px
+    style SERVICES fill:#EBFBEE,stroke:#2B8A3E,stroke-width:2px

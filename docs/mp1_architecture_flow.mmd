@@ -1,9 +1,17 @@
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'16px','primaryTextColor':'#1a1a2e','lineColor':'#495057','edgeLabelBackground':'#ffffff'}}}%%
 flowchart TB
-    subgraph DATA["Data (real, from Kaggle - never redistributed)"]
+    classDef dataStyle fill:#FFD43B,stroke:#E8590C,stroke-width:2px,color:#1a1a2e,font-weight:bold;
+    classDef hyperStyle fill:#4DABF7,stroke:#1864AB,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef bundleStyle fill:#9775FA,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef mpNodeStyle fill:#FF922B,stroke:#D9480F,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef execStyle fill:#845EF7,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef serviceStyle fill:#51CF66,stroke:#2B8A3E,stroke-width:2px,color:#ffffff,font-weight:bold;
+
+    subgraph DATA["📂 Data (real, from Kaggle — never redistributed)"]
         RAW["application_train/test.csv\nprevious_application.csv"]
     end
 
-    subgraph HYPER["src/ HYPER shared library (written once, imported everywhere)"]
+    subgraph HYPER["🧩 src/ HYPER shared library (written once, imported everywhere)"]
         FEAT["features/\nfeature engineering"]
         REPORT["reporting/report_builder\nHTML + Word + Excel"]
         UTIL["utils/performance_setup\nWARP resource ceilings"]
@@ -11,29 +19,16 @@ flowchart TB
     end
 
     RAW --> NB01
+    HYPER -.shared by every notebook & service below.-> MP1
 
-    subgraph MP1["Mega Project 1 - Underwriting & Approval Intelligence"]
-        NB01["01 Credit Default Prediction\n(RF / XGB / CatBoost / LightGBM screen\n-> champion, SHAP+LIME)"]
+    subgraph MP1["🏦 Mega Project 1 — Underwriting & Approval Intelligence"]
+        NB01["01 Credit Default Prediction\n(RF / XGB / CatBoost / LightGBM screen\n→ champion, SHAP+LIME)"]
         NB02["02 Loan Application Approval\n(independent 4-model screen\n+ optional NB01 PD cross-check)"]
         NB03["03 Credit Score Estimation\n(loads NB01 champion,\nPDO scorecard transform)"]
         NB04["04 Repayment Capacity Analysis\n(real ratios, data-driven quintiles,\ncross-checked vs NB01 PD)"]
         NB05["05 Previous Application Outcomes\n(funnel + chi-square association,\nmultinomial-resampled bootstrap)"]
-        NB06["06 Executive Rollup\n(consolidates 01-05's real\nillustrative $ impact - no new modeling)"]
+        NB06["06 Executive Rollup\n(consolidates 01-05's real\nillustrative $ impact — no new modeling)"]
     end
-
-    FEAT -.imported by.-> NB01
-    FEAT -.imported by.-> NB02
-    UTIL -.imported by.-> NB01
-    UTIL -.imported by.-> NB02
-    UTIL -.imported by.-> NB03
-    UTIL -.imported by.-> NB04
-    UTIL -.imported by.-> NB05
-    REPORT -.imported by.-> NB01
-    REPORT -.imported by.-> NB02
-    REPORT -.imported by.-> NB03
-    REPORT -.imported by.-> NB04
-    REPORT -.imported by.-> NB05
-    REPORT -.imported by.-> NB06
 
     NB01 -->|"notebook_01_champion_model.joblib"| BUNDLE01[("champion bundle 01")]
     NB02 -->|"notebook_02_champion_model.joblib"| BUNDLE02[("champion bundle 02")]
@@ -43,34 +38,34 @@ flowchart TB
     BUNDLE01 -.cross-validated against.-> NB04
     BUNDLE01 -.cross-validated against.-> NB05
 
-    NB01 --> REPORTS1["reports: JSON/HTML/Word/Excel"]
-    NB02 --> REPORTS2["reports: JSON/HTML/Word/Excel"]
-    NB03 --> REPORTS3["reports: JSON/HTML/Word/Excel"]
-    NB04 --> REPORTS4["reports: JSON/HTML/Word/Excel"]
-    NB05 --> REPORTS5["reports: JSON/HTML/Word/Excel"]
-    REPORTS1 --> NB06
-    REPORTS2 --> NB06
-    REPORTS3 --> NB06
-    REPORTS4 --> NB06
-    REPORTS5 --> NB06
+    NB01 -->|report| NB06
+    NB02 -->|report| NB06
+    NB03 -->|report| NB06
+    NB04 -->|report| NB06
+    NB05 -->|report| NB06
     NB06 --> EXEC["Executive report: HTML + Word + Excel\n(consolidated ROI, portfolio scale)"]
 
-    SERVE -.built on.-> SVC1
-    SERVE -.built on.-> SVC2
-    SERVE -.built on.-> SVC3
+    HYPER -.serving builder used by all 4 services.-> SERVICES
 
-    subgraph SERVICES["Deployable FastAPI services (Docker Compose)"]
+    subgraph SERVICES["🚀 Deployable FastAPI services (Docker Compose)"]
         SVC1["credit_default_scoring_service :8001"]
         SVC2["loan_approval_scoring_service :8002"]
         SVC3["credit_score_service :8003"]
-        SVC4["repayment_capacity_service :8004\n(ratios only - no tier, see model card)"]
+        SVC4["repayment_capacity_service :8004\n(ratios only — no tier, see model card)"]
     end
 
     BUNDLE01 --> SVC1
     BUNDLE01 --> SVC3
     BUNDLE02 --> SVC2
 
-    style DATA fill:#f4f4f4,stroke:#888
-    style HYPER fill:#eef5ff,stroke:#4a7fd6
-    style MP1 fill:#fff8ee,stroke:#d69a4a
-    style SERVICES fill:#eefaf0,stroke:#4ab06a
+    class RAW dataStyle;
+    class FEAT,REPORT,UTIL,SERVE hyperStyle;
+    class BUNDLE01,BUNDLE02 bundleStyle;
+    class NB01,NB02,NB03,NB04,NB05,NB06 mpNodeStyle;
+    class EXEC execStyle;
+    class SVC1,SVC2,SVC3,SVC4 serviceStyle;
+
+    style DATA fill:#FFF9DB,stroke:#F08C00,stroke-width:2px
+    style HYPER fill:#E7F5FF,stroke:#1971C2,stroke-width:2px
+    style MP1 fill:#FFF4E6,stroke:#E8590C,stroke-width:2px
+    style SERVICES fill:#EBFBEE,stroke:#2B8A3E,stroke-width:2px

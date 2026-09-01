@@ -1,4 +1,4 @@
-# Model Card — Problem 12: Previous Application Outcomes
+# Model Card — Problem 5: Previous Application Outcomes
 
 Notebook: `notebooks/05_previous_application_outcomes.ipynb`
 Service: none — this is a portfolio-level statistical analysis, not a
@@ -37,7 +37,7 @@ real chi-square test of association. There is no classifier and no
 
 ## Statistical robustness verdict vs. pipeline integrity checks
 
-Same distinction as Problem 11's model card (`04_repayment_capacity_analysis_MODEL_CARD.md`)
+Same distinction as Problem 4's model card (`04_repayment_capacity_analysis_MODEL_CARD.md`)
 and `CHANGELOG.md` entry [1.0.1] — this notebook's Statistical Robustness
 Verdict (chi-square significance, bootstrap-CI-excludes-zero on Cramer's V,
 funnel-distribution stability) is a separate, stricter gate from its

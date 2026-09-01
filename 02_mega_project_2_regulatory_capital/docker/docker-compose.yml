@@ -1,0 +1,18 @@
+# Mega Project 2 — real deployable scoring services (2 problems, 1 shared image).
+# Run from the suite root: docker compose -f 02_mega_project_2_regulatory_capital/docker/docker-compose.yml up --build
+services:
+  capital-requirement:            # Problem 1
+    build:
+      context: ../../
+      dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
+    command: ["uvicorn", "capital_requirement_service:app", "--host", "0.0.0.0", "--port", "8005"]
+    ports:
+      - "8005:8005"
+
+  macro-stress-testing:           # Problem 4
+    build:
+      context: ../../
+      dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
+    command: ["uvicorn", "stress_testing_service:app", "--host", "0.0.0.0", "--port", "8006"]
+    ports:
+      - "8006:8006"

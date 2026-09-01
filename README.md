@@ -15,13 +15,17 @@ expect — built end-to-end on the [Home Credit Default
 Risk](https://www.kaggle.com/competitions/home-credit-default-risk) Kaggle
 dataset.
 
-## Status — 1 of 5 Mega Projects built
+## Status — 3 of 5 Mega Projects built
 
-**Mega Project 1 (Underwriting & Approval Intelligence) is built, verified,
-and hardened** across 5 real underwriting problems. Mega Projects 2–5 are
-scoped and reserved in this repo's structure (see [Roadmap](#roadmap)) but
-not yet built — this README says so plainly rather than implying a fuller
-build. Every claim below about "what's real" applies to Mega Project 1.
+**Mega Projects 1-3 are built, verified, and hardened** — 18 real
+notebooks (5 problems + 1 executive rollup, ×3) across underwriting &
+approval, Basel regulatory capital, and risk segmentation, each with real
+deployable FastAPI scoring services, Docker Compose orchestration, a
+pytest suite, and complete fixture-generated sample reports. Mega Projects
+4-5 are scoped and reserved in this repo's structure (see
+[Roadmap](#roadmap)) but not yet built — this README says so plainly
+rather than implying a fuller build. Every claim below about "what's real"
+applies to Mega Projects 1-3.
 
 ## Table of Contents
 
@@ -43,12 +47,14 @@ build. Every claim below about "what's real" applies to Mega Project 1.
 | Area | Evidence in this repo |
 |---|---|
 | Credit risk modeling | XGBoost / RandomForest / CatBoost / LightGBM screened head-to-head per problem → champion selected on held-out data; PD-to-score (PDO) scorecard transform; calibration validated by decile |
+| Regulatory capital & stress testing | Basel retail-IRB Vasicek/ASRF closed-form capital formula (real, cited); real Monte Carlo simulation of the same model for Economic Capital/VaR/Expected Shortfall; conditional-PD-given-Z macro stress scenarios (Baseline/Adverse/Severely Adverse); real HHI portfolio-concentration analysis |
+| Unsupervised segmentation | Data-driven K-Means clustering (silhouette-selected K, never fixed by hand) across 3 independent behavioral feature sets; Cramer's V cross-axis independence testing; data-driven PD-quantile risk tiering via a fitted decision tree |
 | Statistical rigor | Chi-square association testing, multinomial-resampled bootstrap significance (not naive resampling — see `BENCHMARKS.md`), confidence-interval-based robustness gates distinct from structural checks |
 | Explainable AI | SHAP (global importance + beeswarm) and LIME (per-instance) explanations shipped with every trained model, not added after the fact |
 | Model risk & governance | Per-problem `MODEL_CARD.md`, two independent check families per run, honest "not recommended for production" verdicts when a robustness gate fails — see [below](#model-risk--governance) |
-| MLOps / deployment | 4 deployable FastAPI scoring services, Docker Compose orchestration, pytest coverage, 2-workflow CI (GitHub Actions) |
+| MLOps / deployment | 10 deployable FastAPI scoring services across 3 Mega Projects (4 + 2 + 4), Docker Compose orchestration per Mega Project, pytest coverage (bit-identical service verification), 2-workflow CI (GitHub Actions) |
 | Software engineering | Shared library (`src/`) instead of copy-pasted logic across problems, enforced resource ceilings before any heavy import, fixed-seed reproducibility, a real verification protocol (below) — not "it ran on my machine" |
-| Communication | Executive rollup in HTML + Word + Excel, SMART-format insights, one model card per problem written for a non-modeler to read |
+| Communication | Executive rollup in HTML + Word + Excel per Mega Project, SMART-format insights, one model card per problem written for a non-modeler to read |
 
 ## Real Output — Explainability & Model Selection
 
@@ -61,11 +67,16 @@ fixture-vs-real disclosure repeated in full.
 |---|---|
 | ![Model screening](docs/sample_outputs/sample_model_screening.png) | ![SHAP explainability](docs/sample_outputs/sample_shap_explainability.png) |
 
-**Want the full, formatted deliverables?**
-[`01_mega_project_1_underwriting_approval/sample_reports/`](01_mega_project_1_underwriting_approval/sample_reports/README.md)
-has the real HTML dashboard, Word report, and Excel workbook this suite
-generates for all 5 problems, plus the consolidated executive rollup in
-the same 3 formats — 18 files. Same fixture caveat as everywhere else in
+**Want the full, formatted deliverables?** Each Mega Project's own
+`sample_reports/` folder has the real HTML dashboard, Word report, and
+Excel workbook this suite generates for every problem, plus the
+consolidated executive rollup in the same 3 formats:
+[Mega Project 1](01_mega_project_1_underwriting_approval/sample_reports/README.md)
+(18 files, 5 problems + rollup),
+[Mega Project 2](02_mega_project_2_regulatory_capital/sample_reports/README.md)
+(18 files, 5 problems + rollup),
+[Mega Project 3](03_mega_project_3_risk_segmentation/sample_reports/README.md)
+(18 files, 5 problems + rollup). Same fixture caveat as everywhere else in
 this repo. **A note on how GitHub actually opens these when you click
 them**, so there's no surprise: `.csv` files render as a table right in
 the browser; `.html` files show GitHub's raw-source view, not a rendered
@@ -81,12 +92,30 @@ Once GitHub Pages is enabled on this repo (see the push script's `-Public`
 flag), these are real, live, rendered pages — not raw source:
 
 - **[Live site index](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/)**
+
+**Mega Project 1 — Underwriting & Approval Intelligence**
 - [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp1_executive_dashboard.html)
 - [Problem 1 — Credit Default Prediction](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_01_dashboard.html)
-- [Problem 3 — Loan Application Approval](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_02_dashboard.html)
-- [Problem 4 — Credit Score Estimation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_03_dashboard.html)
-- [Problem 11 — Repayment Capacity Analysis](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_04_dashboard.html)
-- [Problem 12 — Previous Application Outcomes](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_05_dashboard.html)
+- [Problem 2 — Loan Application Approval](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_02_dashboard.html)
+- [Problem 3 — Credit Score Estimation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_03_dashboard.html)
+- [Problem 4 — Repayment Capacity Analysis](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_04_dashboard.html)
+- [Problem 5 — Previous Application Outcomes](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_05_dashboard.html)
+
+**Mega Project 2 — Regulatory Capital & Stress Testing**
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_executive_dashboard.html)
+- [Problem 1 — Expected Loss & Capital Requirement](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_01_dashboard.html)
+- [Problem 2 — Basel RWA Portfolio Analytics](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_02_dashboard.html)
+- [Problem 3 — Economic Capital & Unexpected Loss](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_03_dashboard.html)
+- [Problem 4 — Macro Stress Testing](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_04_dashboard.html)
+- [Problem 5 — Capital Concentration by Segment](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_05_dashboard.html)
+
+**Mega Project 3 — Risk Segmentation**
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_executive_dashboard.html)
+- [Problem 1 — Data-Driven Risk Tier Construction](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_01_dashboard.html)
+- [Problem 2 — Credit Bureau Behavioral Segmentation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_02_dashboard.html)
+- [Problem 3 — Repayment Behavior Segmentation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_03_dashboard.html)
+- [Problem 4 — Revolving Credit Utilization Segmentation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_04_dashboard.html)
+- [Problem 5 — Cross-Axis Risk-Return Synthesis](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_05_dashboard.html)
 
 **Do not click the `.html` files directly in GitHub's file browser** (e.g.
 under `docs/dashboards/` or `sample_reports/`) — GitHub shows raw source
@@ -111,9 +140,12 @@ check families run on every notebook, every time:
 A model can pass every integrity check and still be honestly reported
 **"NOT RECOMMENDED FOR PRODUCTION YET"** if it fails a robustness gate —
 this suite surfaces that outcome instead of hiding it (see the dashboard
-below: 2 of Mega Project 1's 5 problems currently read that way). Every
-problem's `MODEL_CARD.md` documents its gate-by-gate results and the
-`.joblib` bundle contract its scoring service depends on.
+below: 2 of Mega Project 1's 5 problems currently read that way; Mega
+Projects 2 and 3 report the same two-tier verdict separately for each of
+their own problems in their own `MODEL_CARD.md` files). Every problem's
+`MODEL_CARD.md` documents its gate-by-gate results and, where a service
+depends on a persisted model, the `.joblib` bundle contract that service
+depends on.
 
 This mirrors the independent-validation, documented-limitations,
 no-result-without-a-check discipline that model-risk-management functions
@@ -140,34 +172,48 @@ measured, so no suite-wide $ figure is restated here.
 
 | Metric | Value |
 |---|---|
-| Mega Projects built / planned | 1 / 5 |
-| Real problems covered (Mega Project 1) | 5 (Problems 1, 3, 4, 11, 12) |
-| Notebooks (Mega Project 1) | 6 — 5 problem notebooks + 1 executive rollup |
-| Deployable scoring services (Mega Project 1) | 4 (FastAPI, Docker Compose) |
+| Mega Projects built / planned | 3 / 5 |
+| Real problems covered (Mega Projects 1-3) | 15 (5 per Mega Project, + 1 executive rollup each) |
+| Notebooks (Mega Projects 1-3) | 18 — 5 problem notebooks + 1 executive rollup, ×3 |
+| Deployable scoring services (Mega Projects 1-3) | 10 total — 4 (MP1) + 2 (MP2) + 4 (MP3), all FastAPI, Docker Compose per Mega Project |
 | Verification protocol per notebook | execute end-to-end (0 errors) → clear outputs → `nbformat` validate → LibreOffice headless recalc on every generated workbook → Playwright network-blocked check on every dashboard |
-| Model cards | 1 per problem, documenting the joblib bundle contract each service depends on |
+| Model cards | 1 per problem (15 total), documenting the joblib bundle contract each service depends on where applicable |
 | Reproducibility | `RANDOM_SEED = 42` everywhere randomness is involved |
 
 ## Repository Structure
 
 ```
 .
-├── 00_executive_rollup_report/             # suite-wide rollup — honest placeholder until MP2-5 exist
+├── 00_executive_rollup_report/             # suite-wide rollup — honest placeholder until MP4-5 exist too
 ├── src/                                     # shared library (pip installable, see below)
 │   ├── features/                              # feature engineering
 │   ├── reporting/                              # HTML + Word + Excel report builder
-│   ├── serving/                                 # shared FastAPI scoring-service builder
+│   ├── serving/                                 # shared FastAPI service builders (scoring + segment-assignment)
 │   └── utils/                                     # resource governance + statistical checks
 ├── 01_mega_project_1_underwriting_approval/  # Mega Project 1 — built & hardened
 │   ├── README.md
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
 │   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
-│   ├── services/                                 # deployable FastAPI scoring services
+│   ├── services/                                 # 4 deployable FastAPI scoring services
 │   ├── docker/                                     # Dockerfile + docker-compose.yml
 │   └── tests/                                       # pytest suite for the services
-├── 02_mega_project_2_regulatory_capital/     # scoped, not yet built
-├── 03_mega_project_3_risk_segmentation/      # scoped, not yet built
+├── 02_mega_project_2_regulatory_capital/     # Mega Project 2 — built & hardened
+│   ├── README.md
+│   ├── notebooks/                              # 01-05 problems + 06 executive rollup
+│   ├── model_cards/                             # one MODEL_CARD.md per problem
+│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
+│   ├── services/                                 # 2 deployable FastAPI scoring services (capital, stress testing)
+│   ├── docker/                                     # Dockerfile + docker-compose.yml
+│   └── tests/                                       # pytest suite for the services
+├── 03_mega_project_3_risk_segmentation/      # Mega Project 3 — built & hardened
+│   ├── README.md
+│   ├── notebooks/                              # 01-05 problems + 06 executive rollup
+│   ├── model_cards/                             # one MODEL_CARD.md per problem
+│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
+│   ├── services/                                 # 4 deployable FastAPI segment-assignment services
+│   ├── docker/                                     # Dockerfile + docker-compose.yml
+│   └── tests/                                       # pytest suite for the services
 ├── 04_mega_project_4_delinquency_prevention/ # scoped, not yet built
 ├── 05_mega_project_5_liquidity_cashflow/     # scoped, not yet built
 ├── data/{raw,processed}/                     # empty (.gitkeep only) — download the real dataset yourself
@@ -192,12 +238,16 @@ cd Home_Credit_RiskIQ_Enterprise_Suite
 pip install -e ".[dev,serving,explainability]"
 ```
 
-Then follow
-[`01_mega_project_1_underwriting_approval/README.md`](01_mega_project_1_underwriting_approval/README.md)
-to download the real dataset and run notebooks **01 → 02 → 03 → 04 → 05 →
-06**, in that order — 03, 04, and 05 load the champion model bundle that 01
-and 02 produce, and 06 (the executive rollup) consolidates all five
-notebooks' reports, so it must run last.
+Then follow each Mega Project's own README to download the real dataset
+and run its notebooks **01 → 02 → 03 → 04 → 05 → 06**, in that order —
+later notebooks in each Mega Project depend on earlier ones' output
+(a champion model bundle, a persisted segment model, or a prior
+notebook's report), and 06 (the executive rollup) consolidates all five
+problem notebooks' reports, so it must run last in every case:
+
+- [`01_mega_project_1_underwriting_approval/README.md`](01_mega_project_1_underwriting_approval/README.md) — Underwriting & Approval Intelligence
+- [`02_mega_project_2_regulatory_capital/README.md`](02_mega_project_2_regulatory_capital/README.md) — Regulatory Capital & Stress Testing (needs Mega Project 1 / Notebook 01's champion model bundle for its own real PD)
+- [`03_mega_project_3_risk_segmentation/README.md`](03_mega_project_3_risk_segmentation/README.md) — Risk Segmentation (needs Mega Project 1 / Notebook 01's champion model bundle for its own real PD)
 
 ```bash
 make install-dev     # editable install + dev/serving/explainability extras
@@ -240,17 +290,17 @@ LibreOffice headless (workbook recalculation check) · Playwright
 
 ## Roadmap
 
-- Build out Mega Projects 2, 3, 4, and 5 to the same standard as Mega
-  Project 1 (real notebooks, hardening pass, model cards, services where
-  applicable) — once at least one more is built,
-  `00_executive_rollup_report/` gets a real, measured suite-wide rollup.
-  See each Mega Project's own `README.md` for the business problem it's
-  scoped to cover.
-- Kaggle notebook/dataset packaging for Mega Project 1.
+- Build out Mega Projects 4 and 5 to the same standard as Mega Projects
+  1-3 (real notebooks, hardening pass, model cards, services where
+  applicable) — once all 5 are built, `00_executive_rollup_report/` gets
+  a real, measured suite-wide rollup. See each Mega Project's own
+  `README.md` for the business problem it's scoped to cover.
+- Kaggle notebook/dataset packaging for Mega Projects 1-3.
 - A repo-wide `black` reformat (currently advisory-only in CI/Makefile —
   see `CHANGELOG.md`'s "Known trade-offs").
 - An actual `docker build`/`docker run` verification once Docker access is
-  available (currently verified structurally only — see `BENCHMARKS.md`).
+  available (currently verified structurally only for all 3 built Mega
+  Projects — see `BENCHMARKS.md`).
 
 ## Repository Hardening
 
@@ -258,6 +308,19 @@ This repo has been through several disclosed hardening passes — every real
 bug found and fixed, every folder-naming correction, and every scope
 change is written up in [`CHANGELOG.md`](CHANGELOG.md), most recently:
 
+- **[1.8.1]** — closed out the remaining top-level pieces of the Mega
+  Project 2/3 hardening pass: fixed a real stale-path bug in Mega Project
+  1's own `docker/Dockerfile`/`docker-compose.yml` (left over from the
+  `[1.1.0]` restructure and never caught until now), extended GitHub
+  Pages and both CI workflows to cover Mega Projects 2 and 3, and updated
+  this README.
+- **[1.8.0]** — Mega Project 3 hardening: added real joblib persistence
+  for its 3 K-Means clustering notebooks, 4 deployable FastAPI
+  segment-assignment services, Docker Compose, pytest suite, and the
+  complete 18-file `sample_reports/` set.
+- **[1.7.0]** — Mega Project 2 hardening: 2 deployable FastAPI scoring
+  services (capital requirement, stress testing), Docker Compose, pytest
+  suite, and the complete 18-file `sample_reports/` set.
 - **[1.3.0]** — added GitHub Pages live dashboard hosting, and corrected
   README claims about how GitHub actually renders `.html`/`.docx`/`.xlsx`
   files when clicked (it mostly doesn't — see [Live Dashboards](#live-dashboards)).

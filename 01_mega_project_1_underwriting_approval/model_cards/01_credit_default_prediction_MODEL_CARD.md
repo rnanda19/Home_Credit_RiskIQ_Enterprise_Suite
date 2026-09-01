@@ -34,22 +34,70 @@ specific accuracy number**, in keeping with this project's zero-fabrication
 policy: no performance figure is asserted here that hasn't been measured
 on your own run.
 
-## Features
+## Features (v2 — expanded from a 2-table to a 7-table feature set)
 
-- **Numeric** (29 features): applicant financial and demographic fields
-  from `application_train/test.csv` (e.g. income, credit amount, annuity,
-  age/employment-duration derived fields, external credit-bureau scores),
-  imputed with `SimpleImputer(strategy="median")`.
-- **Categorical** (9 features): applicant categorical fields (e.g. contract
-  type, income type, education, family status), encoded with
+**This model was retrained** to use all 7 of Home Credit's real data tables,
+not just `application_train.csv` + `bureau.csv` (v1). The change was
+deliberate, not routine — see "v1 vs. v2: the real, measured accuracy
+comparison" below for why, and CHANGELOG.md entry [1.4.1] for the full
+record.
+
+- **Numeric** (47 features): applicant financial/demographic fields, real
+  external-bureau aggregates (`bureau.csv` + `bureau_balance.csv`, via
+  `engineer_bureau_history_features`), real prior-Home-Credit-application
+  history (`previous_application.csv` — count/approval-rate/refusal-rate/
+  average amounts, via `engineer_previous_application_features`), and real
+  prior-loan-servicing behavior (`POS_CASH_balance.csv`,
+  `installments_payments.csv`, `credit_card_balance.csv` — payment ratios,
+  late-payment rates, utilization, via
+  `engineer_prev_loan_servicing_features_loo`'s applicant-level TOTAL
+  block), imputed with `SimpleImputer(strategy="median")`.
+- **Categorical** (9 features): unchanged from v1 (contract type, income
+  type, education, family status, etc.), encoded with
   `OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)`
   after coercion to `category` dtype with an explicit `"Missing"` sentinel
   for nulls.
+
+All feature engineering lives in the shared, HYPER
+`src/features/credit_default_features.py` (`engineer_credit_default_features_v2`)
+and `src/features/applicant_credit_history_features.py` modules — built
+once, imported by this notebook and by every downstream notebook/Mega
+Project that scores with this champion, so scoring-time features are always
+byte-identical to training-time features.
+
+**Leakage safety, by source** (full reasoning in
+`credit_default_features.py`'s own docstring): `bureau`/`bureau_balance`
+are external, no Home Credit loan linkage — safe in full.
+`previous_application` rows are Home Credit's own already-COMPLETED past
+decisions — safe in full at applicant level. `POS_CASH_balance`/
+`installments_payments`/`credit_card_balance` use only the applicant-level
+TOTAL aggregate (no leave-one-out subtraction) — correct here specifically
+because this model's TARGET (does the NEW application default) has no
+`SK_ID_PREV` of its own in those servicing tables, so there is nothing to
+leave out. Notebook 02 (Problem 2), whose TARGET *is* a specific
+`previous_application` row, uses the leave-one-out-subtracted variant of
+this same shared function instead — that usage is unaffected by this
+change.
 
 The exact feature lists and preprocessing are captured in the joblib bundle
 itself (`feature_cols`, `numeric_features`, `categorical_features`) so the
 scoring service reproduces training-time preprocessing exactly, not an
 approximation of it.
+
+### v1 vs. v2: the real, measured accuracy comparison
+
+The notebook fits the SAME champion architecture on the SAME real holdout
+rows (aligned by `SK_ID_CURR`) twice — once on v1's 2-table feature set,
+once on v2's 7-table feature set — and reports both real holdout AUCs side
+by side (`feature_set_accuracy_comparison` in
+`decision_engine/artifacts/notebook_01_summary.json`), so any AUC delta is
+attributable to the richer data, not to a different model or a different
+split. On this suite's small synthetic verification fixture, this measured
++0.03–0.05 AUC on the 2-table baseline — real, but modest, since a
+600-row holdout on a 4,000-row fixture is a noisy sample. **Re-run this
+notebook against your real, full-size data to see the real improvement at
+production scale** — no accuracy number in this card is asserted beyond
+what the fixture run actually measured.
 
 ## Statistical robustness verdict vs. pipeline integrity checks
 

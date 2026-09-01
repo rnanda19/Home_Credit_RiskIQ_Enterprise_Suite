@@ -17,9 +17,9 @@ jobs:
       - name: Install lint tools
         run: pip install pyflakes black
       - name: pyflakes (advisory - does not fail the build)
-        run: pyflakes src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ || true
+        run: pyflakes src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ || true
       - name: black --check (advisory - repo-wide reformat deliberately deferred)
-        run: black --check --diff src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ || true
+        run: black --check --diff src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ || true
 
   security-scan:
     runs-on: ubuntu-latest
@@ -32,4 +32,4 @@ jobs:
         run: pip install bandit
       - name: bandit security scan of src/ and services/ (BLOCKING - excludes tests/ to
           avoid false positives on test fixtures/assertions)
-        run: bandit -r src/ 01_mega_project_1_underwriting_approval/services/ -ll
+        run: bandit -r src/ 01_mega_project_1_underwriting_approval/services/ 02_mega_project_2_regulatory_capital/services/ 03_mega_project_3_risk_segmentation/services/ -ll

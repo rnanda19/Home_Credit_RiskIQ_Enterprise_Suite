@@ -26,7 +26,7 @@
 </head>
 <body>
   <h1>Home Credit RiskIQ Enterprise Suite</h1>
-  <p class="subtitle">Live dashboards — Mega Project 1: Underwriting &amp; Approval Intelligence</p>
+  <p class="subtitle">Live dashboards — Mega Projects 1–3: Underwriting &amp; Approval · Regulatory Capital · Risk Segmentation</p>
 
   <div class="banner">
     <strong>Fixture-verification output, not real-data results.</strong>
@@ -39,13 +39,11 @@
     for how to generate the real version yourself.
   </div>
 
-  <h2>Executive Rollup</h2>
+  <h2>Mega Project 1 — Underwriting &amp; Approval Intelligence</h2>
   <a class="card" href="dashboards/mp1_executive_dashboard.html">
     <div class="name">Mega Project 1 — Executive Dashboard</div>
     <div class="desc">Consolidates all 5 problems below into one executive-level view: SMART-format insights, illustrative $ impact, deployment verdicts.</div>
   </a>
-
-  <h2>Problem Dashboards</h2>
   <a class="card" href="dashboards/notebook_01_dashboard.html">
     <div class="name">Problem 1 — Credit Default Prediction</div>
     <div class="desc">XGBoost champion · SHAP + LIME explainability · calibration-by-decile validation</div>
@@ -65,6 +63,58 @@
   <a class="card" href="dashboards/notebook_05_dashboard.html">
     <div class="name">Problem 12 — Previous Application Outcomes</div>
     <div class="desc">Funnel + chi-square association · multinomial-resampled bootstrap significance</div>
+  </a>
+
+  <h2>Mega Project 2 — Regulatory Capital &amp; Stress Testing</h2>
+  <a class="card" href="dashboards/mp2_executive_dashboard.html">
+    <div class="name">Mega Project 2 — Executive Dashboard</div>
+    <div class="desc">The "Three Real Lenses on Capital" comparison — Pillar-1 Baseline, 99.9% Economic Capital (Monte Carlo), and Stressed Capital — plus cross-notebook consistency checks and deployment verdicts.</div>
+  </a>
+  <a class="card" href="dashboards/mp2_notebook_01_dashboard.html">
+    <div class="name">Problem 1 — Expected Loss &amp; Capital Requirement</div>
+    <div class="desc">Real Basel closed-form Vasicek/ASRF capital formula · 4 real segment definitions · EL, RWA, capital by exposure</div>
+  </a>
+  <a class="card" href="dashboards/mp2_notebook_02_dashboard.html">
+    <div class="name">Problem 2 — Basel RWA Portfolio Analytics</div>
+    <div class="desc">RWA density by segment and risk band · population-level portfolio analytics</div>
+  </a>
+  <a class="card" href="dashboards/mp2_notebook_03_dashboard.html">
+    <div class="name">Problem 3 — Economic Capital &amp; Unexpected Loss</div>
+    <div class="desc">Real Monte Carlo simulation of the same Vasicek model · 99.9% confidence-level economic capital</div>
+  </a>
+  <a class="card" href="dashboards/mp2_notebook_04_dashboard.html">
+    <div class="name">Problem 4 — Macro Stress Testing</div>
+    <div class="desc">Conditional-PD-given-Z stress scenarios (Baseline / Adverse / Severely Adverse) · real scenario capital deltas</div>
+  </a>
+  <a class="card" href="dashboards/mp2_notebook_05_dashboard.html">
+    <div class="name">Problem 5 — Capital Concentration by Segment</div>
+    <div class="desc">Real HHI concentration analysis across segment and risk-band dimensions</div>
+  </a>
+
+  <h2>Mega Project 3 — Risk Segmentation</h2>
+  <a class="card" href="dashboards/mp3_executive_dashboard.html">
+    <div class="name">Mega Project 3 — Executive Dashboard</div>
+    <div class="desc">Real Segmentation Power comparison across all 4 axes, real cross-notebook consistency checks, SMART-format insights, per-problem verdicts.</div>
+  </a>
+  <a class="card" href="dashboards/mp3_notebook_01_dashboard.html">
+    <div class="name">Problem 1 — Data-Driven Risk Tier Construction</div>
+    <div class="desc">Data-driven PD-quantile tiering · reused, never re-scored, from Mega Project 1's champion PD</div>
+  </a>
+  <a class="card" href="dashboards/mp3_notebook_02_dashboard.html">
+    <div class="name">Problem 2 — Credit Bureau Behavioral Segmentation</div>
+    <div class="desc">Real unsupervised K-Means over a 16-feature external bureau behavioral set · real Cramer's V independence check</div>
+  </a>
+  <a class="card" href="dashboards/mp3_notebook_03_dashboard.html">
+    <div class="name">Problem 3 — Repayment Behavior Segmentation</div>
+    <div class="desc">Real K-Means over the applicant's own instalment-loan repayment conduct</div>
+  </a>
+  <a class="card" href="dashboards/mp3_notebook_04_dashboard.html">
+    <div class="name">Problem 4 — Revolving Credit Utilization Segmentation</div>
+    <div class="desc">Real K-Means over previous-loan revolving credit-card usage patterns · 3-way cross-axis independence evidence</div>
+  </a>
+  <a class="card" href="dashboards/mp3_notebook_05_dashboard.html">
+    <div class="name">Problem 5 — Cross-Axis Risk-Return Synthesis</div>
+    <div class="desc">Synthesizes all 4 segmentation axes into one risk-differentiation ranking</div>
   </a>
 
   <footer>

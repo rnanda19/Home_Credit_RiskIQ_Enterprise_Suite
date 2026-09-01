@@ -1,5 +1,5 @@
 """
-Problem 11 — Repayment Capacity Analysis — real deployable FastAPI service.
+Problem 4 — Repayment Capacity Analysis — real deployable FastAPI service.
 
 Notebook 04 is a statistical/tiering analysis, not a trained classifier (see
 its own notebook markdown: "not a predictive-model notebook, by design, not a
@@ -43,7 +43,7 @@ class RepaymentCapacityRequest(BaseModel):
 
 
 app = FastAPI(
-    title="Home Credit — Repayment Capacity Analysis (Problem 11)",
+    title="Home Credit — Repayment Capacity Analysis (Problem 4)",
     description="Real, deterministic repayment-capacity ratio formulas from Notebook 04 (no trained model).",
     version="1.0.0",
 )

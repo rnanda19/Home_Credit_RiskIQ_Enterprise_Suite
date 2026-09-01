@@ -24,7 +24,7 @@ situations:
    keyed to a specific previous_application row (SK_ID_PREV), and only contain
    servicing records for loans that were actually disbursed. A notebook whose
    TARGET is "was THIS previous_application row approved" (e.g. Notebook 02 /
-   Problem 3) cannot safely fold a row's own servicing history into its own
+   Problem 2) cannot safely fold a row's own servicing history into its own
    feature set -- that would leak the very approval outcome being predicted, and
    a naive per-applicant aggregate has exactly this problem whenever an applicant
    has more than one in-scope previous application. This function returns BOTH
@@ -185,3 +185,41 @@ def engineer_prev_loan_servicing_features_loo(
         "CC_CNT_RECORDS", "CC_MEAN_UTILIZATION", "CC_MEAN_BALANCE", "CC_SUM_SK_DPD",
     ]
     return totals_df, own_df, feature_names
+
+
+def engineer_previous_application_features(previous_application: pl.DataFrame) -> tuple[pl.DataFrame, list[str]]:
+    """Real, vectorized (WARP) `previous_application.csv` aggregation to one row
+    per SK_ID_CURR -- an applicant's own history of PAST Home Credit applications
+    (approved, refused, cancelled, unused-offer), as opposed to bureau.csv's
+    EXTERNAL credit history or POS/installments/credit_card's loan-SERVICING
+    history (both already covered by the two functions above in this module).
+
+    Leakage note: every row in `previous_application.csv` is a COMPLETED past
+    decision (Home Credit's own historical Approved/Refused/Cancelled/Unused
+    offer outcome on a PRIOR application) -- there is no SK_ID_PREV linkage to
+    whatever NEW application a downstream notebook's TARGET is about, so this is
+    safe to use in full, at SK_ID_CURR level, for any notebook in this suite
+    (the same convention `engineer_bureau_history_features` already documents for
+    bureau.csv, extended here to Home Credit's own application history).
+
+    Returns (agg, feature_names) where agg has one row per SK_ID_CURR with
+    `feature_names` (all null-filled to 0 already)."""
+    agg = (
+        previous_application.group_by("SK_ID_CURR")
+        .agg([
+            pl.len().alias("PREVAPP_CNT_TOTAL"),
+            (pl.col("NAME_CONTRACT_STATUS") == "Approved").sum().alias("PREVAPP_CNT_APPROVED"),
+            (pl.col("NAME_CONTRACT_STATUS") == "Refused").sum().alias("PREVAPP_CNT_REFUSED"),
+            pl.col("AMT_APPLICATION").mean().alias("PREVAPP_MEAN_AMT_APPLICATION"),
+            pl.col("AMT_CREDIT").mean().alias("PREVAPP_MEAN_AMT_CREDIT"),
+            pl.col("AMT_ANNUITY").mean().alias("PREVAPP_MEAN_AMT_ANNUITY"),
+            pl.col("DAYS_DECISION").max().alias("PREVAPP_DAYS_SINCE_LAST_DECISION"),
+        ])
+        .with_columns([
+            (pl.col("PREVAPP_CNT_APPROVED") / (pl.col("PREVAPP_CNT_TOTAL") + 1.0)).alias("PREVAPP_APPROVAL_RATE"),
+            (pl.col("PREVAPP_CNT_REFUSED") / (pl.col("PREVAPP_CNT_TOTAL") + 1.0)).alias("PREVAPP_REFUSAL_RATE"),
+        ])
+    )
+    feature_names = [c for c in agg.columns if c != "SK_ID_CURR"]
+    agg = agg.with_columns([pl.col(c).fill_null(0) for c in feature_names])
+    return agg, feature_names

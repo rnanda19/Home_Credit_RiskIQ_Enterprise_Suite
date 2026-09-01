@@ -1,0 +1,13 @@
+# Lean runtime dependencies for the 2 deployable scoring services only.
+# Both services are real, deterministic Basel/Vasicek FORMULA services (see
+# each file's own docstring) -- neither loads a trained model, so there is
+# deliberately no scikit-learn/xgboost/joblib/pandas dependency here at all
+# (unlike Mega Project 1's services, which do load a real .joblib bundle).
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+scipy>=1.11
+# regulatory_capital_features.py (imported for its real K()/correlation
+# functions) has a module-level `import polars as pl` even though these 2
+# services never touch a DataFrame -- pulled in so that import succeeds.
+polars>=0.20

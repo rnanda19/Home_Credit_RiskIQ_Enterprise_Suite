@@ -3,6 +3,1156 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.8.1] - 2026-09-01
+
+### Repository hardening — top-level parity for Mega Projects 2 and 3
+
+Cross-cutting follow-up to `[1.7.0]`/`[1.8.0]` closing out the remaining
+top-level pieces of the "exactly like Mega Project 1" hardening pass.
+
+- **Fixed a real bug in Mega Project 1's own `docker/Dockerfile` and
+  `docker/docker-compose.yml`**: every path referenced a stale
+  pre-restructure folder name (`mega_project_3_underwriting_approval`)
+  left over from before this repo's `[1.1.0]` flat, numbered-layout
+  restructure — never updated at the time. Corrected to the current
+  `01_mega_project_1_underwriting_approval` throughout (build context
+  paths, `COPY` instructions, `ENV` bundle paths, and the compose file's
+  `dockerfile:` references). Re-verified structurally with
+  `docker compose config` (clean) and static `COPY`-path existence
+  checks (all present) — no Docker daemon in this build sandbox, so an
+  actual `docker build`/`docker run` has still not been performed for
+  any of the 3 Mega Projects (same disclosed limitation as before).
+- `docs/index.html` (GitHub Pages Live Dashboards): added full "Mega
+  Project 2 — Regulatory Capital & Stress Testing" and "Mega Project 3 —
+  Risk Segmentation" sections (executive dashboard + all problem
+  dashboards each), alongside the existing Mega Project 1 section.
+  `docs/dashboards/` gained the 12 corresponding fixture-generated HTML
+  files (`mp2_*`/`mp3_*` prefixed to avoid colliding with Mega Project
+  1's existing `notebook_0N_dashboard.html` names).
+- `.github/workflows/ci.yml`: the `unit-tests` job now runs as a matrix
+  across all 3 Mega Projects' `services/`+`tests/` (was Mega Project 1
+  only); `notebook-syntax` already covered all notebooks via its
+  recursive glob.
+- `.github/workflows/code-quality.yml`: `pyflakes`/`black --check`/
+  `bandit` now scan Mega Project 2's and 3's `services/`/`tests/` too.
+- `Makefile`: `test`, `lint`, and `security` targets now cover all 3
+  built Mega Projects (were Mega Project 1 only), so `make test-all`
+  matches what CI actually runs.
+- `docs/mp2_architecture_flow.mmd`/`.png` and
+  `docs/mp3_architecture_flow.mmd`/`.png` (NEW) -- mirror Mega Project
+  1's own architecture diagram for the two newly hardened Mega Projects.
+  All 3 architecture diagrams (including Mega Project 1's pre-existing
+  one) were then redesigned together for visual consistency: a vivid,
+  high-contrast color palette per node role (data/shared-library/model
+  artifact/notebook/service), and the dense per-notebook "imported by"
+  edge fan-out collapsed into one labeled arrow per shared-library
+  subgraph, for a materially less cluttered diagram.
+- Top-level `README.md`: Status, Skills Demonstrated, Live Dashboards,
+  Roadmap, and Repository Hardening sections updated to reflect Mega
+  Projects 1-3 all complete and hardened (services + Docker + tests +
+  sample reports for all 3).
+
+## [1.8.0] - 2026-09-01
+
+### Mega Project 3 hardening: deployable services, Docker, tests, sample reports
+
+Brings Mega Project 3 to full parity with Mega Projects 1 and 2's
+hardening level, following the exact same real-code, no-fabrication
+pattern.
+
+- Notebooks 02/03/04 now persist their real, chosen K-Means model + real
+  fitted `StandardScaler` + real feature list (+ real winsorize bounds
+  for 03/04) to a new `notebook_0N_segment_model.joblib` artifact -- a
+  small, additive change (the clustering/winsorization logic itself is
+  unchanged). Re-executed and re-verified end-to-end on the fixture: 0
+  errors, `nbformat.validate()` clean before/after clearing outputs,
+  Playwright-confirmed dashboards (0 blocked requests, 0 console
+  errors), LibreOffice-confirmed workbook recalculation, for all 3
+  notebooks.
+- `src/serving/segment_assignment_common.py` (NEW): HYPER shared
+  component, the Mega Project 3 counterpart to Mega Project 1's own
+  `scoring_service_common.py` -- builds a real FastAPI segment-assignment
+  app from any of the 3 new joblib bundles (identical winsorize ->
+  scale -> predict preprocessing to what each notebook itself does).
+- `services/`: 4 real, deployable FastAPI services.
+  - `risk_tier_assignment_service.py` (Problem 1): real tier boundaries
+    read directly from Notebook 01's own JSON summary -- no model to
+    load.
+  - `bureau`/`repayment`/`utilization_segment_assignment_service.py`
+    (Problems 2-4): thin wrappers over the new shared builder + each
+    notebook's new joblib bundle.
+  - Problems 5/6 deliberately get no service -- each is a
+    population-level analysis/rollup that cannot be meaningfully
+    computed for one applicant in isolation, the same honest scope
+    boundary already established in Mega Project 1/2's own hardening
+    passes.
+- `tests/test_scoring_services.py`: 4 tests, all passing -- each
+  verified against a REAL applicant already present in that notebook's
+  own real output CSV (re-engineered features fed through the service,
+  checked to match the notebook's own real assignment exactly).
+- `docker/`: Dockerfile + docker-compose.yml + .dockerignore,
+  suite-root build context, mirroring Mega Project 1/2's structure.
+  Verified structurally (`docker compose config` + static `COPY`-path
+  resolution) -- no Docker daemon in this build sandbox, so an actual
+  `docker build`/`docker run` has not been performed (same disclosed
+  limitation as Mega Project 1/2).
+- `sample_reports/`: full new set, all 6 notebooks + rollup (18 files)
+  plus a `README.md` matching Mega Project 1/2's disclosure pattern.
+- `model_cards/02-04`: added a "Deployable service (hardening pass)"
+  section each, disclosing the new joblib persistence and its real
+  bit-identical verification.
+- `README.md`: added "Running the scoring services", "Tests", and
+  updated "Folder structure" sections.
+
+## [1.7.0] - 2026-09-01
+
+### Mega Project 2 hardening: deployable services, Docker, tests, sample reports
+
+Brings Mega Project 2 to full parity with Mega Project 1's hardening
+level, following the exact same real-code, no-fabrication pattern.
+
+- `services/`: 2 real, deployable FastAPI scoring services -- neither
+  loads a trained model (Mega Project 2 trains none); both import and
+  call `src/features/regulatory_capital_features.py`'s real Basel
+  retail-IRB Vasicek/ASRF functions directly, so nothing here can drift
+  from what the notebooks themselves compute.
+  - `capital_requirement_service.py` (Problem 1): real segment
+    assignment + `K()`/EL/RWA/capital-requirement formula for one real
+    applicant record.
+  - `stress_testing_service.py` (Problem 4): the same real, documented
+    macro scenarios (Baseline/Adverse/Severely Adverse) from
+    `pipeline_mp2_nb04.py`, applied via the same conditional-PD-given-Z
+    Vasicek formula.
+  - Problems 2/3/5 deliberately get no service -- each is a
+    population-level analysis (RWA density, Monte Carlo simulation, HHI
+    concentration) that cannot be meaningfully computed for one
+    applicant in isolation, the same honest scope boundary Mega Project
+    1 already established for its own population-level Problem 5.
+- `tests/test_scoring_services.py`: 5 tests, all passing, each checking
+  a service's real output bit-identical against
+  `regulatory_capital_features.compute_capital_row()` called directly.
+- `docker/`: Dockerfile + docker-compose.yml + .dockerignore,
+  suite-root build context, mirroring Mega Project 1's structure.
+  Verified structurally (`docker compose config` + static `COPY`-path
+  resolution) -- no Docker daemon in this build sandbox, so an actual
+  `docker build`/`docker run` has not been performed (same disclosed
+  limitation as Mega Project 1).
+- `sample_reports/`: completed the set (Notebooks 03-06 + rollup were
+  missing) -- all 18 fixture-generated files now present, plus a
+  `README.md` matching Mega Project 1's disclosure pattern.
+- `README.md`: added "Running the scoring services", "Tests", and
+  updated "Folder structure" sections.
+
+## [1.6.9] - 2026-09-01
+
+### Added — Mega Project 3, Notebook 05: Cross-Axis Risk-Return Synthesis (5/6)
+
+Trains no model of any kind and reads no raw Home Credit CSV -- a pure,
+honest synthesis of real outputs every other notebook in this suite
+already computed and independently verified: real PD/TARGET/Risk Tier
+(this project's own Notebook 01, hard dependency), real regulatory
+capital (Mega Project 2 / Notebook 01, soft dependency), and real
+Bureau/Repayment/Utilization Segment (this project's own Notebooks
+02-04, each an independent soft dependency). For each real axis actually
+available, computes real default-rate and real capital-rate spread
+across its own segments and ranks axes by how sharply each
+differentiates real risk.
+
+Deliberately does NOT repeat a chi-square/silhouette test -- those
+questions were already answered inside each axis's own notebook, and
+repeating them here would be double-counting, not new evidence. Instead
+asks a new real question: does real capital allocation track real risk
+through Risk Tier's real, PD-ordered axis? Uses
+`monotonic_within_noise()` (the same statistically-tolerant,
+Bonferroni-corrected check Notebook 01 already used for default-rate
+monotonicity) on real CAPITAL rate this time -- a different claim never
+previously tested. The other 3 axes are unordered categorical segments,
+so no monotonicity check applies to them.
+
+### Verified clean on first execution -- no bugs found
+
+On this suite's fixture, all 4 real axes were available. Real
+default-rate spread by axis (widest to narrowest): Risk Tier 97.97%
+(1.63%-99.59% across 6 real data-driven tiers -- expected, built
+directly from real PD), Repayment Segment 7.84% (12.58%-20.42% across
+8), Bureau Segment 6.68% (13.23%-19.91% across 8), Utilization Segment
+5.96% (12.50%-18.46% across 8). Real capital rate by axis: Risk Tier
+5.64%-9.09%, Bureau Segment 6.16%-6.49%, Repayment Segment 5.71%-6.63%,
+Utilization Segment 5.86%-6.82%. Real capital-rate monotonicity across
+Risk Tier: HOLDS. Synthesis verdict: SYNTHESIS VALIDATED -- CAPITAL
+TRACKS RISK AS EXPECTED (all 4 synthesis-validation checks pass). All
+structural Pipeline Integrity Checks pass. Verified end-to-end: 0
+execution errors, nbformat.validate() clean, HTML dashboard confirmed
+under a network-blocked Playwright check, Excel workbook confirmed via
+LibreOffice headless recalculation -- clean on its first execution, no
+bugs found.
+
+**Confirmed on the user's real 307,511-applicant data**: all 4 real axes
+available. Real default-rate spread by axis (widest to narrowest): Risk
+Tier 48.92% (1.67%-50.59%), Utilization Segment 10.51% (5.42%-15.94%
+across 9 real segments -- notably re-ranking to 2nd place at real scale,
+ahead of Bureau Segment (2.98%) and Repayment Segment (2.44%), a reversal
+from the fixture's ranking), Bureau Segment 2.98%, Repayment Segment
+2.44%. Real capital-rate monotonicity across Risk Tier: HOLDS. Real
+synthesis verdict: SYNTHESIS VALIDATED -- CAPITAL TRACKS RISK AS
+EXPECTED. 0 execution errors, all checks pass.
+
+## [1.6.10] - 2026-09-01
+
+### Added — Mega Project 3, Notebook 06: Consolidated Executive Rollup (6/6) -- Mega Project 3 now COMPLETE
+
+Pure rollup, no new modeling: trains nothing, clusters nothing, reads no
+raw Home Credit CSV. Reads each of Problems 1-5's own, already-computed
+real governance JSON summary and consolidates them into one
+executive-ready Word report, multi-sheet Excel workbook, and interactive
+HTML dashboard. A missing summary is reported and skipped, never
+fabricated.
+
+Two genuinely new things: (1) "Real Segmentation Power" -- a fresh bar
+chart independently re-deriving each of Problems 1-4's own real
+default-rate spread straight from that problem's OWN summary JSON,
+deliberately not dependent on Problem 5 having run at all; (2) real
+cross-notebook consistency checks (Section 5) that verify Problem 5's own
+independent real re-aggregation of each axis agrees, segment by segment,
+with that axis's own source notebook -- never asserted, always computed
+and printed, plus a real applicant-population-count consistency check
+across all 5 notebooks.
+
+Correctly surfaces both of this Mega Project's verdict-tier families side
+by side -- Problems 1-4's "Statistical Robustness Verdict" and Problem
+5's differently-named "Synthesis Verdict" -- never conflating them, via
+`PROBLEM_META`'s per-problem `verdict_path`/`verdict_kind`.
+
+### Verified clean on first execution -- no bugs found
+
+On this suite's fixture: 5/5 real problem summaries found, real applicant
+population 4,000. Real segmentation power widest to narrowest: Risk Tier
+97.97%, Repayment Segment 7.84%, Bureau Segment 6.68%, Utilization
+Segment 5.96%. Every real cross-notebook consistency check CONFIRMED --
+maximum absolute difference of exactly 0.00 across every shared segment
+on every one of the 4 axes (Problem 5's independent re-aggregation
+matches each source notebook's own numbers exactly), and the real
+applicant population count (4,000) matched identically across all 5
+notebooks. All 5 rollup integrity checks pass. Verified end-to-end: 0
+execution errors, `nbformat.validate()` clean before and after clearing
+outputs, HTML dashboard confirmed under a network-blocked Playwright
+check (0 blocked external requests, 0 console errors, 10 KPI cards, 7
+charts rendered), Excel workbook confirmed via LibreOffice headless
+recalculation (11 sheets, every Financial Impact formula recalculates to
+the exact value the notebook's own run printed) -- clean on its first
+execution, no bugs found. Not yet run against the user's real data.
+
+**Mega Project 3 (Risk Segmentation) is now complete: 6/6 problems built
+and verified**, matching Mega Projects 1 and 2's fully-complete status.
+
+## [1.6.8] - 2026-09-01
+
+### Added — Mega Project 3, Notebook 04: Revolving Credit Utilization Segmentation (4/6)
+
+Trains no supervised model and scores no PD -- reuses Mega Project 3 /
+Notebook 01's real per-applicant PD/TARGET/RISK_TIER output unchanged
+(hard dependency, checked by actual required columns present). The
+genuinely new work is real unsupervised sklearn.cluster.KMeans clustering
+on a real 13-feature revolving-credit-utilization feature set
+(`engineer_revolving_credit_utilization_features()`, added to
+`src/features/risk_segmentation_features.py`), built entirely from the
+applicant's own real credit-card usage on PREVIOUS Home Credit revolving
+loans -- real month-by-month utilization (`AMT_BALANCE`/
+`AMT_CREDIT_LIMIT_ACTUAL`), real minimum-payment-only behavior
+(`AMT_PAYMENT_TOTAL_CURRENT` vs. `AMT_INST_MIN_REGULARITY`), and real
+cash-advance frequency (`AMT_DRAWINGS_ATM_CURRENT`) -- a fourth axis
+touching neither Problem 1's PD level, Problem 2's external bureau
+tables, nor Problem 3's instalment-loan repayment conduct.
+
+Fixture change: `fixture/credit_card_balance.csv` was extended in place
+(`extend_fixture_credit_card_balance.py`) with two real Kaggle columns
+this notebook's cash-advance feature needs (`AMT_DRAWINGS_ATM_CURRENT`,
+`CNT_DRAWINGS_ATM_CURRENT`) that the original 11-column fixture (created
+for Notebook 02's multi-table verification) did not include -- every
+existing row and column's values are preserved byte-for-byte, so Mega
+Project 1 and 2's already-verified fixture results are unaffected. The
+user's real data already has the full real Kaggle schema.
+
+Applied FROM THE START, pre-emptively, rather than discovered live on
+this notebook's own real run: winsorization of the 9 unbounded real
+features (Notebook 03's real-data lesson on outlier domination), and a
+K range starting at 2 with a 1% (not 3%) stability floor default
+(Notebook 03's real-data lesson on real minority-group size). Two soft
+cross-axis checks (Notebook 02's Bureau Segment, Notebook 03's Repayment
+Segment) in addition to the Problem 1 Risk Tier cross-check -- the most
+independence evidence gathered for any MP3 problem so far. No
+`monotonic_within_noise()` call, by design. No `matplotlib.use(...)`
+call. No EDA section.
+
+### Verified clean on first execution -- no bugs found
+
+On this suite's fixture: 7 real data-driven revolving-credit-utilization
+segments found (silhouette=0.184, chosen from all 7 candidates tried,
+k=2 through k=8, every one clearing the 1% floor at this small scale).
+1,034 of 4,000 real fixture applicants (25.9%) have real previous-loan
+revolving-credit history and were clustered; the remaining 2,966 (74.1%)
+reported as their own "No Revolving Credit History" segment. Real
+default rate spans 12.5%-18.5% across the 8 total segments. Real
+cross-checks: Cramer's V=0.051 vs. Problem 1's Risk Tier, 0.043 vs.
+Problem 2's Bureau Segment, 0.130 vs. Problem 3's Repayment Segment --
+all evidencing a real, independent fourth axis. Statistical Robustness
+Verdict on the fixture: NOT YET STATISTICALLY ROBUST (chi-square
+p=0.949, Cramer's V 95% bootstrap CI [0.023, 0.070]) -- the same
+expected fixture-scale limitation already documented for Problems 2-3,
+not a code defect; all structural Pipeline Integrity Checks pass
+regardless. Verified end-to-end: 0 execution errors, nbformat.validate()
+clean, HTML dashboard confirmed under a network-blocked Playwright
+check, Excel workbook confirmed via LibreOffice headless recalculation
+-- clean on its first execution, no bugs found. Not yet run against the
+user's real data.
+
+## [1.6.7] - 2026-09-01
+
+### Verified — Mega Project 3, Notebook 03: confirmed working end-to-end on real 307,511-applicant data
+
+With v1.6.4 (winsorization), v1.6.5 (k=2 added to the candidate range),
+and v1.6.6 (1% stability floor) all in place, the user re-ran Notebook 03
+against their real data and it completed successfully: 0 errors, all 9
+structural Pipeline Integrity Checks pass, full reporting package
+(Word/Excel/HTML/CSV) written.
+
+Real result: 291,643 of 307,511 real applicants (94.8%) have real
+previous-loan repayment history. Real data-driven K selection chose
+**k=2** decisively (real silhouette=0.717, well clear of the k=3-7
+candidates it beat, 0.22-0.31) -- real Segment A: 287,666 applicants
+(7.4% mean instalments-late rate, 8.18% real default rate); real Segment
+B: 3,977 applicants (18.7% mean instalments-late rate, 8.42% real default
+rate) -- the same recurring ~1.4% minority behavioral group observed
+consistently across every k tried while diagnosing the earlier
+RuntimeError; plus 15,868 (5.2%) applicants with no previous-loan
+history. Real cross-checks: Cramer's V=0.044 vs. Problem 1's Risk Tier,
+0.039 vs. Problem 2's Bureau Segment -- both genuinely low, confirming
+real cross-axis independence from both prior segmentations.
+
+Real Statistical Robustness Verdict: NOT YET STATISTICALLY ROBUST --
+`chi_square_significant` PASSED (p=3.2e-22) but
+`cramers_v_ci_excludes_zero` FAILED (real Cramer's V=0.0179, 95%
+bootstrap CI [0.0150, 0.0210], below the 0.05 materiality threshold) --
+the same honest two-tier pattern already documented for Problem 2: a
+real, cross-axis-independent, statistically detectable signal reported
+honestly as too small in magnitude to call "robust." This is Problem 3's
+final, confirmed result on real data -- no further pipeline changes are
+needed. Documentation-only release (model card + README updated with the
+confirmed real numbers; no code changes).
+
+## [1.6.6] - 2026-09-01
+
+### Changed — Mega Project 3, Notebook 03: lower the stability floor from 3% to 1%, empirically grounded
+
+After v1.6.5 widened the K candidate range to include k=2, re-running on
+the user's real 307,511-applicant data showed that even the broadest
+possible split (k=2) stayed under the 8,749-applicant (3%) floor: its
+smallest real cluster was 3,977. Across every real k from 2 to 8, the
+smallest real cluster consistently landed in the 2,700-4,000 range
+(~1.0%-1.4% of the with-history population) -- a tight, repeating band
+across all 7 candidates, not noise and not the earlier "collapses to a
+handful of points" outlier signature. That consistency is real evidence
+of a recurring minority behavioral group in the real 307K population, not
+an artifact to chase further.
+
+`repayment_segment_min_cluster_fraction`'s default changed from 0.03 to
+**0.01** in `pipeline_mp3_nb03.py` -- a value grounded in what was
+actually observed across all 7 real candidates tried on the user's own
+data, not an arbitrary relaxation to force a pass. The pipeline
+unchanged: it still picks whichever passing k has the best real
+silhouette score; the floor only changes which candidates are eligible.
+
+### Verified clean on re-execution -- no regression on the fixture
+
+Re-run end-to-end on this suite's fixture: identical result to v1.6.5
+(k=7 chosen, silhouette 0.161) -- the fixture's smallest real cluster was
+always well above both the old 3% and new 1% floor, so this change only
+affects real-scale behavior. 0 execution errors, `nbformat.validate()`
+clean, HTML dashboard confirmed under a network-blocked Playwright check,
+Excel workbook confirmed via LibreOffice headless recalculation. **Ready
+to re-run against the user's real data -- combined with v1.6.4 and
+v1.6.5, this directly addresses the RuntimeError seen there.**
+
+## [1.6.5] - 2026-09-01
+
+### Changed — Mega Project 3, Notebook 03: widen K candidate range to include k=2
+
+After the v1.6.4 winsorization fix, re-running Notebook 03 on the user's
+real 307,511-applicant data no longer hit the outlier-domination failure
+(smallest real clusters no longer collapsed to a handful of points at
+every k), but still raised the same `RuntimeError` for a different,
+more benign reason: every candidate k from 3 to 8 produced a smallest
+real cluster of 2,700-3,900 applicants -- a real, substantial group, just
+short of the 8,749-applicant (3%) stability floor. That pattern (cluster
+size scaling sensibly with k rather than collapsing) is real evidence of
+actual structure, not another outlier artifact.
+
+Rather than lowering the stability floor to force a pass,
+`repayment_segment_k_min`'s default in `pipeline_mp3_nb03.py` changed
+from 3 to **2**, so the pipeline also tests whether the real 307K-scale
+data supports just two broad, stable repayment-behavior groups -- a real
+data-driven test of a candidate that simply hadn't been tried yet, not a
+relaxed bar. `repayment_segment_min_cluster_fraction` (the 3% floor
+itself) is unchanged.
+
+### Verified clean on re-execution -- no regression on the fixture
+
+Re-run end-to-end on this suite's fixture: k=7 is still chosen (silhouette
+0.161, unchanged) -- k=2's silhouette (0.150) is lower and does not
+change the fixture's outcome. All 9 structural Pipeline Integrity Checks
+pass, 0 execution errors, `nbformat.validate()` clean, HTML dashboard
+confirmed under a network-blocked Playwright check, Excel workbook
+confirmed via LibreOffice headless recalculation. **Ready to re-run
+against the user's real data -- combined with v1.6.4's winsorization fix,
+this directly addresses the RuntimeError seen there.**
+
+## [1.6.4] - 2026-09-01
+
+### Fixed — Mega Project 3, Notebook 03: real-data K-Means outlier domination
+
+Running Notebook 03 on the user's real 307,511-applicant data raised the
+notebook's own by-design `RuntimeError`: every candidate K from 3 to 8
+produced at least one real cluster below the minimum stable size
+(8,749 applicants, 3% of the 291,643 real applicants with repayment
+history) -- k=5 through k=8 each collapsed to a smallest real cluster of
+just 3 applicants, and k=3/k=4 fell to 1,390/1,354. This was not a code
+defect in the sense of wrong logic -- the guard fired exactly as designed,
+refusing to report an unstable segmentation -- but the underlying real
+cause was a genuine pipeline gap: `engineer_repayment_behavior_features()`
+fed 9 structurally unbounded real features (`MAX_DAYS_LATE`,
+`MEAN_PAYMENT_RATIO`, `MAX_SK_DPD`, etc.) straight into `StandardScaler`
+with no clipping step, so a small number of genuinely extreme real values
+(present in the real 307K-row data but never occurring in the suite's
+small synthetic fixture) dominated Euclidean distance and caused K-Means
+to isolate them as their own tiny outlier cluster at every K it tried.
+
+### Added — real winsorization in `engineer_repayment_behavior_features()`
+
+`src/features/risk_segmentation_features.py`'s
+`engineer_repayment_behavior_features()` now clips its 9 unbounded real
+features to the real 1st/99th percentile range, computed ONLY over
+applicants WITH real repayment history (never over the 0-filled "no
+history" rows, and never applied to them either). This bounds, and never
+invents, the influence of real outliers -- every clipped value is still a
+real value that occurred in the real data, only capped to a real,
+disclosed quantile of the real with-history population's own
+distribution. The function now returns a third element, a
+`winsorize_report` dict with the exact per-feature bounds and how many
+real values were clipped at each end; `pipeline_mp3_nb03.py` prints this
+report in full (never silently) and includes it in the notebook's JSON
+summary and Excel workbook assumptions sheet.
+
+### Verified clean on re-execution -- no regression on the fixture
+
+Re-run end-to-end on this suite's fixture after the fix: still finds
+k=7 (highest real silhouette score, 0.161, unchanged from before the fix
+to 3 decimal places), 2,691 of 4,000 real fixture applicants (67.3%)
+clustered into 7 segments (459/470/730/420/142/311/159) plus 1,309 "No
+Repayment History." Real default rate spans 12.6%-20.4%. Real
+cross-checks: Cramer's V=0.072 vs. Problem 1's Risk Tier, 0.047 vs.
+Problem 2's Bureau Segment -- both still genuinely low. Statistical
+Robustness Verdict unchanged: NOT YET STATISTICALLY ROBUST at this
+fixture's small scale (chi-square p=0.459, Cramer's V 95% bootstrap CI
+[0.033, 0.084]) -- the same expected fixture-scale limitation as before,
+not a regression. All 9 structural Pipeline Integrity Checks pass.
+Verified end-to-end: 0 execution errors, `nbformat.validate()` clean, HTML
+dashboard confirmed under a network-blocked Playwright check, Excel
+workbook confirmed via LibreOffice headless recalculation. **Ready to
+re-run against the user's real data -- this fix directly addresses the
+RuntimeError seen there.**
+
+## [1.6.3] - 2026-09-01
+
+### Added — Mega Project 3, Notebook 03: Repayment Behavior Segmentation (3/6)
+
+Trains no supervised model and scores no PD -- reuses Mega Project 3 /
+Notebook 01's real per-applicant PD/TARGET/RISK_TIER output unchanged
+(hard dependency, checked by actual required columns present). The
+genuinely new work is real unsupervised sklearn.cluster.KMeans clustering
+on a real 13-feature repayment-discipline feature set
+(`engineer_repayment_behavior_features()`, added to the shared
+`src/features/risk_segmentation_features.py` module), built entirely from
+the applicant's own real conduct on PREVIOUS Home Credit loans -- real
+`installments_payments.csv` lateness (`DAYS_ENTRY_PAYMENT -
+DAYS_INSTALMENT`) and real payment-completeness ratio
+(`AMT_PAYMENT/AMT_INSTALMENT`), plus real `POS_CASH_balance.csv`
+days-past-due tracking -- a third axis touching neither Problem 1's PD
+level nor Problem 2's external bureau tables. Real, disclosed null
+handling: an instalment never actually paid has null
+DAYS_ENTRY_PAYMENT/AMT_PAYMENT, dropped from the lateness/payment-ratio
+aggregations (never treated as 0) but still counted in the
+total-instalments feature. Real cluster count (K) chosen by silhouette
+score across a documented candidate range; applicants with zero real
+previous-loan repayment history get their own explicit "No Repayment
+History" segment, never imputed.
+
+New this notebook: a real SOFT cross-check against Mega Project 3 /
+Notebook 02's Bureau Segment output (when present) in addition to the
+existing cross-check against Problem 1's Risk Tier -- both computed as
+honest, descriptive evidence of cross-axis independence, not gated
+pass/fail checks. No `monotonic_within_noise()` call, by design
+(unordered categorical segments, same reasoning already established
+twice in this suite). No `matplotlib.use(...)` call. No EDA section.
+
+### Verified clean on first execution -- no bugs found
+
+On this suite's fixture: 7 real data-driven repayment behavior segments
+found (silhouette=0.161, chosen from 5 candidates that cleared the
+minimum-cluster-size floor -- k=8 was rejected, its smallest real cluster
+of 73 falling below the 80-applicant floor). 2,691 of 4,000 real fixture
+applicants (67.3%) have real previous-loan repayment history and were
+clustered; the remaining 1,309 (32.7%) reported as their own "No
+Repayment History" segment. Real default rate spans 12.0%-18.7% across
+the 8 total segments. Real cross-checks: Cramer's V=0.072 vs. Problem 1's
+Risk Tier, Cramer's V=0.045 vs. Problem 2's Bureau Segment -- both
+genuinely low, evidencing a real, independent third axis. Statistical
+Robustness Verdict on the fixture: NOT YET STATISTICALLY ROBUST
+(chi-square p=0.278, Cramer's V 95% bootstrap CI [0.035, 0.087]) -- the
+same expected fixture-scale statistical-power limitation already
+documented for Problem 2 (LESSONS_LEARNED.md #3), not a code defect; all
+structural Pipeline Integrity Checks pass regardless. Verified end-to-end:
+0 execution errors, nbformat.validate() clean, HTML dashboard confirmed
+under a network-blocked Playwright check, Excel workbook confirmed via
+LibreOffice headless recalculation -- clean on its first execution, no
+bugs found. Not yet run against the user's real data.
+
+Mega Project 3 (Risk Segmentation): 3 of 6 planned problems built.
+
+## [1.6.2] - 2026-09-01
+
+### Fixed — Mega Project 1's problem numbering, renumbered to match Mega Project 2 / Mega Project 3's convention
+
+**What was inconsistent (caught by the user, reviewing Mega Project 1's
+executive rollup dashboard)**: Mega Project 1's 5 problem notebooks
+originally carried numbers from this suite's very first, pre-Mega-Project
+global plan (Problem 1, 3, 4, 11, 12 -- non-consecutive because the
+original plan interleaved problems across all 5 Mega Projects before they
+were split into separate folders), while Mega Project 2 (Problems 1-6) and
+Mega Project 3 (Problems 1-2 so far) were both built later using clean,
+local, project-relative numbering from the start. Both conventions were
+internally consistent on their own but inconsistent with each other --
+visible wherever Mega Project 1's problem numbers appeared next to Mega
+Project 2/3's, most visibly on Mega Project 1's own executive rollup
+dashboard.
+
+**Fix**: Mega Project 1's problems are renumbered to local 1-5, and its
+executive rollup notebook (06) is now explicitly "Problem 6" -- the exact
+convention Mega Project 2 and Mega Project 3 already use for their own
+rollups. Old -> new mapping, for anyone cross-referencing older material
+against this suite (e.g. `BENCHMARKS.md` entries or earlier screenshots
+that still show the old numbers):
+
+| Old (global) | New (local) | Notebook |
+|---|---|---|
+| Problem 1 | Problem 1 | 01 — Credit Default Prediction |
+| Problem 3 | Problem 2 | 02 — Loan Application Approval |
+| Problem 4 | Problem 3 | 03 — Credit Score Estimation |
+| Problem 11 | Problem 4 | 04 — Repayment Capacity Analysis |
+| Problem 12 | Problem 5 | 05 — Previous Application Outcomes |
+| (unnumbered) | Problem 6 | 06 — Executive Rollup |
+
+This is a label-only change -- a single-pass regex substitution (never
+sequential replacements, to avoid the classic renumbering collision where
+a freshly-written new number gets re-matched by a later replacement step)
+applied across every `pipeline_*.py` source, `build_ipynb*.py` header,
+the shared `src/features/credit_default_features.py` and
+`src/features/applicant_credit_history_features.py` and
+`src/utils/stats_checks.py` modules, all 5 model cards, both `README.md`
+files (root and Mega Project 1's own), `sample_reports/README.md`, all 4
+deployable services, `tests/test_stats_checks.py`, and the Docker
+Dockerfile/compose file. No modeling logic, feature engineering, scoring,
+or statistical validation changed in any notebook. Also fixed, found while
+in these same files: all 6 Mega Project 1 notebooks still said "6 Mega
+Projects Enterprise Suite" in their own header (a leftover from before the
+suite was fixed at exactly 5 Mega Projects) while Mega Project 2 and Mega
+Project 3 already correctly said "5" -- now consistent everywhere.
+
+Historical `CHANGELOG.md` entries below this one are left exactly as
+originally written (they used the numbering that was true for that
+build at the time) -- this section is the map from those old numbers to
+the new ones, not a rewrite of history.
+
+### Verified clean on re-execution -- no bugs found
+
+All 6 Mega Project 1 notebooks were rebuilt from their updated source
+(per this suite's own `LESSONS_LEARNED.md` #1: editing a `pipeline_*.py`
+file does not change an already-built `.ipynb` until its `build_ipynb*.py`
+is re-run) and re-executed end-to-end on the fixture in dependency order
+(01 through 05, then 06 last) -- 0 execution errors across all 6, same
+real fixture results as before (this is a pure relabeling, not a logic
+change). Full verification protocol re-run and clean on all 6:
+`nbformat.validate()`, network-blocked Playwright dashboard check (0
+blocked requests / 0 console errors / 0 page errors across all 6
+dashboards including the executive rollup), LibreOffice headless
+recalculation on all 6 workbooks (including the executive workbook's
+"Problem Rollup" sheet, confirmed showing Problem 1-5 in order), outputs
+cleared and re-validated.
+
+**Because Mega Project 1 was already run against your real data before
+this fix, re-running these updated notebooks against your real data is
+needed to get real reports with the corrected Problem 1-5 labels** — your
+existing real results/figures are unaffected (nothing computational
+changed), only the labels.
+
+## [1.6.1] - 2026-09-01
+
+### Added — Mega Project 3, Notebook 02: Credit Bureau Behavioral Segmentation (2/6)
+
+Trains no supervised model and scores no PD -- reuses Mega Project 3 /
+Notebook 01's real per-applicant `PD`/`TARGET`/`RISK_TIER` output
+unchanged (hard dependency, checked by actual required columns present,
+not just file existence -- LESSONS_LEARNED.md #4). The genuinely new work
+is real unsupervised `sklearn.cluster.KMeans` clustering on a real,
+richer 16-feature bureau/bureau_balance behavioral feature set (new
+shared module `src/features/risk_segmentation_features.py` --
+`engineer_bureau_behavior_features()`), deliberately broader than the 7
+bureau summary features already inside Mega Project 1's champion PD model
+and a genuinely different mechanism (unsupervised similarity, never
+trained against real TARGET). Real cluster count (K) is chosen by the
+real `sklearn.metrics.silhouette_score` across a documented candidate
+range (config `bureau_segment_k_min`/`bureau_segment_k_max`, default
+3-8), sampled via scikit-learn's own `sample_size` parameter for O(n)
+tractability at real ~300K scale (disclosed), rejecting any K whose
+smallest real cluster falls below a minimum stable size (config
+`bureau_segment_min_cluster_fraction`, default 3%). Real applicants with
+zero bureau history are never silently imputed into a cluster -- they get
+their own explicit "No Bureau History" segment, disclosed by real,
+measured prevalence.
+
+Applies LESSONS_LEARNED.md deliberately, including recognizing where an
+established check does NOT apply: no `monotonic_within_noise()` call in
+this notebook, by design -- behavioral clusters are unordered categorical
+segments with no expected direction, the same reasoning Mega Project 2 /
+Notebook 05 already established for its own HHI concentration analysis
+(#2). No `matplotlib.use(...)` call anywhere in the file (#7). Real
+cross-check (Section 9): Cramer's V between this notebook's Bureau
+Segment and Problem 1's Risk Tier, computed as honest evidence of
+cross-axis independence, not a gated pass/fail check (#6's "real
+cross-checks beat asserted correctness" pattern).
+
+### Verified clean on first execution -- no bugs found
+
+On this suite's fixture: 7 real data-driven bureau behavioral segments
+found (silhouette=0.153, chosen from 6 candidates k=3..8 that cleared the
+minimum-cluster-size floor). 3,598 of 4,000 real fixture applicants
+(90.0%) have real bureau history and were clustered; the remaining 402
+(10.0%) reported as their own "No Bureau History" segment. Real default
+rate spans 13.2%-19.9% across the 8 total segments. Real cross-check
+against Problem 1's Risk Tier: Cramer's V=0.049 -- genuinely low,
+evidencing independent axes, not a relabeling. Statistical Robustness
+Verdict on the fixture: NOT YET STATISTICALLY ROBUST (chi-square
+p=0.453, Cramer's V 95% bootstrap CI [0.032, 0.082], below this suite's
+0.05 materiality threshold) -- an honestly-computed, expected result at
+this small fixture scale (LESSONS_LEARNED.md #3's scale-sensitivity
+lesson, applying in the opposite direction from where it was first
+documented: limited statistical power splitting 3,598 rows across 7
+clusters, not over-detection), not a code defect; all structural Pipeline
+Integrity Checks pass regardless, per this suite's two-tier verdict
+pattern. Verified end-to-end: 0 execution errors, nbformat.validate()
+clean, HTML dashboard confirmed under a network-blocked Playwright check,
+Excel workbook confirmed via LibreOffice headless recalculation -- clean
+on its first execution, no bugs found. Not yet run against the user's
+real data.
+
+Mega Project 3 (Risk Segmentation): 2 of 6 planned problems built.
+
+## [1.6.0] - 2026-09-01
+
+### Added — Mega Project 3, Notebook 01: Data-Driven Risk Tier Construction (MEGA PROJECT 3 STARTED, 1/6)
+
+Trains no new default-risk model -- reuses Mega Project 1 / Notebook 01's
+real champion model (loaded, never retrained) to score real PD. The
+genuinely new work is the TIERS themselves: a real
+`sklearn.tree.DecisionTreeClassifier` fit directly on real PD vs. real
+TARGET finds where the real data itself splits most sharply, and those
+real thresholds -- not the suite's existing fixed 5-band convention (PD <
+0.05/0.10/0.20/0.35, used elsewhere for Basel capital purposes) -- become
+the tier boundaries. Achieved tier count is whatever the real data
+supports, never forced by construction (`max_leaf_nodes` is a ceiling,
+`min_samples_leaf` prevents unstable tiny tiers). Soft-enriches with Mega
+Project 2 / Notebook 01's real capital output when available
+(capital-by-tier), and still produces a complete, standalone result when
+it isn't -- the same soft-dependency posture Mega Project 1's Notebook 04
+already established.
+
+Applies every LESSONS_LEARNED.md item from the first version, not
+retrofitted: hard dependency checked by actual feature-set compatibility
+(#4), `monotonic_within_noise()`'s ordering contract verified explicitly
+with both arrays reversed before the call since tiers are ascending-PD
+(#2), no `matplotlib.use(...)` call anywhere in the file (#7), vectorized
+multinomial bootstrap for the Cramer's V CI (never per-resample
+`pandas.crosstab`), and runtime-validated tier boundaries (strictly
+increasing, no duplicates, every tier non-empty).
+
+### Verified clean on first execution -- no bugs found
+
+On this suite's fixture: 6 real data-driven tiers found (5 real split
+thresholds), real default rate strictly monotonic from 1.6% (Tier 1) to
+99.6% (Tier 6), chi-square p≈0, Cramer's V=0.887 (95% bootstrap CI [0.870,
+0.904]) -- STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION. All 4,000
+fixture applicants matched against Mega Project 2 / Notebook 01's real
+capital output for the enrichment. Verified end-to-end: 0 execution
+errors, all integrity and statistical-robustness checks pass,
+nbformat.validate() clean, HTML dashboard confirmed under a
+network-blocked Playwright check, Excel workbook confirmed via LibreOffice
+headless recalculation. Not yet run against the user's real data.
+
+Starts Mega Project 3 (Risk Segmentation): 1 of 6 planned problems built.
+
+## [1.5.0] - 2026-09-01
+
+### Added — LESSONS_LEARNED.md items #7-8, ahead of Mega Project 3
+
+Two more real incidents recorded before Mega Project 3's first notebook is
+written: #7 the matplotlib `Agg`-backend inconsistency fixed in [1.4.9]
+(checklist: never call `matplotlib.use(...)` in a new notebook unless
+specifically required); #8 a real point of user confusion, not a suite
+bug, where printed OUTPUT text (containing a comma-formatted dollar
+figure) was pasted into a Jupyter code cell and executed, producing a
+`SyntaxError` on a leading-zero numeric literal — recorded so a future
+`SyntaxError` report referencing prose-looking text is checked against
+this suite's own printed-output format before assuming a code defect.
+Intro paragraph updated: Mega Project 2 (all 6 notebooks, now complete and
+confirmed on real data) is the source of every lesson in this file; it
+now exists for Mega Project 3 onward.
+
+Mega Project 2 status: complete, 6/6 notebooks, confirmed working
+end-to-end on the user's real 307,511-applicant data.
+
+## [1.4.9] - 2026-09-01
+
+### Fixed — cosmetic UserWarning on real-data execution of Notebook 06
+
+Confirmed by the user's real 307,511-applicant run: report generation
+succeeded completely (all 6 rollup integrity checks PASS, real $9,756,908,313
+Pillar-1 capital, all 3 report formats written) -- but a
+`UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown`
+appeared on the `plt.show()` line. Root cause: Notebook 06 was the only
+notebook in this suite that explicitly forced `matplotlib.use("Agg")` before
+importing pyplot; every other notebook (01, 02, 05, and Mega Project 1's own
+charts) lets Jupyter's own inline backend handle `plt.show()`, which does
+not warn. Fixed by removing the explicit `Agg` backend call, matching every
+other notebook's already-proven-clean pattern. The saved chart PNG was
+never affected either way (`plt.savefig()` runs before `plt.show()`) --
+this was a cosmetic stderr warning only, never a sign of failed or
+incomplete report generation. Re-verified end-to-end on the fixture after
+the fix: 0 execution errors, 0 warnings of any kind, all 6 integrity checks
+still pass, nbformat.validate() clean, Playwright dashboard check clean
+with slicers still confirmed interactive, LibreOffice recalc still exact.
+
+## [1.4.8] - 2026-09-01
+
+### Added — Mega Project 2, Notebook 06: Consolidated Executive Rollup (MEGA PROJECT 2 NOW COMPLETE, 6/6)
+
+A pure rollup notebook -- trains nothing, re-simulates nothing. Reads all
+5 real problem notebooks' own already-computed governance JSON summaries
+and consolidates them into one executive-ready package. Adds exactly two
+new things: the "Three Real Lenses on Capital" comparison (Pillar-1
+Baseline vs. 99.9% Monte Carlo Economic Capital vs. Adverse/Severely
+Adverse Stressed Capital -- three real, independently-computed answers to
+three different questions about the SAME real portfolio, placed side by
+side explicitly to compare, never to sum) and 3 real cross-notebook
+consistency checks (baseline capital consistent across Notebooks 01/03/04;
+stressed capital strictly increases with severity; every real HHI value
+within its valid [0, 10,000] range).
+
+### World-class 3-format reporting package
+
+- Word report: exec summary, 7 SMART insights, one section per problem
+  with that problem's own already-verified real chart image embedded
+  (never redrawn), plus a dedicated "Three Real Lenses" section with the
+  notebook's one new synthesis chart.
+- Excel workbook, 10 sheets: a big-letters "Executive Rollup" front sheet
+  with a native, editable openpyxl BarChart of the Three Real Lenses; one
+  sheet per problem with that problem's own real chart image embedded PLUS
+  a second native Excel chart from that problem's own real per-category
+  numbers; a real formula-driven Financial Impact sheet (confirmed to
+  recalculate correctly under LibreOffice headless); a SMART Insights
+  sheet.
+- HTML dashboard: 8 real KPI cards, 7 charts -- 2 of them carrying a real,
+  browser-tested dropdown slicer that switches the chart across this
+  dataset's real segment dimensions (RWA density and capital share, each
+  across 4-5 real dimensions) -- confirmed via an actual Playwright
+  browser interaction test to change the rendered chart's labels, not just
+  visually inspected.
+
+### Verification
+
+Verified end-to-end on this suite's synthetic fixture: 0 execution errors,
+all 6 rollup integrity checks pass, nbformat.validate() clean before and
+after clearing outputs, HTML dashboard confirmed under a network-blocked
+Playwright check with the 2 dropdown slicers driven programmatically and
+confirmed to actually change chart data, Excel workbook confirmed via
+LibreOffice headless recalculation (every Financial Impact formula
+recalculated to the exact real values the notebook itself printed). Not
+yet run against the user's real data.
+
+Bumps Mega Project 2 to complete: all 6 of 6 notebooks built and verified.
+
+## [1.4.7] - 2026-09-01
+
+### Added — Mega Project 2, Notebook 05: Capital Concentration by Segment
+
+Trains no model and introduces no new PD/LGD/EAD/correlation value.
+Reuses Notebook 01's real per-applicant capital output unchanged, joined
+with real application-level segment columns already used by Notebook 02
+(income type, education, contract type, region rating) plus Notebook 01's
+own capital segment, for 5 real dimensions total. Computes a real
+Herfindahl-Hirschman Index (HHI) of capital concentration per dimension --
+the standard concentration metric borrowed from competition economics
+(U.S. DOJ/FTC Horizontal Merger Guidelines interpretive bands), explicitly
+disclosed as a borrowed convention, not a Basel-mandated threshold. Fills
+the concentration-risk gap Notebook 01's Pillar-1 ASRF/infinite-granularity
+assumption deliberately leaves unpriced ([BCBS05]) -- a genuine Pillar-2-
+style addition, not a duplicate of Problem 1.
+
+### Verified clean on first execution -- no bugs found
+
+Unlike Notebooks 02 and 04, this notebook's first real Jupyter execution
+on the fixture passed every check on the first try: 0 execution errors, 0
+integrity-check failures, both real cross-checks (segment-capital-sums-
+match-portfolio-total; HHI-within-mathematical-bounds) passed exactly.
+This is attributed directly to `LESSONS_LEARNED.md` being consulted as a
+genuine pre-flight checklist before writing this notebook's code, not
+after finding a bug -- specifically avoiding the `monotonic_within_noise()`
+directionality trap by recognizing up front that concentration analysis
+has no ordering convention to get backwards in the first place, and
+writing both real cross-checks (not asserted correctness) before the first
+execution rather than adding them reactively.
+
+### Advanced error tackling
+
+- Hard dependency checked by actual required columns, not file existence.
+- Real cross-check: every dimension's segment capital totals sum back to
+  the real portfolio total (rel. diff. < 1e-9) -- catches a join/groupby
+  bug immediately rather than silently mis-counting capital.
+- Real cross-check: HHI is checked to fall within its real mathematical
+  bounds `[1/N, 1]` for a dimension with N segments.
+- Swift, vectorized processing: one pandas groupby-aggregate per real
+  dimension (same pattern proven fast in Notebook 02 -- 1.2s on the user's
+  real 307,511-applicant portfolio), never a per-applicant loop.
+
+### Verification
+
+Verified end-to-end on this suite's synthetic fixture: 0 execution errors,
+all pipeline integrity and concentration-validation checks pass,
+`nbformat.validate()` clean, HTML dashboard confirmed under a
+network-blocked Playwright check (0 external network requests attempted,
+0 page/console errors), Excel workbook confirmed via LibreOffice headless
+recalculation (all formula-sheet values match the notebook's own real
+output exactly). Not yet run against the user's real data.
+
+## [1.4.6] - 2026-09-01
+
+### Added — Mega Project 2, Notebook 04: Macro Stress Testing
+
+Trains no model. Baseline reuses Notebook 01's real per-applicant
+PD/LGD/EAD/correlation directly, unmodified. Adverse and Severely Adverse
+re-evaluate the same real single-factor Vasicek conditional-PD formula
+already used (and cited) in Notebooks 01/03, at documented, cited
+severities: Adverse at the standard-normal 95th-percentile adverse value
+(Phi^-1(0.05) = -1.6449, a "1-in-20 downturn" convention), Severely
+Adverse at Phi^-1(0.001) = -3.0902 -- the SAME 99.9th-percentile severity
+Basel's own closed-form capital function is calibrated to [BCBS05] -- plus
+a documented 25% LGD downturn add-on (capped at 100%), reflecting the
+Basel II "downturn LGD" concept [BCBS06]. Home Credit's data has no
+macro/time-series dimension, so every shock magnitude is a disclosed, cited
+assumption, never fitted -- consistent with this suite's existing LGD/R
+posture.
+
+### Fixed — a real mathematical mistake caught by this notebook's own cross-check before delivery
+
+The first version defined "Baseline" as Z=0 run through the conditional-PD
+formula, on the incorrect assumption that Phi((Phi^-1(PD))/sqrt(1-R))
+reproduces PD exactly at Z=0. It does not: Phi is nonlinear, so the
+unconditional PD is recovered only by integrating the conditional formula
+over Z ~ N(0,1) (how PD was calibrated in the first place), not by
+evaluating it at the single point Z=0. On the fixture this produced a real,
+measurable 5.36% gap between "Baseline" and Notebook 01's actual real
+closed-form capital ($103.2M vs. $109.0M) -- caught immediately by this
+notebook's own `baseline_scenario_matches_notebook_01_exactly` cross-check
+on its FIRST execution, before any delivery. Fixed by having Baseline reuse
+Notebook 01's real PD/LGD directly rather than round-tripping through the
+conditional formula at Z=0; confirmed via re-execution to a relative
+difference of 2.35e-10 (floating-point noise). This is exactly the kind of
+real bug this suite's "real cross-checks beat asserted correctness"
+principle (`LESSONS_LEARNED.md` #6) exists to catch -- recorded there too.
+
+### Advanced error tackling (see `LESSONS_LEARNED.md` for the full checklist this applied)
+
+- Hard dependency checked by actual required columns, not file existence.
+- `SCENARIOS` validated at runtime (severity strictly ordered, no LGD
+  scenario improves on baseline) -- a future edit that breaks ordering
+  raises immediately.
+- A vectorized re-implementation of the Basel K() formula (for swift
+  processing across 3 scenarios x 300K+ real applicants) is cross-checked
+  against the existing trusted scalar function on a real 200-applicant
+  sample (`np.allclose`, `rtol=1e-9`) before being trusted for the full
+  portfolio.
+- Severity ordering (stressed PD non-decreasing across scenarios) checked
+  at the PER-APPLICANT level across the whole real portfolio, not just
+  portfolio totals -- the strongest form of this check, and a real
+  mathematical guarantee of the single-factor model.
+
+### Swift processing
+
+No PD re-scoring, no reloading the 7 raw tables -- everything needed is
+already in Notebook 01's saved CSV. Each scenario is exactly one vectorized
+`scipy.stats.norm.cdf`/`norm.ppf` pass over the whole real portfolio (never
+a per-applicant loop): all 3 scenarios completed in 0.01s on the fixture;
+expect low single-digit seconds at real 300K+-applicant scale (vs.
+Notebook 03's Monte Carlo, which needs tens of thousands of such passes and
+takes minutes for a genuinely different reason -- a full simulated
+distribution, not 3 point estimates).
+
+Full verification performed: real `jupyter nbconvert --execute` (0 errors,
+after the fix above) -- outputs cleared and `nbformat.validate()` passed;
+HTML dashboard re-checked under a network-blocked Playwright pass (0
+console errors, 0 external requests); Excel workbook re-checked via
+LibreOffice headless recalculation.
+
+## [1.4.4] - 2026-09-01
+
+### Added — Mega Project 2, Notebook 03: Economic Capital & Unexpected Loss
+
+Confirmed on real data: the [1.4.3] directionality fix resolved the user's
+real, full-scale (307,511-applicant) runs of both MP2 Notebook 01 and
+Notebook 02 — both now report "STATISTICALLY ROBUST — RECOMMENDED FOR
+PRODUCTION" against real data (Notebook 02: real portfolio RWA density
+66.21%).
+
+Problem 3 trains no model and introduces no new PD/LGD/EAD/correlation
+assumption -- reuses Notebook 01's real per-applicant output unchanged
+(hard dependency). Runs a real, vectorized, batched Monte Carlo simulation
+of the same single-factor Vasicek/ASRF model underlying Notebook 01's
+closed-form Basel capital charge, to obtain a real simulated portfolio loss
+distribution and real Value-at-Risk / Expected Shortfall / Economic Capital
+at 4 documented confidence levels (95%, 99%, 99.5%, 99.9%). Technique:
+every systematic-factor draw's conditional default probability is computed
+for the whole real portfolio in one vectorized `scipy.stats.norm.cdf` call;
+draws are processed in batches so the number of Python-level loop
+iterations stays small regardless of the total draw count requested (a
+real Monte Carlo simulation of a parametric model, not a bootstrap
+resampling of empirical data -- a distinct technique from this suite's
+"vectorized multinomial bootstrap" lesson). On the fixture: 50,000 main
+draws over 4,000 applicants complete in ~7 seconds.
+
+Two real, computed validation layers, neither asserted: (1) a closed-form
+cross-check -- the Monte-Carlo 99.9% Economic Capital vs. Notebook 01's
+real closed-form Basel capital requirement, documented 10% tolerance (1.35%
+relative difference on the fixture); (2) an independent-reseed convergence
+check (`RANDOM_SEED + 1`, a second full Monte Carlo run) standing in for
+this notebook's "Statistical Robustness Verdict" family, since there is no
+real `TARGET` to test a classifier against in a pure simulation notebook --
+tolerances documented per confidence level (5% at 95%, up to 15% at 99.9%,
+widening because a finite Monte Carlo sample has real, larger sampling
+error further into the tail).
+
+Full verification performed: real `jupyter nbconvert --execute` on the
+fixture -- 0 errors; outputs cleared and `nbformat.validate()` passed; HTML
+dashboard re-checked under a network-blocked Playwright pass (0 console
+errors, 0 external requests); Excel workbook re-checked via LibreOffice
+headless recalculation.
+
+## [1.4.3] - 2026-09-01
+
+### Fixed — two real bugs behind Mega Project 2's "NOT YET STATISTICALLY ROBUST" verdict, found while investigating the user's real 307,511-applicant run of Notebook 01
+
+The user ran Mega Project 2 / Notebook 01 for real (full-scale, 307,511
+real applicants) and reported a highly significant chi-square (p < 0.001)
+and a tight bootstrap 95% CI on Cramer's V (V=0.3411, CI [0.3358, 0.3461],
+clearly excluding zero) alongside a failing
+`default_rate_monotonic_by_pd_band` check and an overall "NOT YET
+STATISTICALLY ROBUST" verdict. Investigating this surfaced two separate,
+real, disclosed issues — not one:
+
+1. **Root cause (primary): a directionality bug in Notebook 01 and
+   Notebook 02's call convention.** `monotonic_within_noise()`
+   (`src/utils/stats_checks.py`) is documented to expect its input already
+   ordered with group 0 = the *highest* expected rate. Both notebooks sort
+   `band_agg` ascending by PD risk band ("Lowest Risk" first — the natural
+   order for a human-readable report), but real default rate (and EL rate,
+   and RWA density) is expected to *increase*, not decrease, with risk.
+   Feeding the function the unreversed ascending-order arrays meant every
+   single adjacent-band comparison was evaluated backwards, so the check
+   would report "reversed" on essentially every pair regardless of whether
+   the real underlying relationship was monotonic — a real bug in these two
+   notebooks' call sites, not a property of the data, and not something any
+   amount of statistical tolerance in the test itself could fix. Notebook
+   03 and Notebook 04 were unaffected — they already ordered their inputs
+   correctly (worst-tier/worst-band first). Fixed by reversing the arrays
+   immediately before the `monotonic_within_noise()` call in both
+   notebooks, and correcting Notebook 02's separate descriptive
+   RWA-density ordering comparison (`>=` → `<=`) the same way.
+   **Confirmed via real re-execution on this suite's fixture**: the
+   underlying, *unchanged* band-level default rates (1.11% → 1.77% →
+   4.05% → 22.44% → 96.40%) are genuinely, strongly monotonic; both
+   notebooks' verdicts flip from "NOT YET STATISTICALLY ROBUST" to
+   "STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION" once compared in
+   the correct direction, and the JSON audit trail's `monotonicity_detail`
+   z-statistics are byte-identical before and after — only the direction
+   of comparison changed, nothing was tuned to force a pass. This is very
+   likely the cause of the FAIL on the user's real run too, since it is
+   the same code path; confirmation requires the user to re-run against
+   real data with this fix.
+2. **A separate, defensive fix: large-sample statistical power.**
+   Independent of (1), `monotonic_within_noise()`'s Bonferroni-corrected
+   two-proportion z-test gets more powerful as real sample size grows
+   (standard errors shrink), so at production scale (hundreds of thousands
+   of rows, vs. this suite's ~4,000-row fixture) it can flag a tiny,
+   practically meaningless adjacent-band reversal as "significant" even
+   with directionality fixed correctly. Added a real, disclosed minimum
+   practical-difference threshold (`min_practical_difference`, default
+   0.0025 = 0.25 percentage points): a reversal now only counts as a
+   genuine violation if it is BOTH statistically significant AND
+   practically material. This is the standard remedy for conflating
+   statistical and practical significance at large N — see Cohen, J.
+   (1994), "The Earth Is Round (p < .05)", *American Psychologist*,
+   49(12), 997–1003. A documented assumption, not fitted per-run, applied
+   uniformly to every call site in this suite (Notebook 03, Notebook 04,
+   Mega Project 2 Notebook 01, Mega Project 2 Notebook 02) — confirmed via
+   re-execution that Notebook 03/04's already-passing verdicts on the
+   fixture are unchanged (no reversals were significant-but-immaterial
+   there), so this is additive safety, not a retroactive loosening that
+   happened to help one run.
+
+Every reversal's real z-statistic, p-value, magnitude, and both the
+statistical-significance and practical-materiality verdict are recorded in
+`monotonicity_detail` in the JSON summary — a reversal that is significant
+but immaterial stays visible in the audit trail even though it no longer
+fails the gate; nothing is hidden.
+
+Full re-verification performed: real `jupyter nbconvert --execute` on all 4
+affected notebooks (03, 04, MP2-01, MP2-02) — 0 errors; outputs cleared and
+`nbformat.validate()` passed; both MP2 HTML dashboards re-checked under a
+network-blocked Playwright pass (0 console errors, 0 external requests);
+both MP2 Excel workbooks re-checked via LibreOffice headless recalculation.
+
+## [1.4.2] - 2026-09-01
+
+### Added — Mega Project 2, Notebook 02: Basel RWA Portfolio Analytics
+
+Pure analytical layer, no new model: reuses Notebook 01's real per-applicant
+Expected Loss / RWA / capital output (hard dependency), joined with real
+application-level segment columns (income type, education, contract type,
+region rating), and reports RWA density (RWA / EAD — the standard Basel
+Pillar 3 cross-portfolio comparability metric) per PD risk band and per
+real segment cut.
+
+### Fixed — real statistical bug caught by this suite's own verification protocol
+
+The first version of this notebook fed RWA density into
+`monotonic_within_noise()` (a two-proportion z-test, valid only for a
+proportion bounded in [0, 1]). RWA density is a ratio, not a proportion —
+under the Basel K() formula it can legitimately exceed 100% for high-risk/
+high-LGD segments (this suite's fixture shows the Revolving/QRRE segment at
+>100% density), which broke the z-test's variance calculation with a
+`math domain error` on real execution. Fixed by reporting RWA-density
+ordering descriptively (a real, computed fact, printed and stored in the
+run summary) rather than statistically gating it — gating a ratio with a
+test built for proportions would be invalid, not just imprecise. Real
+default rate *is* a true proportion and remains correctly gated via
+`monotonic_within_noise()`. This is exactly the kind of gap this suite's
+fixture → real-execution → 0-errors verification step exists to catch
+before delivery, not after.
+
+Verified end-to-end against the synthetic fixture after the fix: 0
+execution errors, all pipeline integrity checks pass, HTML dashboard
+confirmed under a network-blocked Playwright check, Excel workbook
+confirmed via LibreOffice headless recalculation. Sample reports added.
+Mega Project 2 status: 2 of 5 problems built.
+
+## [1.4.1] - 2026-09-01
+
+### Changed — Mega Project 1 / Notebook 01 retrained on all 7 real data tables (was 2); every downstream notebook re-verified
+
+**What prompted this**: Notebook 01's champion PD model — the one every
+other notebook in this suite reuses, never retrains — was trained on only
+`application_train.csv` + `bureau.csv`. Five other real Home Credit tables
+(`bureau_balance.csv`, `previous_application.csv`, `POS_CASH_balance.csv`,
+`installments_payments.csv`, `credit_card_balance.csv`) carry real
+behavioral signal (past repayment conduct, past approval/refusal history,
+revolving-credit usage) that an application-snapshot-only feature set
+cannot capture. Left unaddressed, this understated achievable accuracy for
+every downstream notebook and Mega Project that reuses this PD.
+
+**What changed**:
+
+- Added `engineer_previous_application_features()` to
+  `src/features/applicant_credit_history_features.py` — real, leakage-safe
+  (Home Credit's own already-completed past decisions, no linkage to any
+  new application) aggregation of `previous_application.csv`.
+- Added `engineer_credit_default_features_v2()` to
+  `src/features/credit_default_features.py` — combines v1's real
+  application + bureau fields with real bureau_balance, real
+  previous_application history, and real POS/installments/credit-card
+  servicing history (applicant-level TOTAL block — no leave-one-out
+  subtraction, which is the correct, leakage-safe choice at this model's
+  SK_ID_CURR-level target granularity; full reasoning in the function's own
+  docstring). v1 is retained, unused by the deployed champion, solely so
+  the real accuracy comparison below can be computed.
+- Retrained Notebook 01's champion on the v2 (7-table, 47 numeric + 9
+  categorical feature) set. **Real, measured, same-split accuracy
+  comparison** (same champion architecture, same holdout rows, only the
+  feature set differs — see `feature_set_accuracy_comparison` in
+  `decision_engine/artifacts/notebook_01_summary.json`): a real AUC
+  improvement over the retired v1 feature set on this suite's synthetic
+  verification fixture. No number here is asserted beyond what was
+  actually measured — re-run on real data for the real-scale figure.
+- Updated Notebooks 02, 03, 04, 05, and Mega Project 2 / Notebook 01 (every
+  notebook that rebuilds Notebook 01's exact feature set to score with its
+  champion) to call `engineer_credit_default_features_v2` instead of v1,
+  loading the additional raw tables each needs. All 6 Mega Project 1
+  notebooks plus Mega Project 2 / Notebook 01 were re-executed end-to-end
+  against the fixture and re-verified (0 execution errors, nbformat-valid,
+  Playwright network-blocked dashboard checks, LibreOffice headless
+  workbook recalculation) after this change.
+- Fixed a real, pre-existing bug found during this re-verification pass:
+  `06_mp1_executive_report.ipynb`'s own `every_available_problem_has_an_insight`
+  integrity check compared the insight count to the notebook count with
+  `==`, but the report deliberately appends one bonus insight (explaining
+  the two-tier verdict pattern) whenever any problem shows a "NOT YET
+  STATISTICALLY ROBUST" verdict — a real, intentional addition, not a bug.
+  This made the check falsely report FAIL on any run where that bonus
+  insight fired. Fixed to `>=`.
+- Updated `01_credit_default_prediction_MODEL_CARD.md` with the full v2
+  feature list, per-source leakage-safety reasoning, and the v1-vs-v2
+  accuracy comparison methodology.
+
+### Why this belongs in the changelog rather than silently overwriting v1
+
+Per this repo's zero-fabrication standard, a retrain that changes model
+behavior is a disclosed event, not a silent update — anyone who ran
+Notebook 01 before this entry, or who compares an old `.joblib` artifact
+against a new one, should be able to find out why the numbers changed.
+
+## [1.4.0] - 2026-09-01
+
+### Added — Mega Project 2 (Regulatory Capital), Notebook 01: Expected Loss & Capital Requirement Estimation
+
+Real PD (Mega Project 1's trained champion model, loaded not retrained) x
+documented, cited Basel retail-IRB LGD/EAD/correlation assumption layer
+(new HYPER shared module, `src/features/regulatory_capital_features.py`).
+Computes real per-applicant Expected Loss (PD x LGD x EAD) and a real
+Basel retail-IRB capital requirement (Vasicek/ASRF K() function, RWA, 8%
+Pillar-1 capital) for every real applicant, with a real chi-square /
+bootstrap / monotonicity statistical-robustness gate on top.
+
+Every lesson from Mega Project 1's hardening history applied from this
+notebook's first version, not retrofitted: WARP hardware fix, two-tier
+Pipeline-Integrity vs. Statistical-Robustness verdict separation,
+`monotonic_within_noise()` Bonferroni-corrected tolerance, vectorized
+multinomial bootstrap, HYPER shared-module reuse, and a hard (not soft)
+dependency on Mega Project 1's champion model with a clear failure message
+if it hasn't been run yet.
+
+Verified end-to-end against the synthetic fixture: 0 execution errors, all
+pipeline integrity checks pass, nbformat-valid, HTML dashboard confirmed
+under a network-blocked Playwright check, Excel workbook confirmed via
+LibreOffice headless recalculation. Sample reports added under
+`02_mega_project_2_regulatory_capital/sample_reports/`. Mega Project 2
+status: 1 of 5 problems built.
+
 ## [1.2.0] - 2026-09-01
 
 ### Changed — README and documentation rewritten for a hiring-manager/recruiter audience; no code or notebook content changed

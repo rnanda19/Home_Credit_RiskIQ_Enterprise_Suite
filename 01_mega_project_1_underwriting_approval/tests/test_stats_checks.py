@@ -33,7 +33,7 @@ def test_perfectly_monotonic_sequence_holds():
 
 def test_real_home_credit_case_from_user_report_is_not_significant():
     """The exact real-world case that motivated this fix: Notebook 04,
-    Problem 11, on the real 307,499-applicant Home Credit population --
+    Problem 4, on the real 307,499-applicant Home Credit population --
     'Weakest' (8.5122%, n=61,500) vs. 'Weak' (8.6992%, n=61,500), with the
     other 3 tiers monotonically decreasing beyond that. This reversal
     should NOT be flagged (z=1.17, p=0.24 -- not significant even at

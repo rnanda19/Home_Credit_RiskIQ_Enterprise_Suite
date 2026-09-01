@@ -1,5 +1,5 @@
 # Mega Project 1 — Intelligent Underwriting & Automated Credit Decisioning
-# Deployable FastAPI scoring services (Problems 1, 3, 4, 11).
+# Deployable FastAPI scoring services (Problems 1, 2, 3, 4).
 #
 # BUILD CONTEXT: the SUITE ROOT (home-credit-enterprise-suite/), NOT this
 # docker/ folder or 01_mega_project_1_underwriting_approval/ alone -- these

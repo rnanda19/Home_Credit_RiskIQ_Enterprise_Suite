@@ -1,0 +1,63 @@
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'16px','primaryTextColor':'#1a1a2e','lineColor':'#495057','edgeLabelBackground':'#ffffff'}}}%%
+flowchart TB
+    classDef dataStyle fill:#FFD43B,stroke:#E8590C,stroke-width:2px,color:#1a1a2e,font-weight:bold;
+    classDef hyperStyle fill:#4DABF7,stroke:#1864AB,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef bundleStyle fill:#9775FA,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef mpNodeStyle fill:#F06595,stroke:#A61E4D,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef execStyle fill:#845EF7,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef serviceStyle fill:#51CF66,stroke:#2B8A3E,stroke-width:2px,color:#ffffff,font-weight:bold;
+
+    subgraph DATA["📂 Data (real, from Kaggle — never redistributed)"]
+        RAW["application_train/test.csv"]
+    end
+
+    subgraph MP1IN["🔗 Mega Project 1 output (reused, never re-scored)"]
+        BUNDLE01[("notebook_01_champion_model.joblib")]
+    end
+
+    subgraph HYPER["🧩 src/ HYPER shared library (written once, imported everywhere)"]
+        FEAT["features/regulatory_capital_features\nreal Basel Vasicek/ASRF formulas"]
+        REPORT["reporting/report_builder\nHTML + Word + Excel"]
+        UTIL["utils/performance_setup\nWARP resource ceilings"]
+        SERVE["serving/scoring_service_common\nshared FastAPI builder"]
+    end
+
+    RAW --> NB01
+    BUNDLE01 -->|"loaded, not retrained"| NB01
+    HYPER -.shared by every notebook & service below.-> MP2
+
+    subgraph MP2["🏦 Mega Project 2 — Regulatory Capital & Stress Testing"]
+        NB01["01 Expected Loss & Capital Requirement\n(4 Basel LGD segments,\nK() closed-form capital)"]
+        NB02["02 Basel RWA Portfolio Analytics\n(RWA density by segment/band,\npopulation-level, no service)"]
+        NB03["03 Economic Capital & Unexpected Loss\n(Monte Carlo simulation of\nthe same Vasicek model)"]
+        NB04["04 Macro Stress Testing\n(Baseline/Adverse/Severely Adverse\nconditional-PD-given-Z scenarios)"]
+        NB05["05 Capital Concentration by Segment\n(real HHI analysis,\npopulation-level, no service)"]
+        NB06["06 Executive Rollup\n(Three Real Lenses on Capital:\nPillar-1 / Economic / Stressed)"]
+    end
+
+    NB01 -->|report| NB06
+    NB02 -->|report| NB06
+    NB03 -->|report| NB06
+    NB04 -->|report| NB06
+    NB05 -->|report| NB06
+    NB06 --> EXEC["Executive report: HTML + Word + Excel\n(Three Real Lenses on Capital)"]
+
+    FEAT -.real formulas called directly.-> SERVICES
+
+    subgraph SERVICES["🚀 Deployable FastAPI services (Docker Compose)"]
+        SVC1["capital_requirement_service :8005\n(real formula, no model to load)"]
+        SVC2["stress_testing_service :8006\n(real scenario formula, no model to load)"]
+    end
+
+    class RAW dataStyle;
+    class BUNDLE01 bundleStyle;
+    class FEAT,REPORT,UTIL,SERVE hyperStyle;
+    class NB01,NB02,NB03,NB04,NB05,NB06 mpNodeStyle;
+    class EXEC execStyle;
+    class SVC1,SVC2 serviceStyle;
+
+    style DATA fill:#FFF9DB,stroke:#F08C00,stroke-width:2px
+    style MP1IN fill:#F3F0FF,stroke:#7048E8,stroke-width:2px
+    style HYPER fill:#E7F5FF,stroke:#1971C2,stroke-width:2px
+    style MP2 fill:#FFF0F6,stroke:#A61E4D,stroke-width:2px
+    style SERVICES fill:#EBFBEE,stroke:#2B8A3E,stroke-width:2px

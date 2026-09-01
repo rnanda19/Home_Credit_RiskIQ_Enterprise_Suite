@@ -1,4 +1,4 @@
-# Model Card — Problem 4: Credit Score Estimation
+# Model Card — Problem 3: Credit Score Estimation
 
 Notebook: `notebooks/03_credit_score_estimation.ipynb`
 Service: `services/credit_score_service.py` (FastAPI, port 8003)

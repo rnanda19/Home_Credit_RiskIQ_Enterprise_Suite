@@ -34,10 +34,10 @@ in Word/Excel to view them.
 | Problem | Notebook | Dashboard | Report | Workbook |
 |---|---|---|---|---|
 | Problem 1 — Credit Default Prediction | `01_credit_default_prediction.ipynb` | [HTML](SAMPLE_notebook_01_dashboard.html) | [Word](SAMPLE_notebook_01_report.docx) | [Excel](SAMPLE_notebook_01_workbook.xlsx) |
-| Problem 3 — Loan Application Approval | `02_loan_application_approval.ipynb` | [HTML](SAMPLE_notebook_02_dashboard.html) | [Word](SAMPLE_notebook_02_report.docx) | [Excel](SAMPLE_notebook_02_workbook.xlsx) |
-| Problem 4 — Credit Score Estimation | `03_credit_score_estimation.ipynb` | [HTML](SAMPLE_notebook_03_dashboard.html) | [Word](SAMPLE_notebook_03_report.docx) | [Excel](SAMPLE_notebook_03_workbook.xlsx) |
-| Problem 11 — Repayment Capacity Analysis | `04_repayment_capacity_analysis.ipynb` | [HTML](SAMPLE_notebook_04_dashboard.html) | [Word](SAMPLE_notebook_04_report.docx) | [Excel](SAMPLE_notebook_04_workbook.xlsx) |
-| Problem 12 — Previous Application Outcomes | `05_previous_application_outcomes.ipynb` | [HTML](SAMPLE_notebook_05_dashboard.html) | [Word](SAMPLE_notebook_05_report.docx) | [Excel](SAMPLE_notebook_05_workbook.xlsx) |
+| Problem 2 — Loan Application Approval | `02_loan_application_approval.ipynb` | [HTML](SAMPLE_notebook_02_dashboard.html) | [Word](SAMPLE_notebook_02_report.docx) | [Excel](SAMPLE_notebook_02_workbook.xlsx) |
+| Problem 3 — Credit Score Estimation | `03_credit_score_estimation.ipynb` | [HTML](SAMPLE_notebook_03_dashboard.html) | [Word](SAMPLE_notebook_03_report.docx) | [Excel](SAMPLE_notebook_03_workbook.xlsx) |
+| Problem 4 — Repayment Capacity Analysis | `04_repayment_capacity_analysis.ipynb` | [HTML](SAMPLE_notebook_04_dashboard.html) | [Word](SAMPLE_notebook_04_report.docx) | [Excel](SAMPLE_notebook_04_workbook.xlsx) |
+| Problem 5 — Previous Application Outcomes | `05_previous_application_outcomes.ipynb` | [HTML](SAMPLE_notebook_05_dashboard.html) | [Word](SAMPLE_notebook_05_report.docx) | [Excel](SAMPLE_notebook_05_workbook.xlsx) |
 
 ## Consolidated executive rollup (all 5 problems)
 

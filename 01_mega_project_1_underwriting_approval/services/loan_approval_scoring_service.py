@@ -1,5 +1,5 @@
 """
-Problem 3 — Loan Application Approval — real deployable FastAPI scoring service.
+Problem 2 — Loan Application Approval — real deployable FastAPI scoring service.
 
 Wraps Notebook 02's real, already-trained champion model bundle
 (decision_engine/artifacts/notebook_02_champion_model.joblib). If Notebook 02
@@ -35,7 +35,7 @@ BUNDLE_PATH = Path(
 
 app = build_scoring_app(
     bundle_path=BUNDLE_PATH,
-    title="Home Credit — Loan Application Approval (Problem 3)",
+    title="Home Credit — Loan Application Approval (Problem 2)",
     description="Real loan-approval-probability scoring using Notebook 02's trained champion model.",
     score_label="approval_probability",
 )

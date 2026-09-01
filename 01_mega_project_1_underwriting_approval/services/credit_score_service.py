@@ -1,5 +1,5 @@
 """
-Problem 4 — Credit Score Estimation — real deployable FastAPI scoring service.
+Problem 3 — Credit Score Estimation — real deployable FastAPI scoring service.
 
 Wraps Notebook 01's real, already-trained champion model bundle, then applies
 Notebook 03's real PDO log-odds scorecard scaling on top of the real PD --
@@ -57,7 +57,7 @@ _champion_name = _bundle.get("champion_name", "unknown")
 RequestModel = build_request_model("CreditScore", _numeric_features, _categorical_features)
 
 app = FastAPI(
-    title="Home Credit — Credit Score Estimation (Problem 4)",
+    title="Home Credit — Credit Score Estimation (Problem 3)",
     description="Real PDO scorecard score, built on Notebook 01's real trained champion model.",
     version="1.0.0",
 )
