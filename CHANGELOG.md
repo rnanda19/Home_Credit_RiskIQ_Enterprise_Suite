@@ -3,6 +3,69 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.8.3] - 2026-09-01
+
+### Adopted AMEX RiskIQ Platform documentation conventions (root-level, non-structural)
+
+Compared this suite's GitHub structure directly against the real,
+currently-pushed AMEX RiskIQ Enterprise Credit Risk Platform repo and
+adopted its documentation conventions that improve this suite without
+touching its already-verified Mega Project architecture (a full
+per-problem folder split, mirroring AMEX's flat 14-problem layout, was
+considered and deliberately not done -- it would fragment this suite's
+5-distinct-business-capability narrative and require moving and
+re-verifying all 18 built notebooks for no discoverability benefit a
+much smaller change doesn't already deliver):
+
+- `CONTRIBUTING.md` (NEW, suite root) -- the standing engineering rules
+  (zero-fabrication, WARP, HYPER, `RANDOM_SEED = 42`, one-markdown-
+  one-code-cell convention) and code organization, written down as a
+  standalone document instead of only living inside the root README.
+- `ROADMAP.md` (NEW, suite root) -- forward-looking Mega Project status
+  table, hardening-track status, what's not yet done, and immediate next
+  steps in order. Root `README.md`'s own "Roadmap" section shortened to
+  a pointer at this file (mirrors this file's own relationship to
+  `CHANGELOG.md`: `ROADMAP.md` is the summary/what's-next view,
+  `CHANGELOG.md` stays the detailed, version-by-version record).
+- `01_mega_project_1_underwriting_approval/CHANGELOG.md`,
+  `02_mega_project_2_regulatory_capital/CHANGELOG.md`,
+  `03_mega_project_3_risk_segmentation/CHANGELOG.md` (all NEW) -- a
+  curated, this-Mega-Project-only version history table extracted from
+  the root `CHANGELOG.md`, added to all 3 built Mega Projects for
+  consistency (not just the 2 originally in scope for this pass).
+- Root `README.md`: new "Quick links" line near the top (Live
+  Dashboards, Architecture Diagrams, Roadmap, Changelog, Contributing,
+  Benchmarks) and `CONTRIBUTING.md`/`ROADMAP.md`/each Mega Project's own
+  `CHANGELOG.md` added to the Repository Structure listing.
+- Each Mega Project's own `README.md`: a "History" line near the top
+  pointing at its own `CHANGELOG.md` and the root one.
+- Every new link verified to resolve (no broken relative paths) across
+  all 9 touched files before committing.
+
+## [1.8.2] - 2026-09-01
+
+### Fixed a real discoverability gap: no project README linked its own reports or architecture diagram
+
+None of the 3 built Mega Projects' own `README.md` files (including Mega
+Project 1's) actually linked to their `sample_reports/` Word/Excel/HTML
+files or embedded their architecture diagram -- both existed on disk and
+were reachable only by browsing into subfolders. Fixed for all 3:
+
+- Each Mega Project's `README.md` now embeds its architecture flow PNG
+  directly (`## Architecture` section, right after the intro) with a
+  link to the full-resolution PNG and its Mermaid source.
+- Each Mega Project's `README.md` now has a `## Sample reports` section
+  with a full per-problem table -- live GitHub Pages dashboard link,
+  repo-copy HTML link, Word `.docx` link, and Excel `.xlsx` link, for
+  every problem plus the executive rollup -- instead of a single generic
+  pointer at the sample_reports/ folder (Mega Project 1 previously had
+  no link at all).
+- Root `README.md`: added an "Architecture Diagrams" section linking all
+  3 Mega Projects' diagrams directly, and a matching Table of Contents
+  entry.
+- All new links verified to resolve (no broken relative paths) across
+  all 4 READMEs before committing.
+
 ## [1.8.1] - 2026-09-01
 
 ### Repository hardening — top-level parity for Mega Projects 2 and 3

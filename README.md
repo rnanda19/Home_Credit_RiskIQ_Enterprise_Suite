@@ -27,6 +27,12 @@ pytest suite, and complete fixture-generated sample reports. Mega Projects
 rather than implying a fuller build. Every claim below about "what's real"
 applies to Mega Projects 1-3.
 
+**Quick links:** [Live Dashboards](#live-dashboards) ·
+[Architecture Diagrams](#architecture-diagrams) ·
+[Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md) ·
+[Contributing / Engineering Standards](CONTRIBUTING.md) ·
+[Benchmarks](BENCHMARKS.md)
+
 ## Table of Contents
 
 - [Skills Demonstrated](#skills-demonstrated)
@@ -35,6 +41,7 @@ applies to Mega Projects 1-3.
 - [Model Risk & Governance](#model-risk--governance)
 - [Platform at a Glance](#platform-at-a-glance)
 - [Repository Structure](#repository-structure)
+- [Architecture Diagrams](#architecture-diagrams)
 - [How to Run](#how-to-run)
 - [Standing Engineering Principles](#standing-engineering-principles-apply-across-every-mega-project)
 - [Technologies Used](#technologies-used)
@@ -192,6 +199,7 @@ measured, so no suite-wide $ figure is restated here.
 │   └── utils/                                     # resource governance + statistical checks
 ├── 01_mega_project_1_underwriting_approval/  # Mega Project 1 — built & hardened
 │   ├── README.md
+│   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
 │   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
@@ -200,6 +208,7 @@ measured, so no suite-wide $ figure is restated here.
 │   └── tests/                                       # pytest suite for the services
 ├── 02_mega_project_2_regulatory_capital/     # Mega Project 2 — built & hardened
 │   ├── README.md
+│   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
 │   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
@@ -208,6 +217,7 @@ measured, so no suite-wide $ figure is restated here.
 │   └── tests/                                       # pytest suite for the services
 ├── 03_mega_project_3_risk_segmentation/      # Mega Project 3 — built & hardened
 │   ├── README.md
+│   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
 │   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
@@ -220,6 +230,9 @@ measured, so no suite-wide $ figure is restated here.
 ├── docs/                                      # architecture diagrams + GitHub Pages site (Live Dashboards)
 │   ├── index.html                                # Pages landing page
 │   └── dashboards/                               # real dashboard HTML, served live via Pages
+├── CONTRIBUTING.md                            # engineering standards this repo follows
+├── ROADMAP.md                                 # forward-looking status + next steps (CHANGELOG.md is the detailed history)
+├── CHANGELOG.md                               # full, itemized, version-by-version history
 └── .github/                                   # CI workflows, issue/PR templates
 ```
 
@@ -229,6 +242,18 @@ file listing render in the same 1-5 order as the table above. It is not
 part of any Mega Project's identity: code, notebooks, and reports inside
 each folder still refer to "Mega Project 1," "Mega Project 2," etc.,
 unprefixed.
+
+## Architecture Diagrams
+
+Each built Mega Project has a full data→library→notebooks→services flow
+diagram (Mermaid source + rendered PNG), embedded in its own README and
+linked here directly:
+
+| Mega Project | Diagram |
+|---|---|
+| 1 — Underwriting & Approval | [PNG](docs/mp1_architecture_flow.png) · [Mermaid source](docs/mp1_architecture_flow.mmd) |
+| 2 — Regulatory Capital & Stress Testing | [PNG](docs/mp2_architecture_flow.png) · [Mermaid source](docs/mp2_architecture_flow.mmd) |
+| 3 — Risk Segmentation | [PNG](docs/mp3_architecture_flow.png) · [Mermaid source](docs/mp3_architecture_flow.mmd) |
 
 ## How to Run
 
@@ -290,17 +315,13 @@ LibreOffice headless (workbook recalculation check) · Playwright
 
 ## Roadmap
 
-- Build out Mega Projects 4 and 5 to the same standard as Mega Projects
-  1-3 (real notebooks, hardening pass, model cards, services where
-  applicable) — once all 5 are built, `00_executive_rollup_report/` gets
-  a real, measured suite-wide rollup. See each Mega Project's own
-  `README.md` for the business problem it's scoped to cover.
-- Kaggle notebook/dataset packaging for Mega Projects 1-3.
-- A repo-wide `black` reformat (currently advisory-only in CI/Makefile —
-  see `CHANGELOG.md`'s "Known trade-offs").
-- An actual `docker build`/`docker run` verification once Docker access is
-  available (currently verified structurally only for all 3 built Mega
-  Projects — see `BENCHMARKS.md`).
+**Mega Projects 1-3 are built and hardened; 4 and 5 are scoped but not
+yet built.** See [`ROADMAP.md`](ROADMAP.md) for the full Mega Project
+status table, what's not yet done (Kaggle packaging, an actual `docker
+build`/`docker run` verification, the deferred repo-wide `black`
+reformat), and the immediate next steps in order. See
+[`CHANGELOG.md`](CHANGELOG.md) for the detailed, version-by-version
+history of every real fix and scope change already made.
 
 ## Repository Hardening
 
