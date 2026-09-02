@@ -51,7 +51,12 @@ jobs:
         # list: 18/18 tests pass. (It passed locally before this fix only
         # because the sandbox's ambient Python already had these installed
         # -- an undeclared-dependency gap, not a code or test bug.)
-        run: pip install fastapi "uvicorn[standard]" pydantic pytest httpx joblib numpy scikit-learn pandas
+        # 2026-09-02 second fix: same class of gap -- src/tests/test_liquidity_
+        # cashflow_features.py (added with Mega Project 5's HYPER shared feature
+        # module) does `import polars as pl` at module level, which was not
+        # declared here either, so a fresh CI runner ModuleNotFoundError'd during
+        # collection and interrupted the whole job (1 error, 0 tests run). Added.
+        run: pip install fastapi "uvicorn[standard]" pydantic pytest httpx joblib numpy scikit-learn pandas polars
       - name: Run src/tests/ (HYPER shared-component tests -- auth_common.py,
           explainability_common.py; no business data, no notebook artifacts needed)
         run: python -m pytest src/tests/ -v
