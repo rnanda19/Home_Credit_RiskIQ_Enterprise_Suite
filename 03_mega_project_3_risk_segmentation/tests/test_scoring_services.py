@@ -42,16 +42,29 @@ skip_no_nb03 = pytest.mark.skipif(not (NB03_BUNDLE_PATH.exists() and NB03_CSV.ex
 skip_no_nb04 = pytest.mark.skipif(not (NB04_BUNDLE_PATH.exists() and NB04_CSV.exists()),
                                    reason="Notebook 04 has not been run yet (with the segment-model persistence)")
 
+# 2026-09-02 hardening: every service now requires a real X-API-Key header on
+# /schema and /score (never /health) -- see src/serving/auth_common.py. Only
+# risk_tier_assignment_service is exercised through TestClient/HTTP in this
+# file -- the segment services below call assign_segment() directly (a pure
+# function, not the HTTP layer), so they are unaffected by the auth retrofit.
+TEST_API_KEY = "pytest-only-test-key"
+AUTH = {"X-API-Key": TEST_API_KEY}
+
 
 @skip_no_nb01
 def test_risk_tier_service_matches_notebook_bin_edges(monkeypatch):
     monkeypatch.setenv("NB01_SUMMARY_PATH", str(NB01_SUMMARY_PATH))
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("risk_tier_assignment_service", None)
     import risk_tier_assignment_service as svc
 
     client = TestClient(svc.app)
     real_row = pl.read_csv(NB01_CSV).head(1).row(0, named=True)
-    resp = client.post("/score", json={"PD": real_row["PD"]})
+
+    unauth = client.post("/score", json={"PD": real_row["PD"]})
+    assert unauth.status_code == 401
+
+    resp = client.post("/score", json={"PD": real_row["PD"]}, headers=AUTH)
     assert resp.status_code == 200
     assert resp.json()["risk_tier"] == real_row["RISK_TIER"]
 

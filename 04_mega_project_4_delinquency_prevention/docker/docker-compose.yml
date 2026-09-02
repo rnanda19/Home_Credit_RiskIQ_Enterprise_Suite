@@ -1,0 +1,54 @@
+# Mega Project 4 — real deployable scoring services (4 problems, 1 shared image).
+# Run from the suite root: docker compose -f 04_mega_project_4_delinquency_prevention/docker/docker-compose.yml up --build
+#
+# API_KEY is REQUIRED -- every /schema and /score endpoint on every service
+# requires a real X-API-Key header (see src/serving/auth_common.py). Set it
+# in your shell or in a real .env file next to this docker-compose.yml (see
+# .env.example) before running; this file deliberately never bakes a
+# default key into the image or a compose fallback -- an unset API_KEY
+# fails the run immediately rather than silently deploying an
+# unauthenticated (or dev-default-keyed) service.
+services:
+  early-delinquency-scoring:       # Problem 1
+    build:
+      context: ../../
+      dockerfile: 04_mega_project_4_delinquency_prevention/docker/Dockerfile
+    command: ["uvicorn", "early_delinquency_scoring_service:app", "--host", "0.0.0.0", "--port", "8011"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8011
+    ports:
+      - "8011:8011"
+
+  payment-pattern-assignment:      # Problem 2
+    build:
+      context: ../../
+      dockerfile: 04_mega_project_4_delinquency_prevention/docker/Dockerfile
+    command: ["uvicorn", "payment_pattern_assignment_service:app", "--host", "0.0.0.0", "--port", "8012"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8012
+    ports:
+      - "8012:8012"
+
+  revolving-distress-scoring:      # Problem 3
+    build:
+      context: ../../
+      dockerfile: 04_mega_project_4_delinquency_prevention/docker/Dockerfile
+    command: ["uvicorn", "revolving_distress_scoring_service:app", "--host", "0.0.0.0", "--port", "8013"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8013
+    ports:
+      - "8013:8013"
+
+  pos-cash-trajectory-scoring:     # Problem 4
+    build:
+      context: ../../
+      dockerfile: 04_mega_project_4_delinquency_prevention/docker/Dockerfile
+    command: ["uvicorn", "pos_cash_trajectory_scoring_service:app", "--host", "0.0.0.0", "--port", "8014"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8014
+    ports:
+      - "8014:8014"

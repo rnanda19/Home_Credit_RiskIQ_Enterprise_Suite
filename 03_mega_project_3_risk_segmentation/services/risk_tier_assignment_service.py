@@ -25,13 +25,15 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 THIS_DIR = Path(__file__).resolve().parent
 MP3_DIR = THIS_DIR.parent
+SUITE_ROOT = MP3_DIR.parent
+sys.path.insert(0, str(SUITE_ROOT / "src"))
+from serving.auth_common import require_api_key
 
 SUMMARY_PATH = Path(
     os.environ.get("NB01_SUMMARY_PATH",
@@ -86,13 +88,13 @@ def health():
     return {"status": "ok", "n_real_tiers": N_TIERS}
 
 
-@app.get("/schema")
+@app.get("/schema", dependencies=[Depends(require_api_key)])
 def schema():
     return {"tier_labels": TIER_LABELS, "tier_bin_edges": [None if not (-1e300 < e < 1e300) else e
                                                              for e in TIER_BIN_EDGES]}
 
 
-@app.post("/score")
+@app.post("/score", dependencies=[Depends(require_api_key)])
 def score(request: RiskTierRequest):
     try:
         tier, idx = _assign_tier(request.PD)

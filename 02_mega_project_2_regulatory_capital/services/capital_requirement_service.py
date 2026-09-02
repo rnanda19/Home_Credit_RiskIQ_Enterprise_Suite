@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 THIS_DIR = Path(__file__).resolve().parent
@@ -39,6 +39,7 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from features.regulatory_capital_features import (
     SEGMENT_DEFINITIONS, SEGMENT_ORDER, other_retail_correlation, basel_retail_capital_k,
 )
+from serving.auth_common import require_api_key
 
 
 def _assign_segment(name_contract_type: str, flag_own_realty: str, flag_own_car: str) -> str:
@@ -75,14 +76,14 @@ def health():
     return {"status": "ok", "note": "Deterministic real Basel formula, no trained model -- see module docstring."}
 
 
-@app.get("/schema")
+@app.get("/schema", dependencies=[Depends(require_api_key)])
 def schema():
     return {"segment_order": SEGMENT_ORDER,
             "segment_definitions": {k: {kk: vv for kk, vv in v.items() if kk not in ("condition",)}
                                      for k, v in SEGMENT_DEFINITIONS.items()}}
 
 
-@app.post("/score")
+@app.post("/score", dependencies=[Depends(require_api_key)])
 def score(request: CapitalRequest):
     try:
         segment = _assign_segment(request.NAME_CONTRACT_TYPE, request.FLAG_OWN_REALTY or "N",

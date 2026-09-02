@@ -34,6 +34,19 @@ jobs:
               sys.exit(1)
           EOF
 
+  shared-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install shared serving dependencies
+        run: pip install fastapi "uvicorn[standard]" pydantic pytest httpx
+      - name: Run src/tests/ (HYPER shared-component tests -- auth_common.py,
+          explainability_common.py; no business data, no notebook artifacts needed)
+        run: python -m pytest src/tests/ -v
+
   unit-tests:
     runs-on: ubuntu-latest
     strategy:
@@ -42,6 +55,7 @@ jobs:
           - 01_mega_project_1_underwriting_approval
           - 02_mega_project_2_regulatory_capital
           - 03_mega_project_3_risk_segmentation
+          - 04_mega_project_4_delinquency_prevention
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -49,14 +63,24 @@ jobs:
           python-version: "3.11"
       - name: Install serving + test dependencies
         run: |
-          pip install -r ${{ matrix.project }}/services/requirements-services.txt
+          if [ -f "${{ matrix.project }}/services/requirements-services.txt" ]; then
+            pip install -r ${{ matrix.project }}/services/requirements-services.txt
+          fi
           pip install pytest httpx
+        if: hashFiles(format('{0}/tests/**', matrix.project)) != ''
       - name: Run scoring-service tests
         run: |
           cd ${{ matrix.project }}
           pytest tests/ -v
+        if: hashFiles(format('{0}/tests/**', matrix.project)) != ''
         # Tests that need a real trained model bundle or fitted segment
         # model (each project's own .joblib bundles -- gitignored, produced
         # only by running those notebooks on real data) are marked
         # skip-if-missing rather than failing CI on a fresh clone with no
         # bundle present yet -- see each project's tests/test_scoring_services.py.
+        # Every /schema and /score call in these tests now sends a real
+        # X-API-Key header matching a monkeypatched API_KEY env var
+        # (2026-09-02 hardening -- see src/serving/auth_common.py); /health
+        # stays unauthenticated on every service. The matrix includes Mega
+        # Project 4 with a hashFiles guard so this job does not fail before
+        # MP4's own tests/ directory exists yet.

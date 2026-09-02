@@ -1,11 +1,22 @@
 # Mega Project 2 — real deployable scoring services (2 problems, 1 shared image).
 # Run from the suite root: docker compose -f 02_mega_project_2_regulatory_capital/docker/docker-compose.yml up --build
+#
+# API_KEY is REQUIRED (2026-09-02 hardening) -- every /schema and /score
+# endpoint on every service now requires a real X-API-Key header (see
+# src/serving/auth_common.py). Set it in your shell or in a real .env file
+# next to this docker-compose.yml (see .env.example) before running; this
+# file deliberately never bakes a default key into the image or a compose
+# fallback -- an unset API_KEY fails the run immediately rather than
+# silently deploying an unauthenticated (or dev-default-keyed) service.
 services:
   capital-requirement:            # Problem 1
     build:
       context: ../../
       dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
     command: ["uvicorn", "capital_requirement_service:app", "--host", "0.0.0.0", "--port", "8005"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8005
     ports:
       - "8005:8005"
 
@@ -14,5 +25,8 @@ services:
       context: ../../
       dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
     command: ["uvicorn", "stress_testing_service:app", "--host", "0.0.0.0", "--port", "8006"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8006
     ports:
       - "8006:8006"

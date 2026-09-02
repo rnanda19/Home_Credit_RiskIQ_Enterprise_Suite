@@ -23,13 +23,22 @@ from features.regulatory_capital_features import compute_capital_row, other_reta
 REAL_ROW = {"PD": 0.08, "AMT_CREDIT": 500000.0, "NAME_CONTRACT_TYPE": "Cash loans",
             "FLAG_OWN_REALTY": "Y", "FLAG_OWN_CAR": "N"}
 
+# 2026-09-02 hardening: every service now requires a real X-API-Key header on
+# /schema and /score (never /health) -- see src/serving/auth_common.py.
+TEST_API_KEY = "pytest-only-test-key"
+AUTH = {"X-API-Key": TEST_API_KEY}
 
-def test_capital_requirement_service_matches_direct_computation():
+
+def test_capital_requirement_service_matches_direct_computation(monkeypatch):
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("capital_requirement_service", None)
     import capital_requirement_service as svc
 
     client = TestClient(svc.app)
-    resp = client.post("/score", json=REAL_ROW)
+    unauth = client.post("/score", json=REAL_ROW)
+    assert unauth.status_code == 401
+
+    resp = client.post("/score", json=REAL_ROW, headers=AUTH)
     assert resp.status_code == 200
     body = resp.json()
 
@@ -42,21 +51,23 @@ def test_capital_requirement_service_matches_direct_computation():
     assert body["capital_requirement"] == pytest.approx(expected["CAPITAL_REQUIREMENT"], abs=1e-6)
 
 
-def test_capital_requirement_service_revolving_segment_uses_pd_dependent_correlation():
+def test_capital_requirement_service_revolving_segment_uses_pd_dependent_correlation(monkeypatch):
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("capital_requirement_service", None)
     import capital_requirement_service as svc
 
     client = TestClient(svc.app)
     payload = {"PD": 0.15, "AMT_CREDIT": 200000.0, "NAME_CONTRACT_TYPE": "Cash loans",
                "FLAG_OWN_REALTY": "N", "FLAG_OWN_CAR": "N"}
-    resp = client.post("/score", json=payload)
+    resp = client.post("/score", json=payload, headers=AUTH)
     assert resp.status_code == 200
     body = resp.json()
     assert body["capital_segment"] == "Unsecured — Other Retail"
     assert body["correlation_r"] == pytest.approx(other_retail_correlation(0.15), abs=1e-9)
 
 
-def test_stress_testing_service_baseline_matches_capital_requirement_service():
+def test_stress_testing_service_baseline_matches_capital_requirement_service(monkeypatch):
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("capital_requirement_service", None)
     sys.modules.pop("stress_testing_service", None)
     import capital_requirement_service as cap_svc
@@ -65,26 +76,37 @@ def test_stress_testing_service_baseline_matches_capital_requirement_service():
     cap_client = TestClient(cap_svc.app)
     stress_client = TestClient(stress_svc.app)
 
-    cap_resp = cap_client.post("/score", json=REAL_ROW).json()
-    base_resp = stress_client.post("/score/Baseline", json=REAL_ROW).json()
+    cap_resp = cap_client.post("/score", json=REAL_ROW, headers=AUTH).json()
+    base_resp = stress_client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()
     assert base_resp["capital_requirement"] == pytest.approx(cap_resp["capital_requirement"], abs=1e-6)
 
 
-def test_stress_testing_service_severity_strictly_increases():
+def test_stress_testing_service_severity_strictly_increases(monkeypatch):
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("stress_testing_service", None)
     import stress_testing_service as svc
 
     client = TestClient(svc.app)
-    baseline = client.post("/score/Baseline", json=REAL_ROW).json()["capital_requirement"]
-    adverse = client.post("/score/Adverse", json=REAL_ROW).json()["capital_requirement"]
-    severe = client.post("/score/Severely Adverse", json=REAL_ROW).json()["capital_requirement"]
+    baseline = client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
+    adverse = client.post("/score/Adverse", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
+    severe = client.post("/score/Severely Adverse", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
     assert baseline < adverse < severe
 
 
-def test_stress_testing_service_rejects_unknown_scenario():
+def test_stress_testing_service_rejects_unknown_scenario(monkeypatch):
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("stress_testing_service", None)
     import stress_testing_service as svc
 
     client = TestClient(svc.app)
-    resp = client.post("/score/NotAScenario", json=REAL_ROW)
+    resp = client.post("/score/NotAScenario", json=REAL_ROW, headers=AUTH)
     assert resp.status_code == 404
+
+
+def test_stress_testing_service_requires_auth():
+    sys.modules.pop("stress_testing_service", None)
+    import stress_testing_service as svc
+
+    client = TestClient(svc.app)
+    resp = client.post("/score/Baseline", json=REAL_ROW)
+    assert resp.status_code == 401

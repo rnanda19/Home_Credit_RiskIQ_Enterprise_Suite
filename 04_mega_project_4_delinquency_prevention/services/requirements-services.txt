@@ -1,0 +1,14 @@
+# Lean runtime dependencies for the 4 deployable scoring services only --
+# deliberately NOT the full notebook/EDA/reporting stack (polars, jupyter,
+# matplotlib, python-docx, openpyxl, shap, lime, etc. are not needed here).
+# Same convention as Mega Project 1's own requirements-services.txt, minus
+# xgboost -- Notebooks 01/03/04's own real champion-screening candidates are
+# all scikit-learn estimators (LogisticRegression, DecisionTree,
+# RandomForest, GradientBoosting), never xgboost/lightgbm/catboost.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+scikit-learn>=1.4
+pandas>=2.0
+numpy>=1.26
+joblib>=1.3

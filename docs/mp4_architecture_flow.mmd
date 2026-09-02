@@ -1,0 +1,87 @@
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'16px','primaryTextColor':'#1a1a2e','lineColor':'#495057','edgeLabelBackground':'#ffffff'}}}%%
+flowchart TB
+    classDef dataStyle fill:#FFD43B,stroke:#E8590C,stroke-width:2px,color:#1a1a2e,font-weight:bold;
+    classDef hyperStyle fill:#4DABF7,stroke:#1864AB,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef bundleStyle fill:#9775FA,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef mpNodeStyle fill:#20C997,stroke:#0B7285,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef execStyle fill:#845EF7,stroke:#5F3DC4,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef serviceStyle fill:#51CF66,stroke:#2B8A3E,stroke-width:2px,color:#ffffff,font-weight:bold;
+
+    subgraph DATA["📂 Data (real, from Kaggle — never redistributed)"]
+        RAW["installments_payments.csv\ncredit_card_balance.csv / POS_CASH_balance.csv"]
+    end
+
+    subgraph MP1IN["🔗 Mega Project 1 output (reused, never re-scored)"]
+        BUNDLE01MP1[("notebook_01_champion_model.joblib")]
+    end
+
+    subgraph HYPER["🧩 src/ HYPER shared library (written once, imported everywhere)"]
+        FEAT["features/delinquency_features\nfeatures/revolving_distress_features\nfeatures/pos_cash_trajectory_features"]
+        REPORT["reporting/report_builder\nHTML + Word + Excel"]
+        UTIL["utils/performance_setup\nWARP resource ceilings"]
+        AUTH["serving/auth_common\nreal X-API-Key on every /schema + /score"]
+        EXPL["serving/explainability_common\nreal per-request top_reasons"]
+        SERVE["serving/scoring_service_common\nserving/segment_assignment_common\n(shared FastAPI builders, reused unchanged from MP1/MP3)"]
+    end
+
+    RAW --> NB01
+    RAW --> NB02
+    RAW --> NB03
+    RAW --> NB04
+    BUNDLE01MP1 -.loaded, never retrained.-> NB01
+    BUNDLE01MP1 -.loaded, never retrained.-> NB03
+    BUNDLE01MP1 -.loaded, never retrained.-> NB04
+    HYPER -.shared by every notebook & service below.-> MP4
+
+    subgraph MP4["🏦 Mega Project 4 — Delinquency Prevention"]
+        NB01["01 Early Delinquency Risk Scoring\n(4-model-screened classifier,\nreal installment-payment behavior)"]
+        NB02["02 Installment Payment Behavior Detection\n(K-Means, 7 real payment-streak features)"]
+        NB03["03 Revolving/Credit-Card Distress\nEarly Warning (classifier,\ncredit_card_balance.csv trajectory)"]
+        NB04["04 POS/Cash Loan Delinquency Trajectory\n(classifier, POS_CASH_balance.csv trajectory)"]
+        NB05["05 Early-Warning Intervention Ranking\n(real fusion of 1-4's scores,\npopulation-level, no service)"]
+        NB06["06 Executive Rollup\n(behavioral data coverage +\ncross-notebook consistency)"]
+    end
+
+    NB01 -.soft dependency.-> NB05
+    NB02 -.soft dependency.-> NB05
+    NB03 -.soft dependency.-> NB05
+    NB04 -.soft dependency.-> NB05
+
+    NB01 -->|"notebook_01_champion_model.joblib"| BUNDLE01[("champion bundle 01")]
+    NB02 -->|"notebook_02_kmeans_model.joblib"| BUNDLE02[("kmeans bundle 02")]
+    NB03 -->|"notebook_03_champion_model.joblib"| BUNDLE03[("champion bundle 03")]
+    NB04 -->|"notebook_04_champion_model.joblib"| BUNDLE04[("champion bundle 04")]
+
+    NB01 -->|report| NB06
+    NB02 -->|report| NB06
+    NB03 -->|report| NB06
+    NB04 -->|report| NB06
+    NB05 -->|report| NB06
+    NB06 --> EXEC["Executive report: HTML + Word + Excel\n(Real Behavioral Data Coverage +\nCross-Notebook Consistency)"]
+
+    HYPER -.auth + explainability + scoring/segment builders used by all 4 services.-> SERVICES
+
+    subgraph SERVICES["🚀 Deployable FastAPI services (Docker Compose, X-API-Key required)"]
+        SVC1["early_delinquency_scoring_service :8011\n(real top_reasons)"]
+        SVC2["payment_pattern_assignment_service :8012\n(real distance_to_each_segment)"]
+        SVC3["revolving_distress_scoring_service :8013\n(real top_reasons)"]
+        SVC4["pos_cash_trajectory_scoring_service :8014\n(real top_reasons)"]
+    end
+
+    BUNDLE01 --> SVC1
+    BUNDLE02 --> SVC2
+    BUNDLE03 --> SVC3
+    BUNDLE04 --> SVC4
+
+    class RAW dataStyle;
+    class BUNDLE01MP1,BUNDLE01,BUNDLE02,BUNDLE03,BUNDLE04 bundleStyle;
+    class FEAT,REPORT,UTIL,AUTH,EXPL,SERVE hyperStyle;
+    class NB01,NB02,NB03,NB04,NB05,NB06 mpNodeStyle;
+    class EXEC execStyle;
+    class SVC1,SVC2,SVC3,SVC4 serviceStyle;
+
+    style DATA fill:#FFF9DB,stroke:#F08C00,stroke-width:2px
+    style MP1IN fill:#F3F0FF,stroke:#7048E8,stroke-width:2px
+    style HYPER fill:#E7F5FF,stroke:#1971C2,stroke-width:2px
+    style MP4 fill:#E6FCF5,stroke:#0B7285,stroke-width:2px
+    style SERVICES fill:#EBFBEE,stroke:#2B8A3E,stroke-width:2px

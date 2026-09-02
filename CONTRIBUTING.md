@@ -64,11 +64,11 @@ down.
 
 ```bash
 make install-dev     # editable install + dev/serving/explainability extras
-make test-all         # notebook-check + pytest (all 3 built Mega Projects) + lint (advisory) + bandit (blocking)
+make test-all         # notebook-check + pytest (all 4 built Mega Projects) + lint (advisory) + bandit (blocking)
 ```
 
 Both run in CI on every push to `main` — see `.github/workflows/ci.yml`
-(notebook syntax + unit tests, matrixed across all 3 built Mega Projects)
+(notebook syntax + unit tests, matrixed across all 4 built Mega Projects)
 and `code-quality.yml` (pyflakes/black advisory, bandit blocking). See
 the [`Makefile`](Makefile) for individual targets.
 

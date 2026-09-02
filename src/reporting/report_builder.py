@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import inspect
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -72,6 +73,37 @@ def _contrast_text(hex_color: str) -> str:
     r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
     luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
     return "1a1a1a" if luminance > 0.6 else "FFFFFF"
+
+
+# ---------------------------------------------------------------------------
+# Real bug fix (2026-09-01, found on the user's real full-scale run): Excel
+# forbids \ / ? * [ ] : in a worksheet title. Mega Project 4's own real
+# problem names -- "Revolving/Credit-Card Distress Early Warning", "POS/Cash
+# Loan Delinquency Trajectory" -- both contain a literal real "/", which
+# previously reached wb.create_sheet() unsanitized and crashed with
+# openpyxl's "Invalid character / found in sheet title" on the real dataset
+# (never on this suite's own synthetic fixture, whose problem labels never
+# happened to contain one of these characters). This is a real, disclosed
+# label-formatting bug in this shared HYPER module, not a data-quality bug --
+# fixed once here so every past and future caller (any Mega Project's
+# executive rollup) is protected, without altering the real, unsanitized
+# label anywhere else (reports, charts, insights all keep the real name).
+# ---------------------------------------------------------------------------
+_INVALID_SHEET_CHARS_RE = re.compile(r"[\\/?*\[\]:]")
+
+
+def safe_sheet_name(name: str, max_len: int = 31) -> str:
+    """Return an Excel-legal worksheet title: characters Excel itself forbids
+    in a sheet title (\\ / ? * [ ] :) replaced with '-', a leading/trailing
+    apostrophe stripped (also forbidden), truncated to max_len (Excel's own
+    31-character sheet-name limit by default), and never left empty. Callers
+    that build a sheet name AND separately need to look that same sheet back
+    up by name later (e.g. to embed a chart into it) should call this
+    function themselves on the exact same input and reuse the result, so the
+    name they look up always matches the name actually created here."""
+    cleaned = _INVALID_SHEET_CHARS_RE.sub("-", name).strip()
+    cleaned = cleaned.strip("'")
+    return (cleaned or "Sheet")[:max_len]
 
 
 # ---------------------------------------------------------------------------
@@ -290,7 +322,7 @@ def build_excel_workbook(
         ws0.column_dimensions[col].width = width
 
     for idx, sheet in enumerate(data_sheets):
-        ws = wb.create_sheet(sheet["name"][:31])
+        ws = wb.create_sheet(safe_sheet_name(sheet["name"]))
         ws.append(sheet["headers"])
         header_color = VIVID_PALETTE[idx % len(VIVID_PALETTE)]
         header_font_color = _contrast_text(header_color)
@@ -324,7 +356,7 @@ def build_excel_workbook(
             ws.column_dimensions[get_column_letter(i)].width = max(14, len(str(header)) + 4)
 
     if formula_sheet:
-        ws = wb.create_sheet(formula_sheet["name"][:31])
+        ws = wb.create_sheet(safe_sheet_name(formula_sheet["name"]))
         ws.append(["Metric", "Value"])
         for c in ws[1]:
             c.font = HEADER_FONT
@@ -336,7 +368,7 @@ def build_excel_workbook(
         ws.column_dimensions["B"].width = 20
 
     if insights_sheet:
-        ws = wb.create_sheet(insights_sheet["name"][:31])
+        ws = wb.create_sheet(safe_sheet_name(insights_sheet["name"]))
         headers = ["#", "Headline", "Specific", "Measurable", "Achievable", "Relevant", "Time-bound"]
         widths = [4, 30, 38, 32, 32, 32, 32]
         ws.append(headers)

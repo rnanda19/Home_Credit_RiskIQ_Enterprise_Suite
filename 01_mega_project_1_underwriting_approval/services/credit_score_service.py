@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 
 THIS_DIR = Path(__file__).resolve().parent
 MP1_DIR = THIS_DIR.parent
@@ -34,6 +34,8 @@ SUITE_ROOT = MP1_DIR.parent
 
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.scoring_service_common import load_bundle, score_one, build_request_model
+from serving.auth_common import require_api_key
+from serving.explainability_common import top_reason_codes
 
 BUNDLE_PATH = Path(
     os.environ.get("NB01_BUNDLE_PATH", str(MP1_DIR / "decision_engine" / "artifacts" / "notebook_01_champion_model.joblib"))
@@ -69,25 +71,33 @@ def health():
             "scaling_assumptions": SCALING_ASSUMPTIONS}
 
 
-@app.get("/schema")
+@app.get("/schema", dependencies=[Depends(require_api_key)])
 def schema():
     return {"numeric_features": _numeric_features, "categorical_features": _categorical_features,
             "upstream_champion_model": _champion_name}
 
 
-@app.post("/score")
+@app.post("/score", dependencies=[Depends(require_api_key)])
 def score(request: RequestModel):
+    payload = request.model_dump()
     try:
-        pd_value = score_one(_bundle, request.model_dump())
+        pd_value = score_one(_bundle, payload)
         pd_clipped = float(np.clip(pd_value, 1e-6, 1 - 1e-6))
         odds = (1 - pd_clipped) / pd_clipped
         raw_score = OFFSET + FACTOR * np.log(odds)
         credit_score = float(np.clip(raw_score, 300, 900))
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
+    baseline_payload = {f: None for f in _numeric_features + _categorical_features}
+    top_reasons = top_reason_codes(
+        predict_fn=lambda p: score_one(_bundle, p),
+        raw_payload=payload,
+        baseline_payload=baseline_payload,
+    )
     return {
         "credit_score": credit_score,
         "probability_of_default": pd_clipped,
         "scaling_assumptions": SCALING_ASSUMPTIONS,
         "champion_model": _champion_name,
+        "top_reasons": top_reasons,
     }

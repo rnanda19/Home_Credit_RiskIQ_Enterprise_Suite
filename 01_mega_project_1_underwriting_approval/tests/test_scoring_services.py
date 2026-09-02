@@ -21,6 +21,13 @@ ARTIFACTS_DIR = MP1_DIR / "decision_engine" / "artifacts"
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 sys.path.insert(0, str(MP1_DIR / "services"))
 
+# 2026-09-02 hardening: every service now requires a real X-API-Key header on
+# /schema and /score (never /health) -- see src/serving/auth_common.py. Every
+# test below that calls /schema or /score sets this same real env var via
+# monkeypatch and sends this same header.
+TEST_API_KEY = "pytest-only-test-key"
+AUTH = {"X-API-Key": TEST_API_KEY}
+
 
 def _direct_score(bundle, row: dict) -> float:
     """Reference computation, independent of the service code under test --
@@ -60,6 +67,7 @@ skip_no_nb02 = pytest.mark.skipif(not NB02_BUNDLE_PATH.exists(), reason="Noteboo
 @skip_no_nb01
 def test_credit_default_scoring_service_matches_direct_computation(monkeypatch):
     monkeypatch.setenv("NB01_BUNDLE_PATH", str(NB01_BUNDLE_PATH))
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("credit_default_scoring_service", None)
     import credit_default_scoring_service as svc
 
@@ -72,18 +80,24 @@ def test_credit_default_scoring_service_matches_direct_computation(monkeypatch):
     row = _sample_row(bundle)
     expected = _direct_score(bundle, row)
 
-    resp = client.post("/score", json=row)
+    # No key -> 401 (real auth retrofit, 2026-09-02 hardening)
+    unauth = client.post("/score", json=row)
+    assert unauth.status_code == 401
+
+    resp = client.post("/score", json=row, headers=AUTH)
     assert resp.status_code == 200
     got = resp.json()["probability_of_default"]
     assert got == pytest.approx(expected, abs=1e-6), (
         f"Service score {got} does not bit-match direct computation {expected}"
     )
     assert 0.0 <= got <= 1.0
+    assert isinstance(resp.json()["top_reasons"], list)
 
 
 @skip_no_nb02
 def test_loan_approval_scoring_service_matches_direct_computation(monkeypatch):
     monkeypatch.setenv("NB02_BUNDLE_PATH", str(NB02_BUNDLE_PATH))
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("loan_approval_scoring_service", None)
     import loan_approval_scoring_service as svc
 
@@ -92,16 +106,21 @@ def test_loan_approval_scoring_service_matches_direct_computation(monkeypatch):
     row = _sample_row(bundle)
     expected = _direct_score(bundle, row)
 
-    resp = client.post("/score", json=row)
+    unauth = client.post("/score", json=row)
+    assert unauth.status_code == 401
+
+    resp = client.post("/score", json=row, headers=AUTH)
     assert resp.status_code == 200
     got = resp.json()["approval_probability"]
     assert got == pytest.approx(expected, abs=1e-6)
     assert 0.0 <= got <= 1.0
+    assert isinstance(resp.json()["top_reasons"], list)
 
 
 @skip_no_nb01
 def test_credit_score_service_pdo_scaling_matches_manual_computation(monkeypatch):
     monkeypatch.setenv("NB01_BUNDLE_PATH", str(NB01_BUNDLE_PATH))
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("credit_score_service", None)
     import credit_score_service as svc
 
@@ -115,7 +134,10 @@ def test_credit_score_service_pdo_scaling_matches_manual_computation(monkeypatch
     offset = 600.0 - factor * np.log(50.0)
     expected_score = float(np.clip(offset + factor * np.log(odds), 300, 900))
 
-    resp = client.post("/score", json=row)
+    unauth = client.post("/score", json=row)
+    assert unauth.status_code == 401
+
+    resp = client.post("/score", json=row, headers=AUTH)
     assert resp.status_code == 200
     body = resp.json()
     assert body["credit_score"] == pytest.approx(expected_score, abs=1e-4)
@@ -124,14 +146,18 @@ def test_credit_score_service_pdo_scaling_matches_manual_computation(monkeypatch
     assert body["scaling_assumptions"]["pdo"] == 20.0
 
 
-def test_repayment_capacity_service_formulas():
+def test_repayment_capacity_service_formulas(monkeypatch):
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("repayment_capacity_service", None)
     import repayment_capacity_service as svc
 
     client = TestClient(svc.app)
     payload = {"AMT_INCOME_TOTAL": 200000.0, "AMT_ANNUITY": 24000.0, "AMT_CREDIT": 500000.0,
                "BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL": 100000.0}
-    resp = client.post("/score", json=payload)
+    unauth = client.post("/score", json=payload)
+    assert unauth.status_code == 401
+
+    resp = client.post("/score", json=payload, headers=AUTH)
     assert resp.status_code == 200
     body = resp.json()
     expected_capacity = 200000.0 / (24000.0 + 1.0)
@@ -140,12 +166,13 @@ def test_repayment_capacity_service_formulas():
     assert body["total_debt_burden_ratio"] == pytest.approx(expected_burden, abs=1e-9)
 
 
-def test_repayment_capacity_service_handles_missing_annuity_gracefully():
+def test_repayment_capacity_service_handles_missing_annuity_gracefully(monkeypatch):
+    monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("repayment_capacity_service", None)
     import repayment_capacity_service as svc
 
     client = TestClient(svc.app)
-    resp = client.post("/score", json={"AMT_INCOME_TOTAL": 100000.0})
+    resp = client.post("/score", json={"AMT_INCOME_TOTAL": 100000.0}, headers=AUTH)
     assert resp.status_code == 200
     body = resp.json()
     assert body["repayment_capacity_ratio"] is None

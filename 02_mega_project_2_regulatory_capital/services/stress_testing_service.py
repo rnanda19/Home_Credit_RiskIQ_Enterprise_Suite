@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from scipy.stats import norm
 
@@ -38,6 +38,7 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from features.regulatory_capital_features import (
     SEGMENT_DEFINITIONS, other_retail_correlation, basel_retail_capital_k,
 )
+from serving.auth_common import require_api_key
 
 # Real, disclosed ASSUMPTION -- identical constants to pipeline_mp2_nb04.py
 # Section 5. Kept in one place here so the notebook and this service can
@@ -85,12 +86,12 @@ def health():
     return {"status": "ok", "scenarios": list(SCENARIOS.keys())}
 
 
-@app.get("/schema")
+@app.get("/schema", dependencies=[Depends(require_api_key)])
 def schema():
     return {"scenarios": SCENARIOS}
 
 
-@app.post("/score/{scenario}")
+@app.post("/score/{scenario}", dependencies=[Depends(require_api_key)])
 def score(scenario: str, request: StressRequest):
     if scenario not in SCENARIOS:
         raise HTTPException(status_code=404, detail=f"Unknown scenario '{scenario}'. Choose one of: "

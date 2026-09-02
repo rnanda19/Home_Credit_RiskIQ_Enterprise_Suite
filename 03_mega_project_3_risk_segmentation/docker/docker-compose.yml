@@ -1,11 +1,22 @@
 # Mega Project 3 — real deployable scoring services (4 problems, 1 shared image).
 # Run from the suite root: docker compose -f 03_mega_project_3_risk_segmentation/docker/docker-compose.yml up --build
+#
+# API_KEY is REQUIRED (2026-09-02 hardening) -- every /schema and /score
+# endpoint on every service now requires a real X-API-Key header (see
+# src/serving/auth_common.py). Set it in your shell or in a real .env file
+# next to this docker-compose.yml (see .env.example) before running; this
+# file deliberately never bakes a default key into the image or a compose
+# fallback -- an unset API_KEY fails the run immediately rather than
+# silently deploying an unauthenticated (or dev-default-keyed) service.
 services:
   risk-tier-assignment:           # Problem 1
     build:
       context: ../../
       dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
     command: ["uvicorn", "risk_tier_assignment_service:app", "--host", "0.0.0.0", "--port", "8007"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8007
     ports:
       - "8007:8007"
 
@@ -14,6 +25,9 @@ services:
       context: ../../
       dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
     command: ["uvicorn", "bureau_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8008"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8008
     ports:
       - "8008:8008"
 
@@ -22,6 +36,9 @@ services:
       context: ../../
       dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
     command: ["uvicorn", "repayment_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8009"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8009
     ports:
       - "8009:8009"
 
@@ -30,5 +47,8 @@ services:
       context: ../../
       dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
     command: ["uvicorn", "utilization_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8010"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8010
     ports:
       - "8010:8010"

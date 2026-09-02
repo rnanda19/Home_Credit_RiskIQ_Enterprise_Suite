@@ -39,8 +39,20 @@ ENV PYTHONPATH=/app/src
 ENV NB01_BUNDLE_PATH=/app/01_mega_project_1_underwriting_approval/decision_engine/artifacts/notebook_01_champion_model.joblib
 ENV NB02_BUNDLE_PATH=/app/01_mega_project_1_underwriting_approval/decision_engine/artifacts/notebook_02_champion_model.joblib
 
+# Real, non-root runtime user (2026-09-02 hardening) -- these services never
+# need root once dependencies are installed and files are copied in.
+RUN useradd --create-home --uid 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
 WORKDIR /app/services
 EXPOSE 8001 8002 8003 8004
+
+# Real liveness probe against each service's own unauthenticated /health
+# endpoint (2026-09-02 hardening) -- the port is set per-service by
+# docker-compose.yml's HEALTHCHECK_PORT env var below.
+ENV HEALTHCHECK_PORT=8001
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD python -c "import os,urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ[\"HEALTHCHECK_PORT\"]}/health', timeout=3)" || exit 1
 
 # Default command runs Problem 1's service; docker-compose.yml overrides the
 # command per real service/port for the other 3.

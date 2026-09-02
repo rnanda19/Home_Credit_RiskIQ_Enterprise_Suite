@@ -1,11 +1,22 @@
 # Mega Project 1 — real deployable scoring services (4 problems, 1 shared image).
 # Run from the suite root: docker compose -f 01_mega_project_1_underwriting_approval/docker/docker-compose.yml up --build
+#
+# API_KEY is REQUIRED (2026-09-02 hardening) -- every /schema and /score
+# endpoint on every service now requires a real X-API-Key header (see
+# src/serving/auth_common.py). Set it in your shell or in a real .env file
+# next to this docker-compose.yml (see .env.example) before running; this
+# file deliberately never bakes a default key into the image or a compose
+# fallback -- an unset API_KEY fails the run immediately rather than
+# silently deploying an unauthenticated (or dev-default-keyed) service.
 services:
   credit-default-prediction:      # Problem 1
     build:
       context: ../../
       dockerfile: 01_mega_project_1_underwriting_approval/docker/Dockerfile
     command: ["uvicorn", "credit_default_scoring_service:app", "--host", "0.0.0.0", "--port", "8001"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8001
     ports:
       - "8001:8001"
 
@@ -14,6 +25,9 @@ services:
       context: ../../
       dockerfile: 01_mega_project_1_underwriting_approval/docker/Dockerfile
     command: ["uvicorn", "loan_approval_scoring_service:app", "--host", "0.0.0.0", "--port", "8002"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8002
     ports:
       - "8002:8002"
 
@@ -22,6 +36,9 @@ services:
       context: ../../
       dockerfile: 01_mega_project_1_underwriting_approval/docker/Dockerfile
     command: ["uvicorn", "credit_score_service:app", "--host", "0.0.0.0", "--port", "8003"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8003
     ports:
       - "8003:8003"
 
@@ -30,5 +47,8 @@ services:
       context: ../../
       dockerfile: 01_mega_project_1_underwriting_approval/docker/Dockerfile
     command: ["uvicorn", "repayment_capacity_service:app", "--host", "0.0.0.0", "--port", "8004"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - HEALTHCHECK_PORT=8004
     ports:
       - "8004:8004"

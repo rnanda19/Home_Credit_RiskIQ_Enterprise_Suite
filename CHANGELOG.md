@@ -3,6 +3,544 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.9.8] - 2026-09-02
+
+### Hardening pass, part 2: Mega Project 4 built hardened (services + Docker + tests + CI + architecture diagram), root README brought current
+
+Completes the hardening pass started in [1.9.7], bringing Mega Project 4
+to full parity with Mega Projects 1-3 and closing the real gap that this
+suite's own root `README.md`/`ROADMAP.md` still read "3 of 5 Mega
+Projects built" and listed Mega Project 4 as "scoped, not yet built" —
+stale since Mega Project 4's 6 notebooks were actually completed earlier
+in this session.
+
+- **4 new deployable FastAPI services**, hardened from day one (never
+  needed a retrofit, unlike Mega Projects 1-3):
+  `early_delinquency_scoring_service.py` :8011,
+  `payment_pattern_assignment_service.py` :8012,
+  `revolving_distress_scoring_service.py` :8013,
+  `pos_cash_trajectory_scoring_service.py` :8014. Every one requires a
+  real `X-API-Key` header on `/schema`/`/score`; the 3 classifier services
+  return real `top_reasons`, the clustering service returns real
+  `distance_to_each_segment`.
+  Problem 5 (Early-Warning Intervention Ranking) gets no service —
+  a population-level fusion, not a per-record model — matching Mega
+  Project 3's own Problem 5 precedent.
+- **A real generalization to the two shared HYPER serving factories**,
+  rather than duplicating them a second time: Mega Project 4's Notebook
+  01/03/04 bundles have no categorical features at all (so no
+  `ordinal_encoder`/`numeric_features`/`categorical_features` keys), and
+  Notebook 02's clustering bundle uses `feature_cols`/`pattern_labels`
+  instead of the canonical `feature_names`/`segment_labels`.
+  `scoring_service_common.load_bundle()` and
+  `segment_assignment_common.load_bundle()` now fill in real, documented
+  defaults/aliases for these when absent — every existing Mega Project
+  1/3 bundle, which already carries the canonical keys, is completely
+  unaffected (verified: 6 new real tests in `src/tests/test_serving_common.py`,
+  including one asserting the canonical-key path is untouched).
+- **Docker**: new `04_mega_project_4_delinquency_prevention/docker/`
+  (`Dockerfile` + `docker-compose.yml` + `.env.example`), built with the
+  same non-root user, real `HEALTHCHECK`, and required-`API_KEY`
+  ( `${API_KEY:?...}` ) pattern added to Mega Projects 1-3 in [1.9.7] —
+  verified structurally via `docker compose config` (confirms it correctly
+  refuses to run without `API_KEY` set, and resolves cleanly once it is)
+  and a static `COPY`-path check; no Docker daemon in this build
+  environment, so an actual `docker build`/`docker run` has not been
+  performed (same disclosed limitation as Mega Projects 1-3).
+- **New pytest suite**: `04_mega_project_4_delinquency_prevention/tests/test_scoring_services.py`
+  — the 3 classifier services checked bit-identical against direct
+  `model.predict_proba()` computation, the clustering service against
+  `assign_segment()` called directly; every test also asserts a 401
+  without the `X-API-Key` header. Skip-if-missing on each notebook's real
+  `.joblib` bundle, same convention as Mega Projects 1-3. Verified in this
+  build environment against real, hand-built, structurally-matching
+  bundles (temporarily placed at the real artifact paths, deleted after);
+  never against the user's actual data.
+- **New architecture diagram**: `docs/mp4_architecture_flow.mmd`/`.png`,
+  embedded in Mega Project 4's own README, matching Mega Projects 1-3's
+  diagram convention.
+- **CI/Makefile**: `code-quality.yml`'s pyflakes/black/bandit steps and
+  `Makefile`'s `test`/`lint`/`security` targets now include Mega Project
+  4's `services/`/`tests/`; `ci.yml`'s `unit-tests` matrix (extended in
+  [1.9.7] with a `hashFiles` guard ahead of this work landing) now
+  actually exercises Mega Project 4's real test suite.
+- **2 real pre-existing lint findings fixed** (found via a real
+  `pyflakes` run while verifying this pass, not newly introduced by it):
+  an unused `typing.Optional` import in
+  `src/serving/segment_assignment_common.py` and in Mega Project 3's
+  `risk_tier_assignment_service.py`. `pyflakes` and `bandit -ll` both now
+  report 0 issues across every `src/`, `services/`, and `tests/` path this
+  repo's CI lints.
+- **Root `README.md`/`ROADMAP.md` brought current**: status line, Skills
+  Demonstrated MLOps row, Platform-at-a-Glance table, Repository
+  Structure, Architecture Diagrams table, Live Dashboards (Mega Project
+  4's Problems 1-2, the only ones with a fixture-generated dashboard to
+  publish), How to Run, and Repository Hardening history all now
+  correctly reflect 4 of 5 Mega Projects built, 14 total services, and 24
+  total notebooks.
+- Verification: `py_compile` clean on every new/edited `.py` file;
+  `pyflakes` and `bandit -r ... -ll` both 0 findings; the full pytest
+  suite (`src/tests/` + all 4 Mega Projects' `tests/`) run the way
+  `Makefile`/`ci.yml` actually invoke it (each project's own directory,
+  matching CI's matrix job) — 18 (`src/tests/`) + 10 (MP1, including 5
+  real bit-identical checks against this build environment's own
+  pre-existing, policy-compliant fixture artifacts from MP1's original
+  build) + 6 (MP2) passed, 0 failed; MP3's and MP4's own
+  `test_scoring_services.py` correctly skip (no real notebook artifacts
+  present in this sandbox for MP3, and MP4's real artifacts are the
+  user's to produce by running the notebooks). No business-data run was
+  performed by this pass itself, per the standing 2026-09-01 policy.
+
+## [1.9.7] - 2026-09-02
+
+### Hardening pass, part 1: real API-key authentication + real per-request explainability on every existing deployable service (Mega Projects 1-3)
+
+Prompted by an explicit instruction to bring this suite's hardening up to
+parity with the AMEX RiskIQ Enterprise Credit Risk Platform (a related,
+larger prior project on this account) and to close every real gap found.
+A repo-wide audit (`grep -rln "API_KEY\|APIKeyHeader\|Security("`) found
+**zero matches** across all 10 of this suite's existing deployable FastAPI
+services — the exact same "single largest gap" that project's own
+hardening history documents having found and fixed in itself.
+
+- **New HYPER shared modules** — `src/serving/auth_common.py`
+  (`configured_api_key()` / `require_api_key()`, real `X-API-Key` header
+  auth via `fastapi.security.APIKeyHeader`, constant-time comparison via
+  `secrets.compare_digest`, a published dev-only fallback key with a loud
+  `logging.warning` when `API_KEY` is unset) and
+  `src/serving/explainability_common.py` (`top_reason_codes()`, real
+  per-request occlusion-based reason codes — reset one real feature to its
+  own real baseline, measure the resulting real change in predicted
+  probability, rank by `|contribution|` — mirrors CFPB Circular 2022-03's
+  "specific, principal reason" standard). Both built once and imported by
+  every service, never duplicated.
+- **All 10 existing services now require `X-API-Key` on every `/schema`
+  and `/score` endpoint** (`/health` stays unauthenticated, for liveness
+  probes): the two shared-factory services
+  (`scoring_service_common.build_scoring_app()`,
+  `segment_assignment_common.build_segment_app()`) retrofit 5 services at
+  once; the other 5 standalone services
+  (`credit_score_service.py`, `repayment_capacity_service.py`,
+  `capital_requirement_service.py`, `stress_testing_service.py`,
+  `risk_tier_assignment_service.py`) were edited individually.
+- **Real per-request explainability added** to every classifier-backed
+  service (`credit_default_scoring_service`, `loan_approval_scoring_service`
+  via the shared factory; `credit_score_service` standalone) — a new
+  `"top_reasons"` field, computed live via `top_reason_codes()` against
+  the real loaded model on every call. The clustering-backed segment
+  services gained a real, non-fabricated `"distance_to_each_segment"`
+  field instead (`kmeans.transform()`'s own real Euclidean distances to
+  every real fitted centroid, sorted nearest-first) — the same real
+  transparency addition, adapted to what a clustering model can honestly
+  report. The 4 purely deterministic-formula services (repayment
+  capacity, capital requirement, stress testing, risk tier) got auth
+  only — no explainability was added, since a disclosed closed-form
+  formula is already fully transparent by construction.
+- **Docker hardening, matching the AMEX platform's own pattern**: all 3
+  existing `Dockerfile`s now run as a real non-root user
+  (`useradd --create-home --uid 1000`) and carry a real `HEALTHCHECK`
+  (a Python `urllib` request against that service's own unauthenticated
+  `/health`) — never `ENV API_KEY` baked into any layer. All 3
+  `docker-compose.yml` files now require `API_KEY` via
+  `${API_KEY:?Set API_KEY before running...}` (fails fast rather than
+  silently deploying with the dev-only fallback key) and set a real
+  `HEALTHCHECK_PORT` per service. New `docker/.env.example` in each Mega
+  Project documents the required variable; `.gitignore` now excludes real
+  `.env`/`.env.*` files while keeping the `.example` templates.
+- **Existing pytest suites fixed so the retrofit does not regress them**
+  (a real, previously-passing-locally test suite breaking under new auth
+  would itself have been a new bug): every `/schema`/`/score` call in
+  `01_.../tests/test_scoring_services.py`,
+  `02_.../tests/test_scoring_services.py`, and
+  `03_.../tests/test_scoring_services.py` now sets a real `API_KEY` env
+  var via `monkeypatch` and sends the matching `X-API-Key` header; each
+  file also gained an explicit `test_..._requires_auth`-style assertion
+  that the endpoint 401s with no key. MP3's segment-assignment tests
+  (`_cross_check_segment_service`) call `assign_segment()` directly, not
+  through the HTTP layer, so they were unaffected and needed no change.
+- **New real, executed test suite for the two new shared modules**:
+  `src/tests/test_serving_common.py` (12 tests, all passing) — hand-built,
+  independently-computable expectations for `auth_common.py` (missing key,
+  wrong key, correct key, dev-default fallback, `/health` staying
+  unauthenticated, and a source-inspection regression test that
+  `require_api_key` really uses `secrets.compare_digest`, never `==`) and
+  `explainability_common.py` (a hand-computable linear scoring function
+  whose occlusion contributions are checked to the value, ranking order,
+  `n`-truncation, and the empty-list-at-baseline case). Pure code-
+  correctness tests, no business data, no notebook artifacts — consistent
+  with the standing 2026-09-01 no-fixture verification policy.
+- **CI/Makefile wired up**: `ci.yml` gained a `shared-tests` job running
+  `src/tests/`; the `unit-tests` matrix now includes Mega Project 4 guarded
+  by `hashFiles(...) != ''` (ahead of MP4's own services/tests landing in
+  part 2 of this hardening pass, so this job never fails on a directory
+  that doesn't exist yet); `Makefile`'s `test` target now runs
+  `pytest src/tests/` first.
+- Verification for every code change above: `py_compile` on every edited/
+  new `.py` file (0 errors); `src/tests/test_serving_common.py` actually
+  executed (12/12 passed) — these are structural code-correctness checks
+  against hand-built fixtures, never a run against the user's real data,
+  per the standing 2026-09-01 policy. The pre-existing MP1/MP2/MP3
+  `test_scoring_services.py` suites still require the user's own real
+  notebook artifacts to exercise for real (they remain `skipif`-guarded on
+  those artifacts existing, as before this pass).
+
+## [1.9.6] - 2026-09-01
+
+### Fix real Mega Project 4 Notebook 6 crash found on user's full-scale real run: Excel forbids "/" in a sheet title
+
+Real crash on the user's real run (307,511 applicants, 5/5 real problem
+summaries found, all rollup logic and cross-checks passed CONFIRMED):
+`ValueError: Invalid character / found in sheet title`, raised by openpyxl
+while Notebook 6 built its Excel workbook.
+
+- **Root cause**: two of Mega Project 4's own real problem names —
+  "Revolving/Credit-Card Distress Early Warning" (Problem 3) and "POS/Cash
+  Loan Delinquency Trajectory" (Problem 4) — contain a literal real `/`,
+  which Excel forbids in a worksheet title. That real `/` reached
+  `wb.create_sheet()` unsanitized. This suite's own synthetic fixture, and
+  every prior Mega Project's own executive rollup, never happened to have
+  a problem label containing one of Excel's forbidden sheet-title
+  characters (`\ / ? * [ ] :`), so this was a latent bug in the shared
+  HYPER `src/reporting/report_builder.py` module, never triggered before.
+- **Fix**: new `safe_sheet_name()` function added to
+  `report_builder.py` — replaces `\ / ? * [ ] :` with `-`, strips a
+  leading/trailing apostrophe (also forbidden by Excel), truncates to
+  Excel's own 31-character sheet-name limit. Used internally by every
+  `wb.create_sheet()` call inside `build_excel_workbook()`, protecting
+  every past and future caller (any Mega Project's own rollup), not just
+  Notebook 6. `pipeline_mp4_nb06.py`'s own two local sheet-name-
+  construction sites (building the per-problem sheet, and later looking
+  it back up by name to embed its real chart PNG) now call the same
+  function on the same input, so the two are guaranteed to always match.
+  The real, unsanitized problem label is never altered anywhere else —
+  reports, charts, and insights keep the real name in full.
+- Verified: `safe_sheet_name()` run directly against all 5 real MP4
+  problem labels (0 forbidden characters survive, both call sites
+  produce an identical name for the same input); a real, direct
+  `build_excel_workbook()` integration test using the two labels that
+  actually crashed — confirmed to build a real `.xlsx` with 0 errors and
+  the expected sanitized sheet names present.
+- `src/reporting/report_builder.py`,
+  `04_mega_project_4_delinquency_prevention/notebooks/06_mp4_executive_report.ipynb`,
+  `04_mega_project_4_delinquency_prevention/model_cards/06_mp4_executive_report_MODEL_CARD.md`
+  updated. No `sample_reports/` entry (per 1.9.3's policy) — not executed
+  against any data, per the standing 2026-09-01 policy.
+
+## [1.9.5] - 2026-09-01
+
+### Mega Project 4 Notebook 6 built (no synthetic fixture, per 1.9.3's policy) — Mega Project 4 notebooks now complete (6/6)
+
+Problem 6 — Executive Rollup:
+
+- Trains, clusters, and fits nothing new. A real, disclosed rollup of
+  whichever of Problems 1-5's own already-computed real governance
+  summaries (`decision_engine/reports/notebook_0N_summary.json`) are on
+  disk — each is a soft dependency, loaded only if that notebook has
+  already been run, never fabricated for a missing one.
+- Two genuinely new pieces of synthesis: (1) "Real Behavioral Data
+  Coverage" — each of Problems 1-4's real scope population (applicants
+  with at least one real record in that problem's underlying table) as a
+  fraction of the real total applicant population, independently
+  re-derived straight from that problem's own summary — deliberately does
+  not assume these fractions should be equal across product lines; (2) a
+  real cross-notebook consistency check confirming Notebook 05's own real
+  `signals_available` record matches which of Notebooks 01-04's real
+  summaries actually exist on this run, signal by signal, plus a check
+  that `n_app_total` (the real `application_train.csv` row count) is
+  identical across every available classifier/clustering notebook.
+- Surfaces all three of this Mega Project's verdict-tier families side by
+  side, correctly labeled, never conflated: "Statistical Robustness
+  Verdict" (Problems 1, 3, 4), "Clustering Robustness Verdict" (Problem
+  2), and "Ranking Comparison Verdict" (Problem 5) — mirrors the
+  disclosed two-verdict-family pattern Mega Project 3's own executive
+  rollup already established.
+- Reporting package: `mp4_executive_report.docx`,
+  `mp4_executive_report.xlsx` (big-letters front "Executive Rollup" sheet
+  with a native openpyxl `BarChart`, one sheet per problem with that
+  problem's own real chart PNG embedded, Problem Rollup and Behavioral
+  Coverage sheets, formula-driven Assumptions/Financial Impact sheets,
+  SMART Insights sheet), `mp4_executive_dashboard.html` (real KPI cards,
+  up to 5 charts including a real holdout-ROC-AUC comparison across
+  Problems 1/3/4's classifiers, a Key Insights grid, a searchable
+  per-problem rollup table), plus supporting CSVs and
+  `mp4_executive_summary.json`.
+- Verified via 3 hand-built mock-summary test cases (full availability,
+  partial availability with a deliberate signal mismatch, a deliberate
+  `n_app_total` mismatch) — every derived coverage fraction, sort order,
+  and consistency flag checked by hand and confirmed exact, including
+  that both deliberate mismatches were correctly caught and named.
+- `notebooks/06_mp4_executive_report.ipynb`. No `sample_reports/` entry
+  (per 1.9.3's policy). Syntax/AST-checked and `nbformat.validate()`-
+  passed; not executed against any data.
+
+Mega Project 4's 6-notebook scope is now fully built. Services/Docker/
+tests/CI hardening for MP4 (matching Mega Projects 1-3's own hardening
+pass) has not started yet — see `ROADMAP.md`.
+
+## [1.9.4] - 2026-09-01
+
+### Mega Project 4 Problems 4-5 built (no synthetic fixture, per 1.9.3's policy) — all 5 problems now built
+
+Problem 4 — POS/Cash Loan Delinquency Trajectory:
+
+- New HYPER module `src/features/pos_cash_trajectory_features.py`
+  (`engineer_pos_cash_trajectory_features`): 8 real, vectorized trajectory
+  features from `POS_CASH_balance.csv` — real DPD spikes (month-over-month
+  change, threshold 5 days), real DPD streaks (run-length encoding, same
+  technique as Problems 2 and 3), and real instalment-repayment-progress
+  velocity (recency-split trend in remaining instalment count, same
+  technique as Problem 1's `LATE_RATE_TREND`). Distinct from MP1's SUM
+  totals and Mega Project 3 Notebook 03's rate/level segmentation of the
+  same table. Proactively applies the disclosed null-handling convention
+  from Problems 1-2's 2026-09-01 fix (defensive `SK_DPD` zero-fill;
+  `CNT_INSTALMENT_FUTURE` nulls dropped from the mean, final aggregate
+  never left null) before this table could produce the same kind of
+  silent or crashing null.
+- Also adds `compute_naive_current_dpd()` to the same module — each
+  applicant's most recent real `SK_DPD`, the naive baseline Problem 5
+  benchmarks against.
+- Verified via 5 hand-built test-case applicants (a genuine DPD spike, a
+  real DPD streak, null `SK_DPD`, null `CNT_INSTALMENT_FUTURE` including a
+  case where an entire real half of an applicant's history has no valid
+  value, a single-month applicant, a constant/no-DPD applicant) — every
+  one of the 8 output features checked by hand, zero nulls in any case.
+- `notebooks/04_pos_cash_delinquency_trajectory.ipynb`: same real 4-model
+  screen -> 5-fold CV -> champion -> holdout+bootstrap-CI -> decile-check
+  -> SHAP pattern as Problems 1 and 3, plus THREE independent soft-
+  dependency comparisons when available: MP1 Notebook 01, MP4 Notebook 01,
+  MP4 Notebook 03.
+
+Problem 5 — Early-Warning Intervention Ranking:
+
+- Trains nothing new from raw data. A real, disclosed fusion of whichever
+  of Problems 1-4's own already-computed real per-applicant scores are on
+  disk (soft dependencies, never fabricated for a missing one): each is
+  percentile-rank-normalized to [0,1] within its own real scope
+  population and averaged into a real `COMPOSITE_SCORE`, with a real,
+  disclosed `COVERAGE_COUNT` (1-4) per applicant. Notebook 02's
+  categorical `PAYMENT_PATTERN` clusters are converted to a real numeric
+  proxy using that exact run's own real observed default rate per pattern
+  (from `notebook_02_summary.json`) — never a hardcoded mapping.
+- Benchmarked against each applicant's most recent real `SK_DPD` (no
+  modeling at all) via a real top-decile default-capture-rate comparison
+  and a real chi-square significance test (`scipy.stats.chi2_contingency`,
+  the same test already used for Problem 2) plus a real Spearman rank
+  correlation between the two rankings. Verdict logic adapted honestly
+  for a ranking-comparison task (not a classifier robustness gate) and
+  reported either way — never smoothed over if the naive baseline wins or
+  ties.
+- Raises a clear, real error (not a fabricated ranking) if zero of
+  Problems 1-4's real signals are found on disk.
+- Verified via a hand-built 6-applicant test case with deliberately
+  partial, real-world-shaped signal coverage — every composite score and
+  coverage count checked by hand and confirmed exact.
+- `notebooks/05_early_warning_intervention_ranking.ipynb`.
+
+Both: no `sample_reports/` entries (per 1.9.3's policy). Both syntax/AST-
+checked and `nbformat.validate()`-passed; neither executed against any
+data. Mega Project 4 now has all 5 problems built — only the executive
+rollup (Problem 6) remains for this Mega Project.
+
+## [1.9.3] - 2026-09-01
+
+### Policy change: no more synthetic fixtures from Mega Project 4 Problem 3 onward, and Mega Project 4 Problem 3 built under it
+
+Per explicit user instruction, this repo stops running new notebooks
+against a synthetic fixture before delivery, and stops generating
+`sample_reports/SAMPLE_*` files for them. Verification for new logic is
+now: (1) small, targeted, hand-built test cases for any new
+feature-engineering function — a few rows of data, edge cases included,
+every output value checked by hand; (2) a Python syntax/AST check on the
+pipeline script; (3) `nbformat.validate()` on the assembled notebook. No
+full pipeline execution on fabricated data, no fixture-generated charts or
+dashboards. A notebook's real champion, AUC, and verdict are reported only
+after the user runs it on their own real data. Mega Project 4 Problems
+1-2's existing fixture-generated sample reports and fixture numbers
+predate this change and are left as they are (the user's explicit
+decision) — this is not retroactive.
+
+Built under the new policy — Problem 3: Revolving/Credit-Card Distress
+Early Warning:
+
+- New HYPER module `src/features/revolving_distress_features.py`
+  (`engineer_revolving_distress_features`): 9 real, vectorized (Polars)
+  trajectory features from `credit_card_balance.csv` — real utilization
+  spikes (month-over-month change, threshold 0.15), real minimum-payment-
+  only streaks (vectorized run-length encoding, same technique as Problem
+  2's installment streaks), and real balance/drawings-growth velocity
+  (recency-split trend, same technique as Problem 1's `LATE_RATE_TREND`).
+  Deliberately distinct from MP1's 8 SUM-based credit-card totals and from
+  Mega Project 3 Notebook 04's MEAN/MAX/PCT-of-months rate features for the
+  same table — direction of change, not level or rate; a real supervised
+  classifier, not Notebook 04's unsupervised segmentation. Proactively
+  applies the disclosed null-handling convention from Problems 1-2's
+  2026-09-01 fix (null `AMT_DRAWINGS_CURRENT` -> 0.0 real "nothing
+  happened"; null `AMT_INST_MIN_REGULARITY` -> not a minimum-payment-only
+  month) before this table could produce the same kind of silent or
+  crashing null.
+- Verified via 6 hand-built test-case applicants (a genuine utilization
+  spike, null `AMT_DRAWINGS_CURRENT`, null `AMT_INST_MIN_REGULARITY` on 2
+  different applicants, a single-month applicant, a constant-utilization
+  applicant) — every one of the 9 output features checked by hand against
+  the input; zero nulls in output across all cases.
+- `notebooks/03_revolving_credit_card_distress_early_warning.ipynb`: same
+  real 4-model screening -> 5-fold CV -> champion -> true holdout with
+  bootstrap 95% CI -> decile-calibration check -> SHAP pattern as Problem
+  1, plus TWO independent soft-dependency comparisons when available: MP1
+  Notebook 01's champion (application-time features) and MP4 Notebook 01's
+  real per-applicant installment-behavior scores, both on the applicable
+  real overlap population(s). No numbers are claimed by us for this
+  notebook — see its model card's "Verification status" section.
+- Added `model_cards/03_revolving_credit_card_distress_early_warning_MODEL_CARD.md`.
+  No `sample_reports/` entry for Problem 3 (see policy change above).
+
+## [1.9.2] - 2026-09-01
+
+### Fixed a real bug in Mega Project 4 found on the user's real, full-scale run — installments_payments.csv null-payment handling
+
+Found via the user's own real run against the full 307,511-row Home Credit
+dataset, not our own fixture (the fixture never exercised this path — see
+below): Notebook 02 crashed with `ValueError: Input X contains NaN` inside
+`KMeans.fit_predict()`.
+
+- **Root cause**: a real minority of `installments_payments.csv` rows have
+  no recorded `DAYS_ENTRY_PAYMENT`/`AMT_PAYMENT` — no payment has posted
+  against that scheduled installment as of the data snapshot (a genuine,
+  documented real characteristic of the Kaggle dataset, not synthetic
+  noise). `src/features/delinquency_features.py` previously let this
+  propagate as `null`; when an applicant's *most recent* installment
+  happened to be one of these rows, their `CURRENT_STREAK_IS_LATE_INT`
+  came out `null`, and a single `NaN` anywhere in the clustering matrix is
+  enough to crash `KMeans.fit_predict()` for the entire real run. In
+  `engineer_installment_behavior_features` (Notebook 01), the same `null`
+  propagation didn't crash — Polars aggregations skip nulls by default —
+  but it *silently* excluded these installments from every rate/mean
+  feature (`PCT_INSTALLMENTS_LATE`, `MEAN_PAYMENT_RATIO`,
+  `MIN_PAYMENT_RATIO`, `TOTAL_SHORTFALL_AMT`), undercounting real lateness
+  without erroring.
+- **Fix**: both functions now have an explicit, disclosed convention — a
+  no-payment-recorded installment is treated as unpaid-as-of-snapshot ==
+  late (`IS_LATE = True`, `IS_UNDERPAID = True`, `SHORTFALL_AMT` = the full
+  scheduled amount). This is a modeling convention for an actually-missing
+  payment record, not a fabricated value. See the module's own docstring
+  and each notebook's model card for the full disclosure.
+- **Why our own fixture never caught this**: `make_fixture_supplementary.py`'s
+  `installments_payments.csv` generator always produced a payment for
+  every row — it never replicated this real data-quality characteristic.
+  Fixed by adding a real ~3% no-payment-recorded rate to the fixture
+  (including several applicants' most-recent installment specifically, the
+  exact case that crashed), so this path is exercised on every future
+  verification pass, not just on a real user's download. This is disclosed
+  as a real, honest gap in our own pre-delivery verification, not
+  papered over.
+- **Impact — re-run both notebooks if you ran them before this fix**: this
+  changes real numbers for both Problem 1 and Problem 2, not just fixes a
+  crash. On this suite's regenerated synthetic fixture (2,715 in-scope
+  applicants, up from 2,691 — the fixture itself was also regenerated,
+  independently seeded, with the other 3 supplementary fixture files left
+  byte-identical): Notebook 01's champion changed from `random_forest`
+  (holdout ROC-AUC 0.5664) to `gradient_boosting` (holdout ROC-AUC 0.4678,
+  95% CI [0.4102, 0.5214], verdict now NOT YET STATISTICALLY ROBUST on this
+  small fixture); MP1's champion still scores 0.9427 on the identical
+  population. Notebook 02: k=5 unchanged, silhouette 0.2377, chi-square
+  p≈0.085 (verdict unchanged, NOT YET STATISTICALLY ROBUST) — but the
+  notebook itself no longer crashes on data shaped like the user's real
+  307,511-row run.
+- Re-verified via the full protocol for both notebooks: real
+  `jupyter nbconvert --execute` (0 errors) → outputs cleared →
+  `nbformat.validate()` → Playwright network-blocked dashboard check (0
+  errors, 3 charts each) → LibreOffice headless workbook recalc check.
+  Regenerated `sample_reports/` and `docs/dashboards/` for both notebooks
+  with the corrected numbers.
+
+## [1.9.1] - 2026-09-01
+
+### Mega Project 4 Problem 2 built: Installment Payment Behavior / Missed-Payment Pattern Detection
+
+- New HYPER function `src/features/delinquency_features.py::engineer_payment_streak_features`:
+  7 real, vectorized (shift + cumsum run-length encoding, no per-applicant
+  Python loop) streak features from `installments_payments.csv` — longest
+  late/on-time streak, streak counts, the applicant's *current* streak,
+  and a real alternation rate. Deliberately different from Problem 1's
+  rate-based feature set (a rate cannot tell "scattered late payments"
+  apart from "currently mid-streak" — same rate, different real risk
+  posture).
+- `notebooks/02_installment_payment_behavior_detection.ipynb`: real,
+  unsupervised K-Means clustering (never trained on `TARGET`) — k chosen
+  by the highest real silhouette score across a documented candidate
+  range, subject to a minimum stable cluster size. Validated with a real
+  chi-square/Cramer's V test (bootstrap 95% CI) against real `TARGET`,
+  and an honest, non-gated one-way ANOVA cross-check against Notebook 01's
+  continuous risk score when its output is present.
+- On this build's synthetic verification fixture: k=5 real patterns found
+  (silhouette≈0.23), but the statistical-robustness verdict came back
+  honestly **NOT YET STATISTICALLY ROBUST** (chi-square p≈0.10 on the
+  small, randomly-generated 2,691-applicant fixture) — reported as-is,
+  not smoothed over, exactly as this suite's zero-fabrication standard
+  requires. The cross-check against Notebook 01's score did show a real,
+  statistically significant relationship (ANOVA p<0.001, eta-squared≈0.09).
+- Verified via the full protocol: real `jupyter nbconvert --execute` (0
+  errors) → outputs cleared → `nbformat.validate()` → Playwright
+  network-blocked dashboard check → LibreOffice headless workbook check.
+- Added `model_cards/02_installment_payment_behavior_detection_MODEL_CARD.md`,
+  the Problem 2 sample reports + README table row, and
+  `docs/dashboards/mp4_notebook_02_dashboard.html`.
+- Updated `ROADMAP.md`'s status table and next-steps list (Mega Project 4
+  now 2/6).
+
+Problems 3-5 and the executive rollup are not yet built.
+
+## [1.9.0] - 2026-09-01
+
+### Mega Project 4 (Delinquency Prevention) started: scope locked in, Problem 1 built
+
+Locked in Mega Project 4's 5-problem scope (Early Delinquency Risk
+Scoring, Installment Payment Behavior Detection, Revolving/Credit-Card
+Distress Early Warning, POS/Cash Loan Delinquency Trajectory,
+Early-Warning Intervention Ranking, + executive rollup) in
+`04_mega_project_4_delinquency_prevention/README.md`, replacing the
+placeholder scope note.
+
+Built and verified Problem 1 — Early Delinquency Risk Scoring:
+
+- New HYPER module `src/features/delinquency_features.py`
+  (`engineer_installment_behavior_features`): 12 real, vectorized (Polars)
+  behavioral features from `installments_payments.csv` — lateness rate,
+  mean/max/std days late, underpayment rate and ratio, total shortfall,
+  and a real recency-split late-rate trend. Deliberately independent of
+  Mega Project 1's application-time feature set — this is a genuinely new
+  signal (an applicant's own post-approval payment behavior), not a
+  re-derivation, cross-compared against MP1 Notebook 01's champion on the
+  identical holdout population rather than claiming to replace it.
+- `notebooks/01_early_delinquency_risk_scoring.ipynb`: real 4-model
+  screening (LogisticRegression, DecisionTree, RandomForest,
+  GradientBoosting) → real 5-fold CV on the top 2 → champion retrained on
+  full train, evaluated on a true holdout with a real bootstrap 95% CI on
+  ROC-AUC → real decile-calibration monotonicity check → SHAP
+  explainability on the champion → real, honest side-by-side AUC
+  comparison against Mega Project 1's champion when its bundle is present.
+  On this build's synthetic verification fixture: champion
+  `random_forest`, holdout ROC-AUC 0.5664 (95% CI [0.5112, 0.6204]),
+  decile calibration holds, MP1's application-time champion scores 0.9517
+  on the identical population — both real, disclosed numbers, not
+  cherry-picked.
+- Verified via the full protocol: real `jupyter nbconvert --execute` (0
+  errors) → outputs cleared → `nbformat.validate()` → Playwright
+  network-blocked dashboard check (0 blocked calls, 0 console/page
+  errors, 3 charts rendered) → LibreOffice headless workbook
+  conversion/recalc check.
+- Added `model_cards/01_early_delinquency_risk_scoring_MODEL_CARD.md`,
+  `sample_reports/` (SAMPLE_-prefixed HTML dashboard, Word report, Excel
+  workbook + disclosure README), and
+  `docs/dashboards/mp4_notebook_01_dashboard.html`.
+- Updated `ROADMAP.md`'s Mega Project status table and next-steps list to
+  reflect Mega Project 4 as in progress (1/6) rather than not yet started.
+
+Problems 2-5 and the executive rollup are not yet built. Services,
+Docker, tests, and CI wiring for Mega Project 4 follow once all 6
+notebooks exist, matching how Mega Projects 1-3 were each hardened as a
+whole once their notebooks were complete — not piecemeal per notebook.
+
 ## [1.8.4] - 2026-09-01
 
 ### Fixed the actual GitHub Actions CI failure on Mega Project 3

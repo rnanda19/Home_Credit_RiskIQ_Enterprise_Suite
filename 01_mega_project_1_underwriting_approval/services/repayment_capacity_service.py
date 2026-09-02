@@ -28,10 +28,15 @@ Endpoints:
                       "total_debt_burden_ratio": float | null,
                       "note": str}
 """
+import sys
+from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel, Field
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from serving.auth_common import require_api_key
 
 
 class RepaymentCapacityRequest(BaseModel):
@@ -54,7 +59,7 @@ def health():
     return {"status": "ok", "note": "Deterministic formulas, no trained model -- see module docstring."}
 
 
-@app.post("/score")
+@app.post("/score", dependencies=[Depends(require_api_key)])
 def score(request: RepaymentCapacityRequest):
     repayment_capacity_ratio = None
     total_debt_burden_ratio = None
