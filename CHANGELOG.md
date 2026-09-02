@@ -3,6 +3,23 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.9.9] - 2026-09-02
+
+### Fix: CI `shared-tests` job failing on a fresh runner -- undeclared dependencies
+
+Found via a real GitHub Actions failure after this repo's first push (10 of
+11 checks green, `CI / shared-tests` red). Root cause: `src/tests/test_serving_common.py`
+builds real fitted scikit-learn bundles in-fixture (`joblib`, `numpy`,
+`scikit-learn`) and exercises `scoring_service_common.py`'s `/score` handler,
+which does a lazy `import pandas` to build the prediction row -- none of
+which the job's `pip install` line declared. It passed locally throughout
+this suite's development only because the development sandbox's ambient
+Python already had all four installed; a fresh CI runner has nothing but
+what the workflow explicitly installs. Verified the fix in an isolated venv
+containing only the corrected install list: 18/18 tests pass. No test
+logic, service code, or model output changed -- this was a CI-configuration
+gap, not a code or results bug.
+
 ## [1.9.8] - 2026-09-02
 
 ### Hardening pass, part 2: Mega Project 4 built hardened (services + Docker + tests + CI + architecture diagram), root README brought current

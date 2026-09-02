@@ -42,7 +42,16 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install shared serving dependencies
-        run: pip install fastapi "uvicorn[standard]" pydantic pytest httpx
+        # 2026-09-02 fix: this job was failing CI -- test_serving_common.py
+        # builds real fitted scikit-learn bundles in-fixture (joblib, numpy,
+        # scikit-learn) and scoring_service_common.py's /score handler does
+        # a lazy `import pandas` to build the prediction row -- none of
+        # which were declared here, so a fresh CI runner ModuleNotFoundError'd
+        # in ~11s. Verified fixed in a clean venv with exactly this install
+        # list: 18/18 tests pass. (It passed locally before this fix only
+        # because the sandbox's ambient Python already had these installed
+        # -- an undeclared-dependency gap, not a code or test bug.)
+        run: pip install fastapi "uvicorn[standard]" pydantic pytest httpx joblib numpy scikit-learn pandas
       - name: Run src/tests/ (HYPER shared-component tests -- auth_common.py,
           explainability_common.py; no business data, no notebook artifacts needed)
         run: python -m pytest src/tests/ -v
