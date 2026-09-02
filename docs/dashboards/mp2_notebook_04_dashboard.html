@@ -63,30 +63,30 @@
 <body>
 <header>
   <h1>Mega Project 2 — Macro Stress Testing</h1>
-  <p>4,000 real applicants — 3 documented macro scenarios</p>
+  <p>307,511 real applicants — 3 documented macro scenarios</p>
 </header>
 <main>
   <div class="kpi-row">
-    <div class="kpi" style="--kc:#2a78d6"><div class="label">Real Applicants</div><div class="value">4,000</div></div>
-<div class="kpi" style="--kc:#eb6834"><div class="label">Baseline Capital</div><div class="value">$109,035,535</div></div>
-<div class="kpi" style="--kc:#1baf7a"><div class="label">Severely Adverse Capital</div><div class="value">$178,424,489</div></div>
-<div class="kpi" style="--kc:#eda100"><div class="label">Increase vs. Baseline</div><div class="value">+63.6%</div></div>
+    <div class="kpi" style="--kc:#2a78d6"><div class="label">Real Applicants</div><div class="value">307,511</div></div>
+<div class="kpi" style="--kc:#eb6834"><div class="label">Baseline Capital</div><div class="value">$9,756,908,313</div></div>
+<div class="kpi" style="--kc:#1baf7a"><div class="label">Severely Adverse Capital</div><div class="value">$20,536,046,971</div></div>
+<div class="kpi" style="--kc:#eda100"><div class="label">Increase vs. Baseline</div><div class="value">+110.5%</div></div>
   </div>
 
-  <h2 class="section-title">Key Insights &amp; SMART Recommendations</h2><div class="insight-grid"><div class="insight-card" style="--ic:#2a78d6"><h4>Real capital requirement under Severely Adverse stress is 63.6% above Baseline</h4><div class="facet"><span class="chip">S</span><span class="txt"><b>Specific:</b> Baseline: $109,035,535; Adverse: $132,589,810 (+21.6%); Severely Adverse: $178,424,489 (+63.6%).</span></div>
-<div class="facet"><span class="chip">M</span><span class="txt"><b>Measurable:</b> 3 documented, cited macro scenarios evaluated over 4,000 real applicants in 0.01s.</span></div>
+  <h2 class="section-title">Key Insights &amp; SMART Recommendations</h2><div class="insight-grid"><div class="insight-card" style="--ic:#2a78d6"><h4>Real capital requirement under Severely Adverse stress is 110.5% above Baseline</h4><div class="facet"><span class="chip">S</span><span class="txt"><b>Specific:</b> Baseline: $9,756,908,313; Adverse: $13,811,041,323 (+41.6%); Severely Adverse: $20,536,046,971 (+110.5%).</span></div>
+<div class="facet"><span class="chip">M</span><span class="txt"><b>Measurable:</b> 3 documented, cited macro scenarios evaluated over 307,511 real applicants in 0.12s.</span></div>
 <div class="facet"><span class="chip">A</span><span class="txt"><b>Achievable:</b> No further tuning required this cycle.</span></div>
 <div class="facet"><span class="chip">R</span><span class="txt"><b>Relevant:</b> Gives risk management a real, cited view of capital sensitivity to macro severity, using the exact same model and citations already established in Notebook 01/03 -- no new, unvalidated stress-testing methodology introduced.</span></div>
 <div class="facet"><span class="chip">T</span><span class="txt"><b>Time-bound:</b> Re-run after any Notebook 01 update or a documented revision to scenario severities.</span></div></div></div>
 
   <h2 class="section-title">Charts</h2>
-  <div class="chart-card"><div class="chart-head"><h3>Capital Requirement by Macro Scenario</h3></div><canvas id="capitalByScenario"></canvas><div class="story" style="--sc:#2a78d6"><b>Insight —</b> Real capital requirement rises from $109,035,535 (Baseline) to $178,424,489 (Severely Adverse) -- a real 63.6% increase under the same severity Basel's own closed-form capital calibration already targets [BCBS05]. Scenario validation verdict: SCENARIO MECHANICS VALIDATED — RECOMMENDED FOR PRODUCTION.</div></div>
+  <div class="chart-card"><div class="chart-head"><h3>Capital Requirement by Macro Scenario</h3></div><canvas id="capitalByScenario"></canvas><div class="story" style="--sc:#2a78d6"><b>Insight —</b> Real capital requirement rises from $9,756,908,313 (Baseline) to $20,536,046,971 (Severely Adverse) -- a real 110.5% increase under the same severity Basel's own closed-form capital calibration already targets [BCBS05]. Scenario validation verdict: SCENARIO MECHANICS VALIDATED — RECOMMENDED FOR PRODUCTION.</div></div>
 
   <h2 class="section-title">Capital by Segment and Scenario</h2><div class="filter-bar"><input id="table-search" type="text" placeholder="Search sampled rows..."><select id="table-colfilter"></select></div><div class="table-wrap"><table class="data-table"><thead><tr><th>scenario</th><th>segment</th><th>n_applicants</th><th>total_capital_requirement</th></tr></thead><tbody id="table-body"></tbody></table></div><div class="note" id="table-count"></div>
 </main>
 <footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side.</footer>
 <script>
-const CHART_DATA = [{"id": "capitalByScenario", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["Baseline", "Adverse", "Severely Adverse"], "datasets": [{"label": "Total Capital ($)", "data": [109035535.0, 132589810.0, 178424489.0]}]}], "showLegend": true, "options": null}];
+const CHART_DATA = [{"id": "capitalByScenario", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["Baseline", "Adverse", "Severely Adverse"], "datasets": [{"label": "Total Capital ($)", "data": [9756908313.0, 13811041323.0, 20536046971.0]}]}], "showLegend": true, "options": null}];
 const charts = {};
 function renderView(cfg, view) {
   const ctx = document.getElementById(cfg.id).getContext('2d');
@@ -111,7 +111,7 @@ CHART_DATA.forEach(cfg => {
   }
 });
 
-const TABLE_DATA = [{"scenario": "Baseline", "segment": "Revolving (QRRE)", "n_applicants": 381, "total_capital_requirement": 15495602.51622313}, {"scenario": "Baseline", "segment": "Secured \u2014 Other (Vehicle/Goods)", "n_applicants": 938, "total_capital_requirement": 20100849.449594285}, {"scenario": "Baseline", "segment": "Secured \u2014 Real Estate", "n_applicants": 1755, "total_capital_requirement": 48524209.79598825}, {"scenario": "Baseline", "segment": "Unsecured \u2014 Other Retail", "n_applicants": 926, "total_capital_requirement": 24914873.54000093}, {"scenario": "Adverse", "segment": "Revolving (QRRE)", "n_applicants": 381, "total_capital_requirement": 18470976.105876617}, {"scenario": "Adverse", "segment": "Secured \u2014 Other (Vehicle/Goods)", "n_applicants": 938, "total_capital_requirement": 25170894.06592327}, {"scenario": "Adverse", "segment": "Secured \u2014 Real Estate", "n_applicants": 1755, "total_capital_requirement": 57606419.08112134}, {"scenario": "Adverse", "segment": "Unsecured \u2014 Other Retail", "n_applicants": 926, "total_capital_requirement": 31341521.126822986}, {"scenario": "Severely Adverse", "segment": "Revolving (QRRE)", "n_applicants": 381, "total_capital_requirement": 26133925.03993306}, {"scenario": "Severely Adverse", "segment": "Secured \u2014 Other (Vehicle/Goods)", "n_applicants": 938, "total_capital_requirement": 37262638.375922315}, {"scenario": "Severely Adverse", "segment": "Secured \u2014 Real Estate", "n_applicants": 1755, "total_capital_requirement": 68622774.23665497}, {"scenario": "Severely Adverse", "segment": "Unsecured \u2014 Other Retail", "n_applicants": 926, "total_capital_requirement": 46405151.70360805}];
+const TABLE_DATA = [{"scenario": "Baseline", "segment": "Revolving (QRRE)", "n_applicants": 29279, "total_capital_requirement": 498053281.37261224}, {"scenario": "Baseline", "segment": "Secured \u2014 Other (Vehicle/Goods)", "n_applicants": 30138, "total_capital_requirement": 912034450.1788971}, {"scenario": "Baseline", "segment": "Secured \u2014 Real Estate", "n_applicants": 190207, "total_capital_requirement": 6340640309.91688}, {"scenario": "Baseline", "segment": "Unsecured \u2014 Other Retail", "n_applicants": 57887, "total_capital_requirement": 2006180271.4880552}, {"scenario": "Adverse", "segment": "Revolving (QRRE)", "n_applicants": 29279, "total_capital_requirement": 705380436.002472}, {"scenario": "Adverse", "segment": "Secured \u2014 Other (Vehicle/Goods)", "n_applicants": 30138, "total_capital_requirement": 1364099915.4204736}, {"scenario": "Adverse", "segment": "Secured \u2014 Real Estate", "n_applicants": 190207, "total_capital_requirement": 8880659835.385609}, {"scenario": "Adverse", "segment": "Unsecured \u2014 Other Retail", "n_applicants": 57887, "total_capital_requirement": 2860901136.3962574}, {"scenario": "Severely Adverse", "segment": "Revolving (QRRE)", "n_applicants": 29279, "total_capital_requirement": 1158137245.2640064}, {"scenario": "Severely Adverse", "segment": "Secured \u2014 Other (Vehicle/Goods)", "n_applicants": 30138, "total_capital_requirement": 2330611090.919276}, {"scenario": "Severely Adverse", "segment": "Secured \u2014 Real Estate", "n_applicants": 190207, "total_capital_requirement": 12353743097.968485}, {"scenario": "Severely Adverse", "segment": "Unsecured \u2014 Other Retail", "n_applicants": 57887, "total_capital_requirement": 4693555536.665145}];
 const TABLE_COLUMNS = ["scenario", "segment", "n_applicants", "total_capital_requirement"];
 const TABLE_FILTER_COLUMN = "scenario";
 if (TABLE_DATA.length) {

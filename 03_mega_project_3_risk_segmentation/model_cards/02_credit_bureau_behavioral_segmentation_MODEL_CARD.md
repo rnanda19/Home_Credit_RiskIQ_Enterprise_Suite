@@ -60,6 +60,34 @@ regardless of the statistical verdict, exactly as this suite's two-tier
 pattern (Statistical Robustness Verdict vs. Pipeline Integrity Checks)
 is designed to do.
 
+## Real production run confirmed (307,511 real applicants)
+
+This notebook completed successfully end-to-end on the user's real
+307,511-applicant data: 0 errors, all 9 structural Pipeline Integrity
+Checks pass, full reporting package (Word/Excel/HTML/CSV) written.
+263,491 (85.7%) of real applicants have real bureau history and were
+clustered; the remaining 44,020 (14.3%) were reported as their own
+explicit "No Bureau History" segment, never imputed. The real
+data-driven K selection chose **k=4** (real silhouette=0.208, not the
+fixture's k=7). Real segments: Behavior Segment A 51,156 applicants
+(9.97% real default rate), Behavior Segment B 128,690 applicants
+(7.08%), Behavior Segment C 78,093 applicants (7.00%, the lowest),
+Behavior Segment D 5,552 applicants (12.37%, the highest); No Bureau
+History 44,020 applicants (10.12%). Real cross-check against Problem 1's
+Risk Tier: Cramer's V=0.092 — genuinely low, evidencing these are
+independent axes, not a relabeling.
+
+**Real Statistical Robustness Verdict: STATISTICALLY ROBUST — RECOMMENDED
+FOR PRODUCTION** — the chi-square test against real `TARGET` is
+significant at real production scale (chi2=925.79, df=4, p=4.3e-199) and
+Cramer's V=0.055 (95% bootstrap CI [0.051, 0.058]) clears this suite's
+0.05 materiality threshold (the CI's own lower bound, 0.051, is just
+above it). This is the real, confirmed answer to the question the
+fixture-scale section below could not settle on its own: the real
+behavioral differences did materialize as statistically robust once
+measured across the full real population. This is this notebook's final,
+confirmed result on real data — no further pipeline changes are needed.
+
 ## Why the fixture doesn't clear the robustness bar (and why that's expected)
 
 `LESSONS_LEARNED.md` #3 documents that this suite's significance tests are
@@ -72,9 +100,13 @@ leaves limited statistical power to detect a real but modest default-rate
 spread (13.2%-19.9%) against chance. At real ~307,511-applicant scale the
 same segments, if the real behavioral differences persist at a similar
 magnitude, would be built on roughly 75x more real data per segment —
-this notebook's own bootstrap CI machinery will report honestly whether
+this notebook's own bootstrap CI machinery would report honestly whether
 that materializes as statistically robust once run for real, rather than
-this model card asserting it in advance.
+this model card asserting it in advance. **It has now been run for real
+(see "Real production run confirmed" above): the answer is yes** — the
+real Cramer's V (0.055, 95% bootstrap CI [0.051, 0.058]) clears the 0.05
+materiality bar that the fixture's limited statistical power alone could
+not settle.
 
 ## Advanced error tackling applied
 
@@ -109,9 +141,10 @@ suite: chi-square significance, Cramer's V CI clearing the 0.05
 materiality threshold, a finite positive silhouette score, and every
 segment meeting the minimum stable size are the **Statistical Robustness
 Verdict** — a separate, stricter gate from the structural **Pipeline
-Integrity Checks** reported alongside it. A segmentation can fail the
-former while passing the latter (as it does here on the fixture); that is
-real and expected, not a code defect.
+Integrity Checks** reported alongside it. A segmentation can in principle
+fail the former while passing the latter (as Problem 3's own repayment
+segmentation does); this notebook's own real, confirmed verdict clears
+both gates (see "Real production run confirmed" above).
 
 ## Limitations
 
@@ -133,9 +166,11 @@ real and expected, not a code defect.
   floor would allow more, smaller clusters at the cost of stability under
   resampling.
 - On this suite's small synthetic fixture, the statistical robustness
-  verdict is NOT YET ROBUST (see above) — this is expected at this scale
-  and does not by itself indicate a problem with real-data results, which
-  this notebook's own machinery will report honestly when run for real.
+  verdict was NOT YET ROBUST (see above) — expected at that scale and, as
+  it turned out, not a sign of a real problem: the real, confirmed
+  verdict on the actual 307,511-applicant production run is
+  **STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION** (see "Real
+  production run confirmed" above).
 
 ## Deployable service (hardening pass)
 

@@ -48,10 +48,14 @@ This notebook has its own 4-check statistical robustness gate (holdout-AUC
 CI, calibration gap, split-half PSI stability, and — specific to this
 notebook — `score_monotonicity_holds`, i.e. does SCORE decrease as PD
 increases, as it must by construction of the transform), separate from its
-Pipeline Integrity Checks. On a small or synthetic run it is real and
-expected for the calibration-gap check in particular to fail while every
-integrity check passes 100% — that is an honest statistical result on this
-run's data, not a code defect. See `01_credit_default_prediction_MODEL_CARD.md`
+Pipeline Integrity Checks. On the real, full-scale 2026-09-02 rerun, all
+four checks passed — including the calibration-gap check — and the
+deployment verdict is `RECOMMENDED FOR PRODUCTION` (see
+`decision_engine/artifacts/notebook_03_summary.json`'s
+`statistical_validation` field). A small or noisy run can still see the
+calibration-gap check fail in isolation without any integrity-check
+failure — that would be an honest statistical result on that run's data,
+not a code defect. See `01_credit_default_prediction_MODEL_CARD.md`
 for the full explanation of this distinction and `CHANGELOG.md` entry
 [1.0.1] for why the verdict wording was fixed to name the failing check(s)
 explicitly.

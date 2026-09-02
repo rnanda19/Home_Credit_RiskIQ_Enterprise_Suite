@@ -74,10 +74,12 @@ discipline this suite already uses elsewhere (e.g. Mega Project 3
 Notebook 02). **The winning `k` and the resulting pattern profiles are
 determined by your real data when you run the notebook** — this repository
 does not hardcode a specific cluster count, per this project's
-zero-fabrication policy. On this suite's synthetic fixture (post data-quality
-fix, see above), k=5 was chosen (silhouette≈0.24) — see the notebook's own
-printed output and `decision_engine/reports/notebook_02_summary.json` for
-your real run's numbers.
+zero-fabrication policy. On this suite's original small synthetic fixture
+(post data-quality fix, see above), k=5 was chosen (silhouette≈0.24).
+**Update, 2026-09-02 — real, full-scale run:** on the real
+291,643-applicant scope population, k=4 was chosen (real silhouette
+score 0.5181) — see the notebook's own printed output and
+`decision_engine/reports/notebook_02_summary.json` for the real numbers.
 
 ## Statistical validation
 
@@ -88,11 +90,16 @@ your real run's numbers.
   risk score, these are unordered categorical clusters with no expected
   direction, the same disclosed choice this suite already makes for its
   other unsupervised segmentations.
-- On this suite's small synthetic fixture (2,715 applicants), the honest
-  result was **NOT YET STATISTICALLY ROBUST** (chi-square p≈0.085, Cramer's
-  V 95% CI [0.032, 0.099] included 0) — reported as-is, not smoothed over. A
-  small, randomly-generated fixture is not expected to show strong real
-  statistical structure; your real-data run's numbers will differ.
+- On this suite's original small synthetic fixture (2,715 applicants), the
+  honest result was **NOT YET STATISTICALLY ROBUST** (chi-square p≈0.085,
+  Cramer's V 95% CI [0.032, 0.099] included 0) — reported as-is, not
+  smoothed over; a small, randomly-generated fixture is not expected to
+  show strong real statistical structure. **Update, 2026-09-02 — real,
+  full-scale run:** on the real 291,643-applicant scope population, the
+  real result is **STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION**
+  (chi-square p≈6.37e-234, Cramer's V=0.0609, 95% CI [0.0572, 0.0645],
+  excludes 0) — see
+  `decision_engine/reports/notebook_02_summary.json` for the real numbers.
 
 ## Real cross-check against Notebook 01
 
@@ -108,8 +115,10 @@ validating the other.
 - **Unsupervised — no guarantee patterns separate real risk**: the
   clustering never sees real `TARGET`; the chi-square/Cramer's V check
   exists specifically to measure, honestly, whether the resulting patterns
-  happen to carry real default-rate separation, and on the fixture, they
-  did not clear the significance bar.
+  happen to carry real default-rate separation. On this suite's original
+  small synthetic fixture they did not clear the significance bar; on the
+  real, full-scale 2026-09-02 run they did (see Statistical validation
+  above).
 - **No production scoring service**: like Notebook 01, this is intended
   for batch/portfolio-level monitoring, not a per-transaction API.
 - **Cluster labels are stable only for this fitted `KMeans` bundle** — a

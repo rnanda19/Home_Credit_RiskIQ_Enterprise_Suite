@@ -25,9 +25,9 @@ cuts.
 ## A real statistical bug found and fixed while building this notebook
 
 RWA density is a **ratio, not a proportion** — under the Basel K() formula,
-RWA can legitimately exceed EAD for high-risk/high-LGD segments (this
-suite's own fixture shows the "Revolving (QRRE)" segment at >100%
-density). The first version of this notebook fed RWA density into
+RWA can legitimately exceed EAD for high-risk/high-LGD segments (this suite's own real, full-scale 307,511-applicant rerun shows the
+"High Risk" and "Highest Risk" PD bands at 112.4% and 107.2% density
+respectively). The first version of this notebook fed RWA density into
 `monotonic_within_noise()` (a two-proportion z-test, valid only for values
 bounded in [0, 1]) and it threw a `math domain error` on execution — a real
 bug caught by this suite's own verification protocol (fixture → real
@@ -49,7 +49,8 @@ with the highest expected rate first. Both were feeding the ascending-order
 arrays through unreversed, and the density comparison operator was pointed
 the wrong way for that same ascending order. Fixed by reversing before the
 `monotonic_within_noise()` call and flipping the density comparison to
-`<=`. Confirmed via real re-execution on this suite's fixture: the verdict
+`<=`. Confirmed via real re-execution on the user's own real, full-scale
+307,511-applicant rerun: the verdict
 flips from "NOT YET STATISTICALLY ROBUST" to "STATISTICALLY ROBUST —
 RECOMMENDED FOR PRODUCTION" against the same underlying, unchanged data —
 see `CHANGELOG.md` [1.4.3] and Notebook 01's model card for the full

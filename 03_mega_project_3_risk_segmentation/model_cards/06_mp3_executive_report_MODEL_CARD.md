@@ -93,21 +93,39 @@ Mega Project 2's own rollup does for its 3 verdict-tier families.
 
 ## Verification
 
-Verified end-to-end on this suite's synthetic fixture: 0 execution
-errors, all 5 rollup integrity checks pass (including the cross-notebook
-consistency check), `nbformat.validate()` clean before and after clearing
-outputs. On this run, all 4 axis-level consistency checks (Risk Tier,
-Bureau Segment, Repayment Segment, Utilization Segment) confirmed a
-maximum absolute difference of exactly 0.00 between each axis's own
-source notebook and Problem 5's independent re-aggregation, across every
-shared segment. HTML dashboard confirmed under a network-blocked
-Playwright check (0 blocked external requests, 0 console errors, 10
-KPI-like elements, 7 canvases/charts rendered, 5 rollup table rows).
-Excel workbook confirmed via LibreOffice headless recalculation — every
-Financial Impact sheet formula recalculated to the exact same values
-already printed by the notebook's own real run (Real Applicant Population
-4,000; Real Widest Segmentation Spread 0.979664 — all on this suite's
-fixture). Not yet run against the user's real data.
+Verified end-to-end on this suite's synthetic fixture (an earlier
+verification pass, before the real 307,511-applicant run below): 0
+execution errors, all 5 rollup integrity checks pass (including the
+cross-notebook consistency check), `nbformat.validate()` clean before and
+after clearing outputs. On that fixture run, all 4 axis-level consistency
+checks (Risk Tier, Bureau Segment, Repayment Segment, Utilization
+Segment) confirmed a maximum absolute difference of exactly 0.00 between
+each axis's own source notebook and Problem 5's independent
+re-aggregation, across every shared segment. HTML dashboard confirmed
+under a network-blocked Playwright check (0 blocked external requests, 0
+console errors, 10 KPI-like elements, 7 canvases/charts rendered, 5
+rollup table rows). Excel workbook confirmed via LibreOffice headless
+recalculation — every Financial Impact sheet formula recalculated to the
+exact same values already printed by the notebook's own fixture run (Real
+Applicant Population 4,000; Real Widest Segmentation Spread 0.979664 —
+all on this suite's fixture).
+
+**Confirmed on the user's real 307,511-applicant data**: all 5 problem
+summaries found (0 missing), all 6 real rollup integrity checks pass
+(all_5_problem_summaries_found, n_applicants_identical_across_available_notebooks,
+axis_default_rates_consistent_between_primary_notebooks_and_notebook_05_synthesis,
+every_available_problem_has_a_story, every_available_problem_has_an_insight,
+roi_timeline_cumulative_benefit_non_decreasing), and all 5 real
+cross-notebook consistency checks confirmed a maximum absolute difference
+of exactly 0.00 — including the real applicant-population-identical
+check (307,511 across every available notebook: Notebooks 01-05). Real
+Widest Segmentation Spread: Risk Tier, 48.92% across 6 real segments.
+Real total estimated annual financial-impact benefit: $52,803,356.03 (see
+the Financial Impact sheet's own disclosed assumptions, including the
+real AMT_CREDIT-derived average exposure per applicant computed fresh
+from this run's real applicant population). This is this notebook's
+final, confirmed result on real data — no further pipeline changes are
+needed.
 
 ## Limitations
 

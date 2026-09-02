@@ -63,31 +63,31 @@
 <body>
 <header>
   <h1>Mega Project 2 — Economic Capital & Unexpected Loss</h1>
-  <p>4,000 real applicants — 50,000 real Monte Carlo draws</p>
+  <p>307,511 real applicants — 50,000 real Monte Carlo draws</p>
 </header>
 <main>
   <div class="kpi-row">
-    <div class="kpi" style="--kc:#2a78d6"><div class="label">Real Applicants</div><div class="value">4,000</div></div>
-<div class="kpi" style="--kc:#eb6834"><div class="label">Real Expected Loss</div><div class="value">$97,633,699</div></div>
-<div class="kpi" style="--kc:#1baf7a"><div class="label">99.9% Economic Capital</div><div class="value">$110,509,544</div></div>
-<div class="kpi" style="--kc:#eda100"><div class="label">vs. Closed-Form Capital</div><div class="value">1.35% diff</div></div>
+    <div class="kpi" style="--kc:#2a78d6"><div class="label">Real Applicants</div><div class="value">307,511</div></div>
+<div class="kpi" style="--kc:#eb6834"><div class="label">Real Expected Loss</div><div class="value">$3,917,645,733</div></div>
+<div class="kpi" style="--kc:#1baf7a"><div class="label">99.9% Economic Capital</div><div class="value">$9,915,102,034</div></div>
+<div class="kpi" style="--kc:#eda100"><div class="label">vs. Closed-Form Capital</div><div class="value">1.62% diff</div></div>
   </div>
 
-  <h2 class="section-title">Key Insights &amp; SMART Recommendations</h2><div class="insight-grid"><div class="insight-card" style="--ic:#2a78d6"><h4>Real Monte Carlo economic-capital estimate confirms Notebook 01's closed-form Basel capital requirement</h4><div class="facet"><span class="chip">S</span><span class="txt"><b>Specific:</b> 99.9% Economic Capital (Monte Carlo): $110,509,544 vs. closed-form capital requirement: $109,035,535 (1.35% relative difference, tolerance 10%).</span></div>
+  <h2 class="section-title">Key Insights &amp; SMART Recommendations</h2><div class="insight-grid"><div class="insight-card" style="--ic:#2a78d6"><h4>Real Monte Carlo economic-capital estimate confirms Notebook 01's closed-form Basel capital requirement</h4><div class="facet"><span class="chip">S</span><span class="txt"><b>Specific:</b> 99.9% Economic Capital (Monte Carlo): $9,915,102,034 vs. closed-form capital requirement: $9,756,908,313 (1.62% relative difference, tolerance 10%).</span></div>
 <div class="facet"><span class="chip">M</span><span class="txt"><b>Measurable:</b> Real VaR/Expected Shortfall/Economic Capital computed at 4 documented confidence levels from 50,000 real simulated draws.</span></div>
 <div class="facet"><span class="chip">A</span><span class="txt"><b>Achievable:</b> No further tuning required this cycle.</span></div>
 <div class="facet"><span class="chip">R</span><span class="txt"><b>Relevant:</b> Gives risk management a real loss DISTRIBUTION (VaR at multiple levels, Expected Shortfall) that Notebook 01's single closed-form number cannot provide, plus an independent numerical check on that closed-form number.</span></div>
 <div class="facet"><span class="chip">T</span><span class="txt"><b>Time-bound:</b> Re-run after any Notebook 01 (MP2) re-run or LGD/correlation assumption update.</span></div></div></div>
 
   <h2 class="section-title">Charts</h2>
-  <div class="chart-card"><div class="chart-head"><h3>Economic Capital by Confidence Level</h3></div><canvas id="ecByLevel"></canvas><div class="story" style="--sc:#2a78d6"><b>Insight —</b> Real Economic Capital rises from $48,742,580 at 95.0% confidence to $110,509,544 at 99.9% -- by construction, a real, monotonically non-decreasing quantile of the same simulated loss distribution. Statistical robustness verdict: STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION.</div></div>
-<div class="chart-card"><div class="chart-head"><h3>Expected Shortfall by Confidence Level</h3></div><canvas id="esByLevel"></canvas><div class="story" style="--sc:#eb6834"><b>Insight —</b> Real simulated mean portfolio loss ($97,662,902) closely tracks Notebook 01's real closed-form Expected Loss ($97,633,699) -- expected, since both come from the same real PD x LGD x EAD inputs; this is a real internal-consistency check, not a coincidence. Real simulated 99.9% VaR: $208,143,243. Real 99.9% Economic Capital (VaR - EL): $110,509,544, vs. Notebook 01's real closed-form Basel capital requirement of $109,035,535 (1.35% relative difference).</div></div>
+  <div class="chart-card"><div class="chart-head"><h3>Economic Capital by Confidence Level</h3></div><canvas id="ecByLevel"></canvas><div class="story" style="--sc:#2a78d6"><b>Insight —</b> Real Economic Capital rises from $3,754,282,633 at 95.0% confidence to $9,915,102,034 at 99.9% -- by construction, a real, monotonically non-decreasing quantile of the same simulated loss distribution. Statistical robustness verdict: STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION.</div></div>
+<div class="chart-card"><div class="chart-head"><h3>Expected Shortfall by Confidence Level</h3></div><canvas id="esByLevel"></canvas><div class="story" style="--sc:#eb6834"><b>Insight —</b> Real simulated mean portfolio loss ($3,920,516,563) closely tracks Notebook 01's real closed-form Expected Loss ($3,917,645,733) -- expected, since both come from the same real PD x LGD x EAD inputs; this is a real internal-consistency check, not a coincidence. Real simulated 99.9% VaR: $13,832,747,766. Real 99.9% Economic Capital (VaR - EL): $9,915,102,034, vs. Notebook 01's real closed-form Basel capital requirement of $9,756,908,313 (1.62% relative difference).</div></div>
 
   <h2 class="section-title">Risk Metrics by Confidence Level</h2><div class="filter-bar"><input id="table-search" type="text" placeholder="Search sampled rows..."></div><div class="table-wrap"><table class="data-table"><thead><tr><th>confidence_level</th><th>value_at_risk</th><th>expected_shortfall</th><th>economic_capital</th><th>n_tail_draws</th></tr></thead><tbody id="table-body"></tbody></table></div><div class="note" id="table-count"></div>
 </main>
 <footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side.</footer>
 <script>
-const CHART_DATA = [{"id": "ecByLevel", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["95.0%", "99.0%", "99.5%", "99.9%"], "datasets": [{"label": "Economic Capital ($)", "data": [48742580.0, 75963054.0, 86536083.0, 110509544.0]}]}], "showLegend": true, "options": null}, {"id": "esByLevel", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["95.0%", "99.0%", "99.5%", "99.9%"], "datasets": [{"label": "Expected Shortfall ($)", "data": [162995394.0, 188494673.0, 198875018.0, 221814203.0]}]}], "showLegend": true, "options": null}];
+const CHART_DATA = [{"id": "ecByLevel", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["95.0%", "99.0%", "99.5%", "99.9%"], "datasets": [{"label": "Economic Capital ($)", "data": [3754282633.0, 6340557946.0, 7403256552.0, 9915102034.0]}]}], "showLegend": true, "options": null}, {"id": "esByLevel", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["95.0%", "99.0%", "99.5%", "99.9%"], "datasets": [{"label": "Expected Shortfall ($)", "data": [9259055099.0, 11788610760.0, 12867372761.0, 15335341107.0]}]}], "showLegend": true, "options": null}];
 const charts = {};
 function renderView(cfg, view) {
   const ctx = document.getElementById(cfg.id).getContext('2d');
@@ -112,7 +112,7 @@ CHART_DATA.forEach(cfg => {
   }
 });
 
-const TABLE_DATA = [{"confidence_level": 0.95, "value_at_risk": 146376278.9189629, "expected_shortfall": 162995394.301168, "economic_capital": 48742580.08818635, "n_tail_draws": 2500.0}, {"confidence_level": 0.99, "value_at_risk": 173596753.20963654, "expected_shortfall": 188494672.64261857, "economic_capital": 75963054.37886, "n_tail_draws": 500.0}, {"confidence_level": 0.995, "value_at_risk": 184169782.2577611, "expected_shortfall": 198875017.7660081, "economic_capital": 86536083.42698455, "n_tail_draws": 250.0}, {"confidence_level": 0.999, "value_at_risk": 208143243.18942866, "expected_shortfall": 221814203.00677693, "economic_capital": 110509544.35865211, "n_tail_draws": 50.0}];
+const TABLE_DATA = [{"confidence_level": 0.95, "value_at_risk": 7671928365.166597, "expected_shortfall": 9259055099.044191, "economic_capital": 3754282632.581932, "n_tail_draws": 2500.0}, {"confidence_level": 0.99, "value_at_risk": 10258203678.215158, "expected_shortfall": 11788610760.408302, "economic_capital": 6340557945.630493, "n_tail_draws": 500.0}, {"confidence_level": 0.995, "value_at_risk": 11320902284.516502, "expected_shortfall": 12867372760.864233, "economic_capital": 7403256551.931837, "n_tail_draws": 250.0}, {"confidence_level": 0.999, "value_at_risk": 13832747766.243681, "expected_shortfall": 15335341107.343409, "economic_capital": 9915102033.659016, "n_tail_draws": 50.0}];
 const TABLE_COLUMNS = ["confidence_level", "value_at_risk", "expected_shortfall", "economic_capital", "n_tail_draws"];
 const TABLE_FILTER_COLUMN = null;
 if (TABLE_DATA.length) {

@@ -67,9 +67,8 @@ in `CHANGELOG.md` [1.4.6] and `LESSONS_LEARNED.md` #6.
 No PD re-scoring, no reloading the 7 raw tables — everything needed is
 already in Notebook 01's saved CSV. Each scenario is exactly one vectorized
 `scipy.stats.norm.cdf`/`norm.ppf` pass over the whole real portfolio (never
-a per-applicant Python loop): all 3 scenarios over 4,000 fixture applicants
-completed in 0.01 seconds; expect low single-digit seconds at real
-300K+-applicant scale (compare Notebook 03's Monte Carlo, which needs tens
+a per-applicant Python loop): all 3 scenarios over the user's own real, full-scale
+307,511-applicant portfolio completed in 0.12 seconds (compare Notebook 03's Monte Carlo, which needs tens
 of thousands of such passes and takes minutes — this notebook needs exactly
 3).
 

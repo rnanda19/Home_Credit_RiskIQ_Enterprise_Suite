@@ -13,8 +13,23 @@ delivery, and no `sample_reports/SAMPLE_*` files are generated for them.
 New feature logic is instead verified with small, targeted, hand-built
 test cases (not a full pipeline run on fabricated data) plus a syntax/AST
 check and `nbformat.validate()` on the assembled notebook. Problems 1-2's
-existing fixture-generated sample reports predate this change and remain
-in the repo unchanged — see [`sample_reports/README.md`](sample_reports/README.md).
+fixture-generated sample reports predated this change; the whole
+`sample_reports/` folder was removed 2026-09-02 (superseded by real
+dashboards — see the live links above).
+
+**2026-09-02 update — since superseded by real execution**: the
+2026-09-01 policy above described how these notebooks were verified
+*before delivery* (hand-built test cases, no fixture run). Since then,
+**you have run Problems 1-5 (and the executive rollup) end-to-end
+yourself against your real, full-scale data** — real dashboards
+(233KB-294KB each, matching Problems 1-2's scale), real summary JSONs
+with the real 307,511-applicant population, and real deployment verdicts
+were all produced on 2026-09-02. So while no `sample_reports/SAMPLE_*`
+fixture demo exists for Problems 3-5 (that specific artifact type was
+never generated for them, and still isn't), Problems 3-5 are **no longer
+only hand-built-test-verified — they have real, full-scale execution
+evidence**, on the same footing as Problems 1-2. See each problem's own
+`MODEL_CARD.md` and `decision_engine/reports/` for that real output.
 
 **History:** see this Mega Project's own [`CHANGELOG.md`](CHANGELOG.md)
 for a curated version history, or the
@@ -119,11 +134,10 @@ holdout population — see the
 for the full methodology and the real numbers from this build's
 verification run.
 
-Sample reports (fixture-generated, see the [zero-fabrication
-disclosure](sample_reports/README.md)):
-[HTML dashboard](sample_reports/SAMPLE_notebook_01_dashboard.html) ·
-[Word report](sample_reports/SAMPLE_notebook_01_report.docx) ·
-[Excel workbook](sample_reports/SAMPLE_notebook_01_workbook.xlsx).
+Sample reports: removed 2026-09-02 (fixture-era, predated today's real rerun):
+_removed (see live dashboard above)_ ·
+_removed_ ·
+_removed_.
 
 ## Problem 2 — Installment Payment Behavior / Missed-Payment Pattern Detection
 
@@ -139,16 +153,19 @@ one-way ANOVA cross-check against Notebook 01's continuous risk score when
 present. On this build's synthetic fixture the statistical-robustness
 verdict came back **NOT YET STATISTICALLY ROBUST** (chi-square p≈0.085 on
 a small, randomly-generated 2,715-applicant fixture) — reported as-is,
-not smoothed over; see the
+not smoothed over. **Update, 2026-09-02:** this notebook has since been
+run against your real, full-scale data (n_scope=291,643) — the real
+chi-square/Cramer's V test now comes back **STATISTICALLY ROBUST —
+RECOMMENDED FOR PRODUCTION** (chi-square p≈6.37e-234, Cramer's
+V=0.0609, 95% CI [0.0572, 0.0645]); see the
 [model card](model_cards/02_installment_payment_behavior_detection_MODEL_CARD.md)
 for the full methodology, **a real crash this notebook had on full-scale
 real data and the fix for it**, and your real run's numbers.
 
-Sample reports (fixture-generated, see the [zero-fabrication
-disclosure](sample_reports/README.md)):
-[HTML dashboard](sample_reports/SAMPLE_notebook_02_dashboard.html) ·
-[Word report](sample_reports/SAMPLE_notebook_02_report.docx) ·
-[Excel workbook](sample_reports/SAMPLE_notebook_02_workbook.xlsx).
+Sample reports: removed 2026-09-02 (fixture-era, predated today's real rerun):
+_removed (see live dashboard above)_ ·
+_removed_ ·
+_removed_.
 
 ## Problem 3 — Revolving/Credit-Card Distress Early Warning
 
@@ -169,9 +186,7 @@ real, honest side-by-side ROC-AUC comparisons — see the
 [model card](model_cards/03_revolving_credit_card_distress_early_warning_MODEL_CARD.md)
 for the full methodology.
 
-**No sample report** — per the 2026-09-01 policy change above, this
-notebook was not executed against any fixture, so there is nothing
-fixture-generated to show. Run it on your real data for real numbers.
+**No `sample_reports/SAMPLE_*` fixture demo exists for this problem** — but it has since been run on your own real, full-scale data (2026-09-02): a real 244KB dashboard and summary JSON with the real 307,511-applicant population now exist under `decision_engine/reports/` (gitignored, regenerate by running the notebook). See the model card for the real numbers.
 
 ## Problem 4 — POS/Cash Loan Delinquency Trajectory
 
@@ -191,7 +206,7 @@ honest side-by-side ROC-AUC comparisons. See the
 [model card](model_cards/04_pos_cash_delinquency_trajectory_MODEL_CARD.md)
 for the full methodology.
 
-**No sample report** — same 2026-09-01 policy as Problem 3.
+**No `sample_reports/SAMPLE_*` fixture demo exists for this problem** — but it has since been run on your own real, full-scale data (2026-09-02): a real 245KB dashboard and summary JSON now exist under `decision_engine/reports/` (gitignored, regenerate by running the notebook). See the model card for the real numbers.
 
 ## Problem 5 — Early-Warning Intervention Ranking
 
@@ -213,7 +228,7 @@ naive baseline wins or ties. See the
 [model card](model_cards/05_early_warning_intervention_ranking_MODEL_CARD.md)
 for the full methodology.
 
-**No sample report** — same 2026-09-01 policy as Problems 3-4.
+**No `sample_reports/SAMPLE_*` fixture demo exists for this problem** — but it has since been run on your own real, full-scale data (2026-09-02): a real 250KB dashboard and summary JSON (292,286 real applicants in composite scope) now exist under `decision_engine/reports/` (gitignored, regenerate by running the notebook). See the model card for the real numbers.
 
 ## Problem 6 — Executive Rollup
 
@@ -234,14 +249,14 @@ Project's verdict-tier families — Statistical Robustness (Problems 1, 3,
 [model card](model_cards/06_mp4_executive_report_MODEL_CARD.md) for the
 full methodology.
 
-**No sample report** — same 2026-09-01 policy as Problems 3-5.
+**No `sample_reports/SAMPLE_*` fixture demo exists for this problem** — but it has since been run on your own real, full-scale data (2026-09-02): a real 233KB executive dashboard now exists under `decision_engine/reports/` (gitignored, regenerate by running the notebook).
 
 ## Standing rules (apply to every notebook here)
 
 - **Zero-fabrication**: notebooks only ever run against real data you
   provide (the Kaggle dataset) or, for this repo's own verification, a
   synthetic fixture matching the real schema — never against a description
-  of what the real output "should" look like.
+  of what the real output "should" look like. **Update, 2026-09-02:** all 5 problems in this Mega Project have since been run by you against the real Kaggle dataset end-to-end — see the real, current numbers in each problem's own model card and `decision_engine/reports/`.
 - **WARP** resource governance: CPU/memory ceilings are configured before
   any heavy library import, so a notebook never claims 100% of the host
   machine.
@@ -256,7 +271,7 @@ full methodology.
   README's verification-protocol section for the full checklist. **From
   Problem 3 onward, per the 2026-09-01 policy change above, no synthetic
   fixture is used** — new logic is verified with small, targeted, hand-built
-  test cases plus a syntax/AST check and `nbformat.validate()` instead.
+  test cases plus a syntax/AST check and `nbformat.validate()` instead. **Update, 2026-09-02:** since then, you have also run Problems 1-5 (and the executive rollup) here yourself against your real, full-scale data — real dashboards and summary JSONs with the real 307,511-applicant population now exist under each notebook's own `decision_engine/reports/` (gitignored, regenerate locally).
 - **Hardened from day one (2026-09-02)**: unlike Mega Projects 1-3, whose
   services needed a real retrofit to add authentication (see the root
   `CHANGELOG.md` [1.9.7]), Mega Project 4's 4 services were built with real
@@ -357,7 +372,7 @@ suite root).
 ├── services/             # FastAPI scoring services (thin wrappers over src/serving/)
 ├── docker/                # Dockerfile + docker-compose.yml (suite-root build context)
 ├── tests/                  # pytest suite for the services
-├── sample_reports/          # SAMPLE_-prefixed fixture-generated deliverables (Problems 1-2 only)
+├── sample_reports/          # REMOVED 2026-09-02 (was: fixture-generated deliverables, Problems 1-2 only)
 └── decision_engine/
     ├── artifacts/             # trained model bundles (.joblib) + scores/ranking (gitignored)
     └── reports/                # per-notebook JSON/HTML/Word/Excel reports (gitignored)

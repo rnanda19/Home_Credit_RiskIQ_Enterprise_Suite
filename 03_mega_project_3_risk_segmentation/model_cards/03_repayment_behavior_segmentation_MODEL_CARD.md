@@ -206,8 +206,9 @@ materiality threshold, a finite positive silhouette score, and every
 segment meeting the minimum stable size are the **Statistical Robustness
 Verdict** — a separate, stricter gate from the structural **Pipeline
 Integrity Checks** reported alongside it. A segmentation can fail the
-former while passing the latter (as it does here on the fixture); that is
-real and expected, not a code defect.
+former while passing the latter (as it does here, both at fixture scale
+below and on the real 307,511-applicant production run confirmed above);
+that is real and expected, not a code defect.
 
 ## Limitations
 
@@ -231,9 +232,15 @@ real and expected, not a code defect.
   incident #3" above) is a disclosed, empirically-grounded choice, not a
   fitted optimum.
 - On this suite's small synthetic fixture, the statistical robustness
-  verdict is NOT YET ROBUST (see above) — expected at this scale; this
-  notebook's own machinery will report honestly whether real ~307K-scale
-  data clears the same bar.
+  verdict was NOT YET ROBUST (see above) — expected at that scale. The
+  real, confirmed verdict on the actual 307,511-applicant production run
+  (see "Real production run confirmed" at the top of this card) is also
+  **NOT YET STATISTICALLY ROBUST**, but for a different, honest reason:
+  chi-square is easily significant at real N (p=3.2e-22), while Cramer's
+  V (0.018) stays below the 0.05 materiality bar — a real, cross-axis-
+  independent, statistically detectable signal that is honestly too small
+  in magnitude to call "robust," not a code defect, and not something
+  more data volume alone would fix.
 
 ## Deployable service (hardening pass)
 

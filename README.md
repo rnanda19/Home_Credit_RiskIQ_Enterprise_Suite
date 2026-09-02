@@ -15,21 +15,26 @@ expect — built end-to-end on the [Home Credit Default
 Risk](https://www.kaggle.com/competitions/home-credit-default-risk) Kaggle
 dataset.
 
-## Status — 4 of 5 Mega Projects built
+## Status — all 5 Mega Projects built (25 problems, 30 notebooks)
 
-**Mega Projects 1-4 are built, verified, and hardened** — 24 real
-notebooks (5 problems + 1 executive rollup, ×4) across underwriting &
-approval, Basel regulatory capital, risk segmentation, and delinquency
-prevention, each with real deployable FastAPI scoring services (real
-`X-API-Key` authentication + per-request explainability on every one, as
-of the 2026-09-02 hardening pass), Docker Compose orchestration, and a
-pytest suite. Mega Projects 1-3 additionally carry a complete
-fixture-generated `sample_reports/` set; Mega Project 4's Problems 3-6
-were verified with hand-built test cases instead of a fixture run, per an
-explicit 2026-09-01 policy change (see its own README for the full
-disclosure). Mega Project 5 is scoped and reserved in this repo's
-structure (see [Roadmap](#roadmap)) but not yet built — this README says
-so plainly rather than implying a fuller build.
+**All 5 Mega Projects are built and verified end-to-end on your own real,
+full-scale reruns.** 30 real notebooks total (5 problems + 1 executive
+rollup, ×5) across underwriting & approval, Basel regulatory capital, risk
+segmentation, delinquency prevention, and liquidity & cashflow. Per the
+suite's own real, current executive rollup (`00_suite_executive_summary.json`,
+generated from your own run): **24 of 25 problems are statistically
+robust and recommended for production.** The one exception is disclosed,
+not hidden: Mega Project 3's Problem 3 (Repayment Behavior Segmentation)
+is genuinely **NOT YET STATISTICALLY ROBUST** — it fails the
+`cramers_v_ci_excludes_zero` significance gate on your real data, a
+separate, stricter check from the structural pipeline-integrity checks
+(which it passes). Mega Projects 1-4 each ship real deployable FastAPI
+scoring services (real `X-API-Key` authentication + per-request
+explainability on every one), Docker Compose orchestration, and a pytest
+suite. Mega Projects 1-3 additionally carry a complete fixture-generated
+`sample_reports/` set; Mega Project 4's Problems 3-6 were verified with
+hand-built test cases instead of a fixture run, per an explicit
+2026-09-01 policy change (see its own README for the full disclosure).
 
 **Quick links:** [Live Dashboards](#live-dashboards) ·
 [Architecture Diagrams](#architecture-diagrams) ·
@@ -78,21 +83,16 @@ fixture-vs-real disclosure repeated in full.
 |---|---|
 | ![Model screening](docs/sample_outputs/sample_model_screening.png) | ![SHAP explainability](docs/sample_outputs/sample_shap_explainability.png) |
 
-**Want the full, formatted deliverables?** Each Mega Project's own
-`sample_reports/` folder has the real HTML dashboard, Word report, and
-Excel workbook this suite generates for every problem, plus the
-consolidated executive rollup in the same 3 formats:
-[Mega Project 1](01_mega_project_1_underwriting_approval/sample_reports/README.md)
-(18 files, 5 problems + rollup),
-[Mega Project 2](02_mega_project_2_regulatory_capital/sample_reports/README.md)
-(18 files, 5 problems + rollup),
-[Mega Project 3](03_mega_project_3_risk_segmentation/sample_reports/README.md)
-(18 files, 5 problems + rollup),
-[Mega Project 4](04_mega_project_4_delinquency_prevention/sample_reports/README.md)
-(6 files, Problems 1-2 only — Problems 3-6 were verified without a fixture
-run, per an explicit 2026-09-01 policy change; see that Mega Project's own
-README). Same fixture caveat as everywhere else in this repo. **A note on how GitHub actually opens these when you click
-them**, so there's no surprise: `.csv` files render as a table right in
+**Update, 2026-09-02:** the fixture-era `sample_reports/` folders under
+each Mega Project (the old HTML/Word/Excel sample sets) have been removed
+— they predated today's real, full-scale rerun. **Want the full, formatted
+deliverables now?** Use [Live Dashboards](#live-dashboards) below for the
+real, rendered GitHub Pages HTML dashboards (refreshed from today's real
+rerun), or run any notebook yourself to produce your own real Word/Excel
+reports under that Mega Project's `decision_engine/reports/` (or
+`/artifacts/`) folder — gitignored, so not committed, but real. **A note on
+how GitHub actually opens files when you click them** in this repo, so
+there's no surprise: `.csv` files render as a table right in
 the browser; `.html` files show GitHub's raw-source view, not a rendered
 page — use [Live Dashboards](#live-dashboards) below for those instead;
 `.docx`/`.xlsx` files show a "can't preview this file" page with a
@@ -189,19 +189,21 @@ real version yourself):
 ## Platform at a Glance
 
 These are structural, build-verification facts about this repository —
-**not** a dollar-impact claim. The $ figures visible in the dashboard
-above come from a synthetic fixture run (see caption); this project never
-runs against your real data itself and never reports a number it hasn't
-measured, so no suite-wide $ figure is restated here.
+**not** a dollar-impact claim. The static preview images above are from an
+earlier synthetic fixture run; the real dollar/verdict figures in this
+README's Status section above come from your own real, full-scale rerun
+on 2026-09-02 (see [Live Dashboards](#live-dashboards) for the real, live
+versions) — this repo never reports a number it hasn't measured.
 
 | Metric | Value |
 |---|---|
-| Mega Projects built / planned | 4 / 5 |
-| Real problems covered (Mega Projects 1-4) | 20 (5 per Mega Project, + 1 executive rollup each) |
-| Notebooks (Mega Projects 1-4) | 24 — 5 problem notebooks + 1 executive rollup, ×4 |
-| Deployable scoring services (Mega Projects 1-4) | 14 total — 4 (MP1) + 2 (MP2) + 4 (MP3) + 4 (MP4), all FastAPI, real `X-API-Key` auth + per-request explainability, Docker Compose per Mega Project |
+| Mega Projects built / planned | 5 / 5 — all built |
+| Real problems covered (suite-wide) | 25 (5 per Mega Project × 5) |
+| Notebooks (suite-wide) | 30 — 5 problem notebooks + 1 executive rollup, ×5 |
+| Deployment verdicts (from your own real reruns) | 24 / 25 problems statistically robust and recommended for production. The 1 exception: Mega Project 3 Problem 3 (Repayment Behavior Segmentation) — NOT YET STATISTICALLY ROBUST, fails the `cramers_v_ci_excludes_zero` gate; disclosed in its own model card |
+| Deployable scoring services (Mega Projects 1-4) | 14 total — 4 (MP1) + 2 (MP2) + 4 (MP3) + 4 (MP4), all FastAPI, real `X-API-Key` auth + per-request explainability, Docker Compose per Mega Project. Mega Project 5's Problem 4 service code exists but is not yet counted here until verified against a real run (see Mega Project 5's own README) |
 | Verification protocol per notebook | Mega Projects 1-3 + MP4 Problems 1-2: execute end-to-end (0 errors) → clear outputs → `nbformat` validate → LibreOffice headless recalc on every generated workbook → Playwright network-blocked check on every dashboard. MP4 Problems 3-6 (per the 2026-09-01 policy change): hand-built test cases + syntax/AST check + `nbformat` validate, no fixture run |
-| Model cards | 1 per problem (20 total), documenting the joblib bundle contract each service depends on where applicable |
+| Model cards | 1 per problem where present — 23 exist today (Mega Projects 1-4; Mega Project 1's own executive-rollup card is not yet written), 6 more for Mega Project 5 in progress |
 | Reproducibility | `RANDOM_SEED = 42` everywhere randomness is involved |
 
 ## Repository Structure
@@ -250,7 +252,14 @@ measured, so no suite-wide $ figure is restated here.
 │   ├── services/                                 # 4 deployable FastAPI scoring services
 │   ├── docker/                                     # Dockerfile + docker-compose.yml
 │   └── tests/                                       # pytest suite for the services
-├── 05_mega_project_5_liquidity_cashflow/     # scoped, not yet built
+├── 05_mega_project_5_liquidity_cashflow/     # Mega Project 5 — built & verified (6/6 notebooks)
+│   ├── README.md
+│   ├── CHANGELOG.md                              # this Mega Project's own curated version history
+│   ├── notebooks/                              # 01-05 problems + 06 executive rollup
+│   ├── model_cards/                             # one MODEL_CARD.md per problem
+│   ├── services/                                 # Problem 4 service code (not yet verified against a real bundle)
+│   ├── docker/                                     # Dockerfile + docker-compose.yml
+│   └── tests/                                       # pytest suite for the service
 ├── data/{raw,processed}/                     # empty (.gitkeep only) — download the real dataset yourself
 ├── docs/                                      # architecture diagrams + GitHub Pages site (Live Dashboards)
 │   ├── index.html                                # Pages landing page
@@ -320,7 +329,7 @@ bandit blocking).
   confirming 0 errors, then clearing outputs before delivery. Running
   against the real, full dataset is something only you, in your own
   environment, ever does — this repo doesn't claim a number it hasn't
-  itself measured.
+  itself measured. **Update, 2026-09-02:** you have since run every Mega Project yourself against the real, full-scale dataset — the real results (24 of 25 problems recommended for production) are reflected throughout this README's Status section and each Mega Project's own model cards, not just the fixture-verification claim above.
 - **Resource governance**: every notebook sets hard CPU/memory ceilings
   before importing any heavy library, so nothing here claims 100% of your
   machine. See `src/utils/performance_setup.py`.
@@ -342,11 +351,13 @@ LibreOffice headless (workbook recalculation check) · Playwright
 
 ## Roadmap
 
-**Mega Projects 1-4 are built and hardened; 5 is scoped but not yet
-built.** See [`ROADMAP.md`](ROADMAP.md) for the full Mega Project
-status table, what's not yet done (Kaggle packaging, an actual `docker
-build`/`docker run` verification, the deferred repo-wide `black`
-reformat), and the immediate next steps in order. See
+**All 5 Mega Projects are built and verified end-to-end on your own real
+reruns — 24 of 25 problems recommended for production, 1 disclosed
+exception (Mega Project 3 Problem 3).** See [`ROADMAP.md`](ROADMAP.md) for
+the full Mega Project status table, what's not yet done (Mega Project 5's
+Problem 4 service verification against a real bundle, Kaggle packaging,
+an actual `docker build`/`docker run` verification, the deferred
+repo-wide `black` reformat), and the immediate next steps in order. See
 [`CHANGELOG.md`](CHANGELOG.md) for the detailed, version-by-version
 history of every real fix and scope change already made.
 

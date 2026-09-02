@@ -170,6 +170,18 @@ computed by us for this notebook.** Those are determined only by running
 this notebook after whichever of Notebooks 01-05 you have run against your
 real, downloaded Home Credit dataset.
 
+**Update, 2026-09-02 — since superseded by real execution:** the
+above describes how this notebook was verified *before delivery*. Since
+then, you have run this notebook end-to-end yourself against your real,
+full-scale data, with all 5 of Problems 1-5's real summaries present. The
+real rollup now exists in
+`decision_engine/reports/mp4_executive_summary.json`: 5/5 real problem
+summaries found, 0 missing, every cross-notebook consistency check and
+integrity check passed, real total annual illustrative benefit
+**$859,859,330.05**, `sop_stage_reached`: "6 - Production Packaging &
+Governance" — this is real, computed output, not a claimed or
+hand-built number.
+
 ## Limitations
 
 - This notebook cannot recover a problem's real figures if that problem's

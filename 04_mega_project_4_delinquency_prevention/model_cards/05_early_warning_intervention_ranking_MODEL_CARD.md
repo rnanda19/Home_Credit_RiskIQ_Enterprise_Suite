@@ -111,6 +111,17 @@ syntax was checked (`py_compile`/`ast.parse`, 0 errors) and this notebook
 passes `nbformat.validate()`. **No ranking, no lift, no verdict is claimed
 here.**
 
+**Update, 2026-09-02 — since superseded by real execution:** the
+above describes how this notebook was verified *before delivery*. Since
+then, you have run this notebook end-to-end yourself against your real,
+full-scale data, with all 4 of Problems 1-4's real signals present. The
+real results now exist in
+`decision_engine/reports/notebook_05_summary.json`: real composite
+top-decile default rate **16.89%** vs. real naive top-decile default rate
+8.58% (real composite lift **2.07x** vs. real naive lift 1.05x), on
+n_eval=289,444 (chi-square p≈3.27e-197, Spearman ρ=0.110, p≈0), verdict
+**COMPOSITE RANKING MATERIALLY OUTPERFORMS NAIVE BASELINE**.
+
 ## How to reproduce
 
 1. Download the real Home Credit Default Risk dataset from Kaggle.

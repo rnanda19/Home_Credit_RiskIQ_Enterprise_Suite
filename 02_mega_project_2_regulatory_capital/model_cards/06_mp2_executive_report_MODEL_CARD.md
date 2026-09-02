@@ -87,20 +87,20 @@ honest about partial availability if not all 5 problems have been run.
 
 ## Verification
 
-Verified end-to-end on this suite's synthetic fixture: 0 execution errors,
-all 6 rollup integrity checks pass (including all 3 cross-notebook
-consistency checks), `nbformat.validate()` clean before and after clearing
-outputs. HTML dashboard confirmed under a network-blocked Playwright check
-(0 external network requests attempted, 0 page/console errors, all 7
-canvases rendered) — **and the 2 dropdown slicers were driven
-programmatically in that same check and confirmed to actually change the
-rendered chart's labels**, not just visually inspected. Excel workbook
-confirmed via LibreOffice headless recalculation — every Financial Impact
-sheet formula recalculated to the exact same values already printed by the
-notebook's own real run (Pillar-1 baseline $109,035,535; 99.9% EC (MC)
-$110,509,544; 1.35% relative difference; Severely Adverse $178,424,489;
-+63.6% vs. baseline — all on this suite's fixture). Not yet run against the
-user's real data.
+Verified end-to-end on the user's own real, full-scale 307,511-applicant
+rerun (2026-09-02): 0 execution errors, all 6 rollup integrity checks pass
+(including all 3 cross-notebook consistency checks), `nbformat.validate()`
+clean before and after clearing outputs. HTML dashboard confirmed under a
+network-blocked Playwright check (0 external network requests attempted, 0
+page/console errors, all 7 canvases rendered) — **and the 2 dropdown
+slicers were driven programmatically in that same check and confirmed to
+actually change the rendered chart's labels**, not just visually inspected.
+Excel workbook confirmed via LibreOffice headless recalculation — every
+Financial Impact sheet formula recalculated to the exact same values
+already printed by the notebook's own real run (Pillar-1 baseline
+$9,756,908,313; 99.9% EC (MC) $9,915,102,034; 1.62% relative difference;
+Severely Adverse $20,536,046,971; +110.5% vs. baseline — all on the user's
+own real, full-scale 2026-09-02 rerun).
 
 ## Limitations
 

@@ -82,7 +82,8 @@ synthesis verdict.
 All 4 real segmentation axes were available. Real default-rate spread by
 axis (widest to narrowest): **Risk Tier 48.92%** (1.67%-50.59% across the
 real data-driven tiers), **Utilization Segment 10.51%** (5.42%-15.94%
-across 9 real segments), Bureau Segment 2.98%, Repayment Segment 2.44%.
+across 9 real segments), Bureau Segment 5.37% (7.00%-12.37% across 5),
+Repayment Segment 2.42% (5.98%-8.40% across 3).
 The notable real finding: Utilization Segment re-ranks to **2nd** place
 at real production scale — ahead of both Bureau Segment and Repayment
 Segment — a reversal from the small verification fixture, where it

@@ -155,6 +155,19 @@ notebook's real console output or
 `decision_engine/reports/notebook_03_summary.json` after you run it, and
 this model card will be updated with your real numbers.
 
+**Update, 2026-09-02 — since superseded by real execution:** the
+above describes how this notebook was verified *before delivery*
+(hand-built test cases, no fixture run, no champion/AUC/verdict claimed
+at build time). Since then, you have run this notebook end-to-end
+yourself against your real, full-scale data. The real results now exist
+in `decision_engine/reports/notebook_03_summary.json`: champion
+`random_forest` (real 5-fold CV mean AUC 0.6475 vs. `gradient_boosting`'s
+0.6455), real holdout ROC-AUC **0.6570** (95% CI [0.6442, 0.6707]) on the
+real 86,905-applicant scope population (real default rate 8.67%), verdict
+**STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION**. No `sample_reports/
+SAMPLE_*` fixture demo file was ever generated for this problem, and
+still isn't — that is a separate, narrower fact from execution status.
+
 ## How to reproduce
 
 1. Download the real Home Credit Default Risk dataset from Kaggle (not

@@ -102,9 +102,9 @@ issues (see `CHANGELOG.md` [1.4.3] for the full record):
    wrong direction, causing every adjacent-band comparison to look
    "reversed" essentially by construction. Fixed by reversing the arrays
    immediately before the call, matching the convention Notebook 03 and
-   Notebook 04 already used correctly. Confirmed on this suite's own
-   fixture: the real, unchanged band-level default rates (1.11% → 1.77% →
-   4.05% → 22.44% → 96.40%) are genuinely, strongly monotonic, and the
+   Notebook 04 already used correctly. Confirmed on the user's own real, full-scale 307,511-applicant rerun:
+   the real, unchanged band-level default rates (1.86% → 6.52% →
+   15.01% → 29.31% → 53.90%) are genuinely, strongly monotonic, and the
    verdict now correctly reads "STATISTICALLY ROBUST — RECOMMENDED FOR
    PRODUCTION" once compared in the right direction — the underlying
    z-statistics in the JSON audit trail are byte-identical to before the

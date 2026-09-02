@@ -45,9 +45,12 @@ logic, including the leakage rationale, lives in
 
 Only applicants with at least one real serviced installment are in scope —
 an applicant with none has no behavioral signal to score, and is excluded,
-not assigned a fabricated default value. On this suite's synthetic
-verification fixture, this was 2,715 of 4,000 applicants (67.9%); your real
-run's percentage will differ and is printed by the notebook (Section 4).
+not assigned a fabricated default value. On this suite's original small
+synthetic verification fixture, this was 2,715 of 4,000 applicants (67.9%).
+**Your real, full-scale run (2026-09-02) scored 291,643 of the real
+307,511-applicant population (94.84%)** — see
+`decision_engine/reports/notebook_01_summary.json` (`n_scope`, `n_app_total`)
+for the real figure.
 
 ## Real data-quality fix (2026-09-01)
 
@@ -83,16 +86,23 @@ Notebook 01).
 **Which model wins and its actual AUC are determined by your real data
 when you run the notebook** — this repository does not hardcode or claim a
 specific champion or accuracy number, per this project's zero-fabrication
-policy. On this suite's synthetic fixture (post data-quality fix, see
-above), `gradient_boosting` won the real 5-fold CV (mean AUC 0.5179) but
-scored a holdout ROC-AUC of 0.4678 (95% bootstrap CI [0.4102, 0.5214]) —
-below chance on this particular small, randomly-generated fixture, which is
-why the fixture run's honest verdict is **NOT YET STATISTICALLY ROBUST**
-(fails `champion_auc_above_random` and `holdout_auc_ci_excludes_random`),
-reported as-is rather than smoothed over. This is expected variance on a
-2,715-applicant synthetic sample, not a claim about real-world performance
-either way — see the notebook's own printed output and
-`decision_engine/reports/notebook_01_summary.json` for your real run's
+policy. On this suite's original small synthetic fixture (post
+data-quality fix, see above), `gradient_boosting` won the real 5-fold CV
+(mean AUC 0.5179) but scored a holdout ROC-AUC of 0.4678 (95% bootstrap CI
+[0.4102, 0.5214]) — below chance on that particular small,
+randomly-generated fixture, which is why that fixture run's honest verdict
+was **NOT YET STATISTICALLY ROBUST** (fails `champion_auc_above_random`
+and `holdout_auc_ci_excludes_random`), reported as-is rather than smoothed
+over, on a 2,715-applicant synthetic sample only.
+
+**Update, 2026-09-02 — real, full-scale run:** `random_forest` won the
+real 5-fold CV (mean AUC 0.6051, std 0.0059) over `gradient_boosting`
+(mean AUC 0.6041), and scored a real holdout ROC-AUC of **0.6032** (95%
+bootstrap CI [0.5952, 0.6113]) on the real 291,643-applicant scope
+population — clearing both self-checks, for a real verdict of
+**STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION**. See the notebook's
+own printed output and
+`decision_engine/reports/notebook_01_summary.json` for the full real
 numbers.
 
 ## Explainability
@@ -130,13 +140,20 @@ different points in the loan lifecycle), not to declare a winner.
 
 ## Limitations
 
-- **Below-chance holdout AUC on this synthetic fixture** (0.4678, verdict
-  NOT YET STATISTICALLY ROBUST) — installment-payment behavior alone,
-  scored on a small 2,715-applicant synthetic sample, did not clear the
-  significance bar here; MP1's application-time feature set scored 0.9427
-  ROC-AUC on the identical population. This is disclosed, not smoothed
-  over. Your real-data run's numbers (a 307,511-row real population) will
-  differ substantially from this small fixture's.
+- **Historical below-chance holdout AUC on the original small synthetic
+  fixture, since superseded**: on this suite's original 2,715-applicant
+  synthetic fixture, holdout ROC-AUC came back 0.4678 (verdict NOT YET
+  STATISTICALLY ROBUST) and MP1's application-time feature set scored
+  0.9427 ROC-AUC on that same small fixture population. **Update,
+  2026-09-02 — real, full-scale run:** on the real 291,643-applicant
+  scope population, this model scored a real holdout ROC-AUC of 0.6032
+  (95% CI [0.5952, 0.6113], verdict STATISTICALLY ROBUST — RECOMMENDED
+  FOR PRODUCTION), and MP1's champion scored a real 0.8099 ROC-AUC on the
+  identical real holdout population — see
+  `decision_engine/reports/notebook_01_summary.json`. MP1's richer
+  application-time feature set still outperforms this behavioral-only
+  signal on real data, as expected; the two remain complementary, not
+  competing.
 - **Class imbalance**: no explicit resampling is applied; `class_weight="balanced"`
   is used where the candidate model supports it.
 - **No production scoring service for this notebook**: unlike Mega

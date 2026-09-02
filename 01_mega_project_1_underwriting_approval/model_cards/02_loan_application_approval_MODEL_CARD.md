@@ -46,11 +46,13 @@ if holdout AUC is not above 0.5.
 Same distinction as Notebook 01's model card — the Deployment/Statistical
 Robustness Verdict and the Pipeline Integrity Checks are two different,
 independently-computed check families, not the same result shown twice.
-This notebook's checks currently pass on the fixture; see
+On the real, full-scale 2026-09-02 rerun, this notebook's Statistical
+Robustness Verdict is `RECOMMENDED FOR PRODUCTION` — all deployment
+checks passed (see `decision_engine/artifacts/notebook_02_summary.json`'s
+`statistical_validation` field); see
 `01_credit_default_prediction_MODEL_CARD.md` for the full explanation and
 `CHANGELOG.md` entry [1.0.1] for why the verdict wording was fixed to name
-failing checks explicitly (applies to this notebook too, even though it
-isn't currently exercised by a failing case).
+failing checks explicitly.
 
 ## Limitations
 

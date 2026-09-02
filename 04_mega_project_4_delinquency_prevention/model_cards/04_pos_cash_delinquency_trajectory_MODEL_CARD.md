@@ -72,6 +72,14 @@ data** — no fixture was run for this notebook (2026-09-01 policy change),
 so there are no placeholder numbers to compare against. See the notebook's
 own printed output and `decision_engine/reports/notebook_04_summary.json`.
 
+**Update, 2026-09-02 — real, full-scale run:** champion
+`random_forest` (real 5-fold CV mean AUC 0.5779 vs. `gradient_boosting`'s
+0.5766), real holdout ROC-AUC **0.5809** (95% CI [0.5728, 0.5883]) on the
+real 289,444-applicant scope population (real default rate 8.16%),
+verdict **STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION** — see
+`decision_engine/reports/notebook_04_summary.json` for the full real
+numbers.
+
 ## Explainability
 
 SHAP (`TreeExplainer`/`LinearExplainer` as applicable) computed for the
@@ -123,6 +131,17 @@ no valid value), a single-month applicant, and a constant/no-DPD applicant
 syntax/AST check on the pipeline script; (3) `nbformat.validate()`. The
 notebook was never executed end-to-end by us, on any data. **No champion,
 no AUC, no verdict is claimed here.**
+
+**Update, 2026-09-02 — since superseded by real execution:** the
+above describes how this notebook was verified *before delivery*. Since
+then, you have run this notebook end-to-end yourself against your real,
+full-scale data — real champion, real AUC, and a real verdict now exist
+in `decision_engine/reports/notebook_04_summary.json` (real holdout
+ROC-AUC 0.5809, verdict STATISTICALLY ROBUST — RECOMMENDED FOR
+PRODUCTION; see Model selection methodology above for the full real
+numbers). No `sample_reports/SAMPLE_*` fixture demo file was ever
+generated for this problem, and still isn't — a separate, narrower fact
+from execution status.
 
 ## How to reproduce
 

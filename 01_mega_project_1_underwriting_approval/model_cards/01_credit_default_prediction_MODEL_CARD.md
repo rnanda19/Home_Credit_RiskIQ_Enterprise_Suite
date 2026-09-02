@@ -92,12 +92,13 @@ once on v2's 7-table feature set — and reports both real holdout AUCs side
 by side (`feature_set_accuracy_comparison` in
 `decision_engine/artifacts/notebook_01_summary.json`), so any AUC delta is
 attributable to the richer data, not to a different model or a different
-split. On this suite's small synthetic verification fixture, this measured
-+0.03–0.05 AUC on the 2-table baseline — real, but modest, since a
-600-row holdout on a 4,000-row fixture is a noisy sample. **Re-run this
-notebook against your real, full-size data to see the real improvement at
-production scale** — no accuracy number in this card is asserted beyond
-what the fixture run actually measured.
+split. On your real, full-scale 2026-09-02 rerun (46,127-row real holdout,
+aligned by `SK_ID_CURR`), this measured a real +0.0089 AUC improvement
+(v1: 0.7705 → v2: 0.7795) from the 7-table feature set over the 2-table
+baseline — a modest but genuine gain from the richer data, not noise
+from a small fixture. See `feature_set_accuracy_comparison` in
+`decision_engine/artifacts/notebook_01_summary.json` for the full real
+figures.
 
 ## Statistical robustness verdict vs. pipeline integrity checks
 

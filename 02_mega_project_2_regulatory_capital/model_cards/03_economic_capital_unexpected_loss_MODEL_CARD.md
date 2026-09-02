@@ -55,8 +55,8 @@ vectorized `scipy.stats.norm.cdf` call over the whole real portfolio;
 draws are processed in batches (a `(batch_size, n_applicants)` matrix per
 batch) so the number of Python-level loop iterations stays small (100
 batches of 500 draws each by default) regardless of the total draw count —
-on this suite's fixture, 50,000 draws over 4,000 applicants complete in
-about 7 seconds.
+on the user's own real, full-scale 307,511-applicant portfolio, 50,000
+draws complete in about 522 seconds (~8.7 minutes).
 
 ## Two real, computed validation layers (not asserted)
 
@@ -66,7 +66,8 @@ about 7 seconds.
    inputs, so they should agree closely. A documented 10% relative
    tolerance accounts for real Monte Carlo sampling error at an extreme
    quantile with a finite draw count — not a threshold tuned to force a
-   pass. On the fixture: 1.35% relative difference (well within tolerance).
+   pass. On the user's own real, full-scale rerun: 1.62% relative difference
+   (well within tolerance).
 2. **Independent-reseed convergence check** (Section 9, this notebook's
    "Statistical Robustness Verdict" family): there is no real `TARGET` to
    test a classifier against here, so robustness instead means a SECOND,
@@ -93,8 +94,7 @@ the specific failing check(s).
 `N_MC_DRAWS` (main run) and `N_MC_DRAWS_CHECK` (reseed check) are real,
 disclosed, user-overridable performance knobs — set via
 `project_config.json` `"mc_draws"` / `"mc_draws_reseed_check"` — not
-hardcoded to whatever happened to run fast in this suite's cloud-fixture
-environment. Default 50,000 main / 20,000 reseed-check draws, batch size
+hardcoded to whatever happened to run fast during initial development. Default 50,000 main / 20,000 reseed-check draws, batch size
 500 (also configurable: `"mc_batch_size"`).
 
 ## Limitations
