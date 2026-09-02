@@ -1,0 +1,13 @@
+# Context is the suite root -- keep the image lean and never bake in raw data.
+**/data/raw/*
+**/data/processed/*
+**/*.csv
+**/_parquet_cache/
+**/.ipynb_checkpoints/
+**/__pycache__/
+**/*.pyc
+**/.git/
+**/notebooks/
+**/decision_engine/reports/
+**/tests/
+project_config.json

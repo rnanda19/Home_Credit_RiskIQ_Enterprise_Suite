@@ -1,0 +1,11 @@
+# Lean runtime dependencies for the 1 deployable scoring service in this
+# Mega Project (Problem 4 -- Prepayment/Early-Repayment Segmentation) --
+# deliberately NOT the full notebook/EDA/reporting stack. Same convention
+# as Mega Projects 1/3/4's own requirements-services.txt.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+scikit-learn>=1.4
+pandas>=2.0
+numpy>=1.26
+joblib>=1.3

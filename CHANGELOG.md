@@ -3,6 +3,54 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.1] - 2026-09-02
+
+### Closed the real, disclosed hardening gaps: Mega Project 5 service/Docker/tests, Mega Project 1's missing model card, a real MP3 test bug, and a suite-wide pyflakes/bandit/pytest verification pass
+
+- **Mega Project 5 now has a real deployable FastAPI service for Problem
+  4** (`services/prepayment_segment_assignment_service.py`, port 8015),
+  reusing `src/serving/segment_assignment_common.py` unchanged from Mega
+  Projects 3/4, plus real Docker packaging (`docker/Dockerfile`,
+  `docker-compose.yml`, `.dockerignore`, `.env.example`) and a real
+  integration test (`tests/test_scoring_services.py`) that cross-checks
+  the service's assignment against Notebook 04's own real output CSV for
+  a real applicant — skips cleanly (not a failure) until the notebook is
+  re-run to produce `notebook_04_segment_model.joblib`, which has not
+  happened yet.
+- **Mega Project 5 now has an architecture diagram**
+  (`docs/mp5_architecture_flow.mmd` + rendered `.png`), matching Mega
+  Projects 1-4's own diagrams; the broken image-reference placeholder in
+  its README is fixed.
+- **`ci.yml`, `code-quality.yml`, and `Makefile` now cover Mega Project
+  5's `services/`/`tests/`** — added to the `unit-tests` matrix, the
+  pyflakes/black/bandit commands, and the `test`/`lint`/`security`
+  Makefile targets, exactly matching the existing Mega Project 1-4 entries.
+- **Mega Project 1's missing executive-rollup model card is written**
+  (`model_cards/06_mp1_executive_report_MODEL_CARD.md`), built from the
+  real `mp1_executive_summary.json` (5/5 real problem summaries, real
+  $37,421,672 total annual benefit, real 6-horizon ROI timeline) — Mega
+  Project 1 now has all 6 model cards, matching Mega Projects 2-5.
+- **A real, previously-undiscovered test bug fixed in Mega Project 3**:
+  its 3 segment-service cross-check tests read raw fixture CSVs
+  independently of their `.joblib`-bundle skip guard, so on a real
+  checkout with no locally-generated `fixture/` directory they crashed
+  with an unhandled `FileNotFoundError` instead of skipping cleanly (the
+  root `ROADMAP.md` had already described this exact fix as done in an
+  earlier pass, but it had never actually been applied to this real
+  repository — corrected now). The skip guards now also check for the
+  specific raw fixture file(s) each test needs.
+- **Verified directly against the real repository this pass**: `pyflakes`
+  clean (0 issues) across `src/` + every Mega Project's `services/`/
+  `tests/`; `bandit -ll` clean (0 medium/high-severity issues; 78 low-
+  severity, same as CI's own threshold) across `src/` + every Mega
+  Project's `services/`; `pytest` — 26/26 in `src/tests/`, 10/10 in Mega
+  Project 1, 6/6 in Mega Project 2, 1 passed + 3 skipped (clean) in Mega
+  Project 3, 4/4 in Mega Project 4, 1 skipped (clean, awaiting the
+  Notebook 04 rerun) in Mega Project 5.
+- Removed a stale `ROADMAP.md` bullet claiming Mega Project 1's missing
+  model card and Mega Project 5's documentation hardening were still
+  outstanding — both are now done; see above.
+
 ## [2.1.0] - 2026-09-02
 
 ### All 5 Mega Projects now built and rerun end-to-end on real, full-scale data — genuine suite-wide result: 24 of 25 problems recommended for production

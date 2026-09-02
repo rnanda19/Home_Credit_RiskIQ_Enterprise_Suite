@@ -65,6 +65,7 @@ jobs:
           - 02_mega_project_2_regulatory_capital
           - 03_mega_project_3_risk_segmentation
           - 04_mega_project_4_delinquency_prevention
+          - 05_mega_project_5_liquidity_cashflow
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

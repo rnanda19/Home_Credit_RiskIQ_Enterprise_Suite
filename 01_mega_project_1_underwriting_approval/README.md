@@ -28,7 +28,7 @@ for a curated version history, or the
 | 3 | Credit Score Estimation (PDO scorecard) | `notebooks/03_credit_score_estimation.ipynb` | [model card](model_cards/03_credit_score_estimation_MODEL_CARD.md) | `credit_score_service.py` :8003 |
 | 4 | Repayment Capacity Analysis | `notebooks/04_repayment_capacity_analysis.ipynb` | [model card](model_cards/04_repayment_capacity_analysis_MODEL_CARD.md) | `repayment_capacity_service.py` :8004 (ratios only — see model card) |
 | 5 | Previous Application Outcomes | `notebooks/05_previous_application_outcomes.ipynb` | [model card](model_cards/05_previous_application_outcomes_MODEL_CARD.md) | none — portfolio-level analysis, see model card |
-| 6 | Executive Rollup (all 5 above) | `notebooks/06_mp1_executive_report.ipynb` | n/a — not a model | none |
+| 6 | Executive Rollup (all 5 above) | `notebooks/06_mp1_executive_report.ipynb` | [model card](model_cards/06_mp1_executive_report_MODEL_CARD.md) | none |
 
 **Renumbered from this suite's original global 1/3/4/11/12 numbering to
 local 1-5 (+ 6 for the rollup) — matching Mega Project 2 and Mega Project

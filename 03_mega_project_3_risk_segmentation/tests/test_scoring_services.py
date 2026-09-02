@@ -35,12 +35,26 @@ NB04_BUNDLE_PATH = ARTIFACTS_DIR / "notebook_04_segment_model.joblib"
 NB04_CSV = ARTIFACTS_DIR / "notebook_04_utilization_segments.csv"
 
 skip_no_nb01 = pytest.mark.skipif(not NB01_SUMMARY_PATH.exists(), reason="Notebook 01 has not been run yet")
-skip_no_nb02 = pytest.mark.skipif(not (NB02_BUNDLE_PATH.exists() and NB02_CSV.exists()),
-                                   reason="Notebook 02 has not been run yet (with the segment-model persistence)")
-skip_no_nb03 = pytest.mark.skipif(not (NB03_BUNDLE_PATH.exists() and NB03_CSV.exists()),
-                                   reason="Notebook 03 has not been run yet (with the segment-model persistence)")
-skip_no_nb04 = pytest.mark.skipif(not (NB04_BUNDLE_PATH.exists() and NB04_CSV.exists()),
-                                   reason="Notebook 04 has not been run yet (with the segment-model persistence)")
+# 2026-09-02 fix: these 3 cross-check tests also read raw fixture CSVs
+# (FIXTURE_DIR below) to independently re-derive features -- a real gap
+# existed where the skip guard only checked the .joblib bundle + notebook
+# output CSV, so if those existed but the raw fixture CSVs did not (e.g. a
+# clean checkout with no locally-generated fixture/ directory), the test
+# crashed with an unhandled FileNotFoundError instead of skipping cleanly.
+# Now the guard also requires the specific raw fixture file(s) each test
+# reads, so a missing fixture/ directory is a clean skip, not a crash.
+skip_no_nb02 = pytest.mark.skipif(
+    not (NB02_BUNDLE_PATH.exists() and NB02_CSV.exists()
+         and (FIXTURE_DIR / "bureau.csv").exists() and (FIXTURE_DIR / "bureau_balance.csv").exists()),
+    reason="Notebook 02 has not been run yet, or raw fixture CSVs are not present locally")
+skip_no_nb03 = pytest.mark.skipif(
+    not (NB03_BUNDLE_PATH.exists() and NB03_CSV.exists()
+         and (FIXTURE_DIR / "installments_payments.csv").exists() and (FIXTURE_DIR / "POS_CASH_balance.csv").exists()),
+    reason="Notebook 03 has not been run yet, or raw fixture CSVs are not present locally")
+skip_no_nb04 = pytest.mark.skipif(
+    not (NB04_BUNDLE_PATH.exists() and NB04_CSV.exists()
+         and (FIXTURE_DIR / "credit_card_balance.csv").exists()),
+    reason="Notebook 04 has not been run yet, or raw fixture CSVs are not present locally")
 
 # 2026-09-02 hardening: every service now requires a real X-API-Key header on
 # /schema and /score (never /health) -- see src/serving/auth_common.py. Only

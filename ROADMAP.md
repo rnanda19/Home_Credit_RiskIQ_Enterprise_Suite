@@ -67,21 +67,24 @@ Mega Projects 1-4 are at full parity on:
   fixed in itself. See `CHANGELOG.md` [1.9.7]/[1.9.8] for the full detail.
 
 Mega Project 5 is built (6/6 notebooks) and verified end-to-end, with all
-5 problems recommended for production — but its own hardening pass
-(documentation parity, Problem 4's deployable service, CI/Makefile
-wiring) is still in progress; see its own `README.md`/`CHANGELOG.md` for
-current status.
+5 problems recommended for production. **Update, 2026-09-02:** its
+documentation hardening is now complete — architecture diagram
+(`docs/mp5_architecture_flow.mmd`/`.png`), Problem 4's real deployable
+service (`services/prepayment_segment_assignment_service.py`), Docker
+packaging (`docker/`), a real integration test (`tests/`), and CI/Makefile
+wiring are all in place, matching Mega Projects 1-4's pattern exactly.
+The one remaining piece is the `.joblib` bundle itself — Notebook 04 has
+not yet been re-run since the persistence code was added, so the service
+builds and starts but fails fast at startup until that bundle exists. See
+its own `README.md`/`CHANGELOG.md` for current status.
 
 ## What's not yet done
 
-- **Mega Project 5's Problem 4 service** has real persistence code and a
-  real FastAPI service written, but no `.joblib` bundle has been produced
-  by a real run yet — the service is not yet verified against real data.
-  Re-run Notebook 04 to produce the bundle, then the service can be
-  verified for real.
-- **Mega Project 5's documentation hardening** (model cards, CHANGELOG,
-  CI/Makefile wiring for its services/tests, architecture diagram) is in
-  progress.
+- **Mega Project 5's Problem 4 service is unverified against real data.**
+  The service, Docker image, and integration test all exist and are
+  wired into CI (the test skips cleanly, not a failure, until the bundle
+  exists) — re-run Notebook 04 to produce the real `.joblib` bundle, then
+  the service can be verified for real.
 - **An actual `docker build`/`docker run`** has not been performed for
   any of the hardened Mega Projects — verification so far is structural
   only (`docker compose config` + static `COPY`-path existence checks),
@@ -90,17 +93,10 @@ current status.
 - **A repo-wide `black` reformat** is still deferred — lint is currently
   advisory (`|| true` in CI, `-black` in the Makefile), not blocking.
 - **Kaggle notebook/dataset packaging** hasn't been done yet.
-- **Mega Project 1's own executive-rollup model card**
-  (`06_..._MODEL_CARD.md`) is not yet written — Mega Projects 2-4 each
-  have one, Mega Project 1 currently only has the 5 problem-level cards.
 
 ## Immediate next steps (in order)
 
 1. Re-run Mega Project 5 Notebook 4 to produce the real `.joblib` bundle,
    then verify its deployable service against that real bundle.
-2. Complete Mega Project 5's documentation hardening (model cards,
-   CHANGELOG, CI/Makefile wiring, architecture diagram) to bring it to
-   parity with Mega Projects 1-4.
-3. Write Mega Project 1's missing executive-rollup model card.
-4. Revisit the deferred items above (Docker build verification, `black`
+2. Revisit the deferred items above (Docker build verification, `black`
    reformat, Kaggle packaging) once the above is complete.

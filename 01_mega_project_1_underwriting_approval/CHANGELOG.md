@@ -6,6 +6,7 @@ see the [root `CHANGELOG.md`](../CHANGELOG.md).
 
 | Version | What changed |
 |---|---|
+| [1.8.3] | Added the missing 6th model card (`model_cards/06_mp1_executive_report_MODEL_CARD.md`), built from the real `mp1_executive_summary.json` — this Mega Project now has all 6 model cards, matching Mega Projects 2-5. |
 | [1.8.2] | This README now links its own `sample_reports/` (live dashboard, HTML, Word, Excel — every problem + rollup) and embeds the architecture diagram, instead of pointing only at the folder. |
 | [1.8.1] | Fixed a real stale-path bug in `docker/Dockerfile` and `docker-compose.yml`, left over from the `[1.1.0]` restructure and never caught until the Mega Project 2/3 hardening pass found it. GitHub Pages, both CI workflows, and root docs updated to include Mega Projects 2 and 3 alongside this one. |
 | [1.6.2] | Problem numbering fixed to match Mega Project 2 / Mega Project 3's convention (this suite's original global 1/3/4/11/12 numbering renumbered to local 1-5 + 6 for the rollup). |

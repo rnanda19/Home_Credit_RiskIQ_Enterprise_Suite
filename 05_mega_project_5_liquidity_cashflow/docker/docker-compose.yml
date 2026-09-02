@@ -1,0 +1,18 @@
+# Mega Project 5 — real deployable scoring service (Problem 4 only).
+# Run from the suite root: docker compose -f 05_mega_project_5_liquidity_cashflow/docker/docker-compose.yml up --build
+#
+# API_KEY is REQUIRED -- the /schema and /score endpoints require a real
+# X-API-Key header (see src/serving/auth_common.py). Set it in your shell
+# or in a real .env file next to this docker-compose.yml (see
+# .env.example) before running; this file deliberately never bakes a
+# default key into the image or a compose fallback.
+services:
+  prepayment-segment-assignment:   # Problem 4
+    build:
+      context: ../../
+      dockerfile: 05_mega_project_5_liquidity_cashflow/docker/Dockerfile
+    command: ["uvicorn", "prepayment_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8015"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+    ports:
+      - "8015:8015"
