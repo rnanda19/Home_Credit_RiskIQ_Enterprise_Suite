@@ -25,7 +25,7 @@ suite's own real, current executive rollup (`00_suite_executive_summary.json`,
 generated from your own run): 24 of 25 problems are statistically
 robust and recommended for production. The one exception is disclosed,
 not hidden: Mega Project 3's Problem 3 (Repayment Behavior Segmentation)
-is genuinely NOT YET STATISTICALLY ROBUST — it fails the
+is genuinely not yet statistically robust — it fails the
 `cramers_v_ci_excludes_zero` significance gate on your real data, a
 separate, stricter check from the structural pipeline-integrity checks
 (which it passes). Mega Projects 1-4 each ship real deployable FastAPI
@@ -200,7 +200,7 @@ versions) — this repo never reports a number it hasn't measured.
 | Mega Projects built / planned | 5 / 5 — all built |
 | Real problems covered (suite-wide) | 25 (5 per Mega Project × 5) |
 | Notebooks (suite-wide) | 30 — 5 problem notebooks + 1 executive rollup, ×5 |
-| Deployment verdicts (from your own real reruns) | 24 / 25 problems statistically robust and recommended for production. The 1 exception: Mega Project 3 Problem 3 (Repayment Behavior Segmentation) — NOT YET STATISTICALLY ROBUST, fails the `cramers_v_ci_excludes_zero` gate; disclosed in its own model card |
+| Deployment verdicts (from your own real reruns) | 24 / 25 problems statistically robust and recommended for production. The 1 exception: Mega Project 3 Problem 3 (Repayment Behavior Segmentation) — not yet statistically robust, fails the `cramers_v_ci_excludes_zero` gate; disclosed in its own model card |
 | Deployable scoring services (Mega Projects 1-4) | 14 total — 4 (MP1) + 2 (MP2) + 4 (MP3) + 4 (MP4), all FastAPI, real `X-API-Key` auth + per-request explainability, Docker Compose per Mega Project. Mega Project 5's Problem 4 service code exists but is not yet counted here until verified against a real run (see Mega Project 5's own README) |
 | Verification protocol per notebook | Mega Projects 1-3 + MP4 Problems 1-2: execute end-to-end (0 errors) → clear outputs → `nbformat` validate → LibreOffice headless recalc on every generated workbook → Playwright network-blocked check on every dashboard. MP4 Problems 3-6 (per the 2026-09-01 policy change): hand-built test cases + syntax/AST check + `nbformat` validate, no fixture run |
 | Model cards | 1 per problem where present — 23 exist today (Mega Projects 1-4; Mega Project 1's own executive-rollup card is not yet written), 6 more for Mega Project 5 in progress |
