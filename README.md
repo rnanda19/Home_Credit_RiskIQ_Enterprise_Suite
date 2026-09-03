@@ -22,10 +22,10 @@ full-scale reruns.** 30 real notebooks total (5 problems + 1 executive
 rollup, ×5) across underwriting & approval, Basel regulatory capital, risk
 segmentation, delinquency prevention, and liquidity & cashflow. Per the
 suite's own real, current executive rollup (`00_suite_executive_summary.json`,
-generated from your own run): **24 of 25 problems are statistically
-robust and recommended for production.** The one exception is disclosed,
+generated from your own run): 24 of 25 problems are statistically
+robust and recommended for production. The one exception is disclosed,
 not hidden: Mega Project 3's Problem 3 (Repayment Behavior Segmentation)
-is genuinely **NOT YET STATISTICALLY ROBUST** — it fails the
+is genuinely NOT YET STATISTICALLY ROBUST — it fails the
 `cramers_v_ci_excludes_zero` significance gate on your real data, a
 separate, stricter check from the structural pipeline-integrity checks
 (which it passes). Mega Projects 1-4 each ship real deployable FastAPI
