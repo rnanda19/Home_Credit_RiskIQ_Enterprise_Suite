@@ -2,14 +2,25 @@
 # deliberately NOT the full notebook/EDA/reporting stack (polars, jupyter,
 # matplotlib, python-docx, openpyxl, shap, lime, etc. are not needed here).
 # Version ranges (not exact pins) to match the suite root's own
-# requirements.txt convention -- scikit-learn/xgboost/pandas/numpy/joblib
+# requirements.txt convention -- scikit-learn/xgboost/lightgbm/pandas/numpy/joblib
 # ranges are copied verbatim from there so a model bundle you trained with
 # the main requirements.txt unpickles correctly here too.
+# 2026-09-05 fix: notebooks 01 and 02's real champion-model screening picked
+# LGBMClassifier as champion on this data, but lightgbm was never declared
+# here -- loading the real (gitignored, regenerate-by-running-the-notebook)
+# .joblib bundle then fails with ModuleNotFoundError: No module named
+# 'lightgbm' the moment joblib tries to unpickle it. CI's own unit-tests job
+# never caught this because it runs on a fresh clone with no bundle present,
+# so tests/test_scoring_services.py's skip-if-missing guards skip those
+# assertions entirely -- this only surfaces once you've actually run the
+# notebooks and have a real bundle on disk, exactly as any real deployment
+# of these services would.
 fastapi>=0.110
 uvicorn[standard]>=0.29
 pydantic>=2.6
 scikit-learn>=1.4
 xgboost>=2.0
+lightgbm>=4.3
 pandas>=2.0
 numpy>=1.26
 joblib>=1.3
