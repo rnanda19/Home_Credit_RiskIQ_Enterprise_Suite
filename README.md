@@ -132,12 +132,20 @@ flag), these are real, live, rendered pages — not raw source:
 - [Problem 5 — Cross-Axis Risk-Return Synthesis](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_05_dashboard.html)
 
 **Mega Project 4 — Delinquency Prevention**
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_executive_dashboard.html)
 - [Problem 1 — Early Delinquency Risk Scoring](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_01_dashboard.html)
 - [Problem 2 — Installment Payment Behavior Detection](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_02_dashboard.html)
-- Problems 3-6 and the executive rollup have no live dashboard yet — per
-  the 2026-09-01 policy change, they were verified without a fixture run,
-  so there is no fixture-generated HTML to publish (see that Mega
-  Project's own README for the full disclosure).
+- [Problem 3 — Revolving/Credit-Card Distress Early Warning](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_03_dashboard.html)
+- [Problem 4 — POS/Cash Loan Delinquency Trajectory](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_04_dashboard.html)
+- [Problem 5 — Early-Warning Intervention Ranking](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_05_dashboard.html)
+
+**Mega Project 5 — Liquidity & Cashflow**
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_executive_dashboard.html)
+- [Problem 1 — Portfolio Cashflow Timing & Reliability](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_01_dashboard.html)
+- [Problem 2 — Cash-Flow-at-Risk (CFaR) Rolling Forecast](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_02_dashboard.html)
+- [Problem 3 — Retail Liquidity Coverage Proxy (LCR-adapted)](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_03_dashboard.html)
+- [Problem 4 — Prepayment / Early-Repayment Behavior Segmentation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_04_dashboard.html)
+- [Problem 5 — Macro Cashflow Stress Test](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_05_dashboard.html)
 
 **Do not click the `.html` files directly in GitHub's file browser** (e.g.
 under `docs/dashboards/` or `sample_reports/`) — GitHub shows raw source
