@@ -9,6 +9,17 @@ Soft dependencies (cross-check only): `decision_engine/artifacts/notebook_02_bur
 Shared module: `src/features/risk_segmentation_features.py` —
 `engineer_revolving_credit_utilization_features()`
 
+## CI status
+
+Re-verified 2026-09-05 against the current `main` branch (commit `33ebb69`):
+all 12 GitHub Actions checks pass — `shared-tests`, `unit-tests` (all 5 Mega
+Projects), `lint`, `security-scan`, `build`, `notebook-syntax`, `deploy`, and
+`report-build-status`. GitHub's file-history view may still show a red ✗ on
+an older commit that last touched this file (`517b7f4`, from the 2026-09-02
+sync, when a `polars` dependency was briefly missing from the `shared-tests`
+job) — that historical failure was fixed in commit `96e4321` and does not
+reflect the current state of the suite.
+
 ## This trains no supervised model and scores no PD
 
 PD is reused unchanged from Mega Project 3 / Notebook 01 — never

@@ -3,6 +3,17 @@
 Notebook: `notebooks/04_macro_stress_testing.ipynb`
 Hard dependency (not owned by this notebook): `../decision_engine/artifacts/notebook_01_capital_scores.csv`
 
+## CI status
+
+Re-verified 2026-09-05 against the current `main` branch (commit `33ebb69`):
+all 12 GitHub Actions checks pass — `shared-tests`, `unit-tests` (all 5 Mega
+Projects), `lint`, `security-scan`, `build`, `notebook-syntax`, `deploy`, and
+`report-build-status`. GitHub's file-history view may still show a red ✗ on
+an older commit that last touched this file (`517b7f4`, from the 2026-09-02
+sync, when a `polars` dependency was briefly missing from the `shared-tests`
+job) — that historical failure was fixed in commit `96e4321` and does not
+reflect the current state of the suite.
+
 ## This is not a model, and every shock is a documented, cited assumption
 
 This notebook trains nothing. For the Baseline scenario it reuses Notebook
