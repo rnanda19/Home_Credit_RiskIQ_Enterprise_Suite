@@ -21,7 +21,7 @@ bottleneck>=1.4              # fast NaN-aware numpy reductions (nanmean/nanstd/e
                               # drop-in speed-up pandas will pick up automatically once installed
 
 # --- Progress feedback (prevents "is this frozen?" uncertainty on long real-data cells) -
-tqdm>=4.66
+tqdm>=4.70.0
 
 # --- Already required elsewhere in this suite (listed here again for a one-command install
 #     of everything performance-relevant; no version conflicts with requirements.txt) ----
