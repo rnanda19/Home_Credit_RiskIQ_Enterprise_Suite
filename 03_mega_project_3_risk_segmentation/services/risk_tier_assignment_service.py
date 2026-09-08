@@ -34,7 +34,7 @@ THIS_DIR = Path(__file__).resolve().parent
 MP3_DIR = THIS_DIR.parent
 SUITE_ROOT = MP3_DIR.parent
 sys.path.insert(0, str(SUITE_ROOT / "src"))
-from serving.auth_common import require_api_key
+from serving.auth_common import add_token_route, require_auth
 
 SUMMARY_PATH = Path(
     os.environ.get(
@@ -90,6 +90,7 @@ app = FastAPI(
     description="Real tier assignment using Notebook 01's real, CART-derived tier boundaries.",
     version="1.0.0",
 )
+add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -97,7 +98,7 @@ def health():
     return {"status": "ok", "n_real_tiers": N_TIERS}
 
 
-@app.get("/schema", dependencies=[Depends(require_api_key)])
+@app.get("/schema", dependencies=[Depends(require_auth)])
 def schema():
     return {
         "tier_labels": TIER_LABELS,
@@ -105,7 +106,7 @@ def schema():
     }
 
 
-@app.post("/score", dependencies=[Depends(require_api_key)])
+@app.post("/score", dependencies=[Depends(require_auth)])
 def score(request: RiskTierRequest):
     try:
         tier, idx = _assign_tier(request.PD)

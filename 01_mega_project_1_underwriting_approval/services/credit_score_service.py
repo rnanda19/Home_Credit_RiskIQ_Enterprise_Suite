@@ -35,7 +35,7 @@ SUITE_ROOT = MP1_DIR.parent
 
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.scoring_service_common import load_bundle, score_one, build_request_model
-from serving.auth_common import require_api_key
+from serving.auth_common import add_token_route, require_auth
 from serving.explainability_common import top_reason_codes
 
 BUNDLE_PATH = Path(
@@ -69,6 +69,7 @@ app = FastAPI(
     description="Real PDO scorecard score, built on Notebook 01's real trained champion model.",
     version="1.0.0",
 )
+add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -80,7 +81,7 @@ def health():
     }
 
 
-@app.get("/schema", dependencies=[Depends(require_api_key)])
+@app.get("/schema", dependencies=[Depends(require_auth)])
 def schema():
     return {
         "numeric_features": _numeric_features,
@@ -89,7 +90,7 @@ def schema():
     }
 
 
-@app.post("/score", dependencies=[Depends(require_api_key)])
+@app.post("/score", dependencies=[Depends(require_auth)])
 def score(request: RequestModel):
     payload = request.model_dump()
     try:

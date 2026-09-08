@@ -41,7 +41,7 @@ from features.regulatory_capital_features import (
     other_retail_correlation,
     basel_retail_capital_k,
 )
-from serving.auth_common import require_api_key
+from serving.auth_common import add_token_route, require_auth
 
 # Real, disclosed ASSUMPTION -- identical constants to pipeline_mp2_nb04.py
 # Section 5. Kept in one place here so the notebook and this service can
@@ -93,6 +93,7 @@ app = FastAPI(
     description="Real, documented macro stress scenarios applied via the same Vasicek capital formula as Problem 1.",
     version="1.0.0",
 )
+add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -100,12 +101,12 @@ def health():
     return {"status": "ok", "scenarios": list(SCENARIOS.keys())}
 
 
-@app.get("/schema", dependencies=[Depends(require_api_key)])
+@app.get("/schema", dependencies=[Depends(require_auth)])
 def schema():
     return {"scenarios": SCENARIOS}
 
 
-@app.post("/score/{scenario}", dependencies=[Depends(require_api_key)])
+@app.post("/score/{scenario}", dependencies=[Depends(require_auth)])
 def score(scenario: str, request: StressRequest):
     if scenario not in SCENARIOS:
         raise HTTPException(

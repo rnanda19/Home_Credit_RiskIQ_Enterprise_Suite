@@ -23,7 +23,16 @@ from fastapi.testclient import TestClient
 SUITE_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 
-from serving.auth_common import DEV_DEFAULT_API_KEY, configured_api_key, require_api_key  # noqa: E402
+from serving.auth_common import (  # noqa: E402
+    API_ACCESS_SCOPE,
+    DEV_DEFAULT_API_KEY,
+    DEV_DEFAULT_JWT_SECRET,
+    add_token_route,
+    configured_api_key,
+    create_access_token,
+    require_api_key,
+    require_auth,
+)
 from serving.explainability_common import top_reason_codes  # noqa: E402
 from serving.scoring_service_common import build_scoring_app  # noqa: E402
 from serving.scoring_service_common import load_bundle as load_scoring_bundle  # noqa: E402
@@ -103,6 +112,105 @@ def test_require_api_key_uses_constant_time_comparison():
     src = inspect.getsource(require_api_key)
     assert "compare_digest" in src
     assert "presented == expected" not in src.replace(" ", "")
+
+
+# --------------------------------------------------------------------------
+# auth_common.py -- OAuth2/JWT (2026-09-08 hardening)
+# --------------------------------------------------------------------------
+
+
+def _tiny_authenticated_app() -> FastAPI:
+    app = FastAPI()
+    add_token_route(app)
+
+    @app.get("/health")
+    def health():
+        return {"status": "ok"}
+
+    @app.get("/protected", dependencies=[Depends(require_auth)])
+    def protected():
+        return {"ok": True}
+
+    return app
+
+
+def test_token_endpoint_issues_a_real_jwt_for_the_correct_api_key(monkeypatch):
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    client = TestClient(_tiny_authenticated_app())
+    resp = client.post("/token", data={"username": "anything", "password": "a-real-configured-key"})
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["token_type"] == "bearer"
+    assert body["scope"] == API_ACCESS_SCOPE
+    assert isinstance(body["access_token"], str) and len(body["access_token"]) > 20
+
+
+def test_token_endpoint_rejects_wrong_client_secret(monkeypatch):
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    client = TestClient(_tiny_authenticated_app())
+    resp = client.post("/token", data={"username": "anything", "password": "not-the-real-key"})
+    assert resp.status_code == 401
+
+
+def test_require_auth_accepts_a_valid_x_api_key_header_unchanged(monkeypatch):
+    """The pre-existing X-API-Key path must still work exactly as before --
+    require_auth is additive, not a breaking replacement."""
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    client = TestClient(_tiny_authenticated_app())
+    resp = client.get("/protected", headers={"X-API-Key": "a-real-configured-key"})
+    assert resp.status_code == 200
+
+
+def test_require_auth_accepts_a_valid_bearer_jwt_from_the_real_token_endpoint(monkeypatch):
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    monkeypatch.setenv("JWT_SECRET_KEY", "a-real-configured-jwt-secret")
+    client = TestClient(_tiny_authenticated_app())
+    token_resp = client.post("/token", data={"username": "x", "password": "a-real-configured-key"})
+    token = token_resp.json()["access_token"]
+    resp = client.get("/protected", headers={"Authorization": f"Bearer {token}"})
+    assert resp.status_code == 200
+
+
+def test_require_auth_rejects_a_jwt_signed_with_the_wrong_secret(monkeypatch):
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    monkeypatch.setenv("JWT_SECRET_KEY", "the-real-secret")
+    bad_token = create_access_token([API_ACCESS_SCOPE])  # signed with "the-real-secret"
+    monkeypatch.setenv("JWT_SECRET_KEY", "a-different-secret-now")  # rotate -- old token must die
+    client = TestClient(_tiny_authenticated_app())
+    resp = client.get("/protected", headers={"Authorization": f"Bearer {bad_token}"})
+    assert resp.status_code == 401
+
+
+def test_require_auth_rejects_an_expired_jwt(monkeypatch):
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    monkeypatch.setenv("JWT_SECRET_KEY", "a-real-configured-jwt-secret")
+    expired_token = create_access_token([API_ACCESS_SCOPE], expires_minutes=-1)
+    client = TestClient(_tiny_authenticated_app())
+    resp = client.get("/protected", headers={"Authorization": f"Bearer {expired_token}"})
+    assert resp.status_code == 401
+
+
+def test_require_auth_rejects_a_valid_jwt_missing_the_required_scope(monkeypatch):
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    monkeypatch.setenv("JWT_SECRET_KEY", "a-real-configured-jwt-secret")
+    token_without_scope = create_access_token(["some:other:scope"])
+    client = TestClient(_tiny_authenticated_app())
+    resp = client.get("/protected", headers={"Authorization": f"Bearer {token_without_scope}"})
+    assert resp.status_code == 401
+
+
+def test_require_auth_rejects_missing_credentials_entirely(monkeypatch):
+    monkeypatch.setenv("API_KEY", "a-real-configured-key")
+    client = TestClient(_tiny_authenticated_app())
+    resp = client.get("/protected")
+    assert resp.status_code == 401
+
+
+def test_jwt_secret_falls_back_to_dev_default_when_unset(monkeypatch):
+    monkeypatch.delenv("JWT_SECRET_KEY", raising=False)
+    from serving.auth_common import configured_jwt_secret
+
+    assert configured_jwt_secret() == DEV_DEFAULT_JWT_SECRET
 
 
 # --------------------------------------------------------------------------

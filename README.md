@@ -29,7 +29,7 @@ is genuinely not yet statistically robust — it fails the
 `cramers_v_ci_excludes_zero` significance gate on your real data, a
 separate, stricter check from the structural pipeline-integrity checks
 (which it passes). Mega Projects 1-4 each ship real deployable FastAPI
-scoring services (real `X-API-Key` authentication + per-request
+scoring services (real `X-API-Key` **and** OAuth2/JWT Bearer-token authentication + per-request
 explainability on every one), Docker Compose orchestration, and a pytest
 suite. Mega Projects 1-3 additionally carry a complete fixture-generated
 `sample_reports/` set; Mega Project 4's Problems 3-6 were verified with
@@ -68,7 +68,7 @@ hand-built test cases instead of a fixture run, per an explicit
 | Statistical rigor | Chi-square association testing, multinomial-resampled bootstrap significance (not naive resampling — see `BENCHMARKS.md`), confidence-interval-based robustness gates distinct from structural checks |
 | Explainable AI | SHAP (global importance + beeswarm) and LIME (per-instance) explanations shipped with every trained model, not added after the fact |
 | Model risk & governance | Per-problem `MODEL_CARD.md`, two independent check families per run, honest "not recommended for production" verdicts when a robustness gate fails — see [below](#model-risk--governance) |
-| MLOps / deployment | 14 deployable FastAPI scoring services across 4 Mega Projects (4 + 2 + 4 + 4), every one requiring real `X-API-Key` authentication with real per-request explainability, Docker Compose orchestration per Mega Project (non-root containers + real health checks), pytest coverage (bit-identical service verification), 2-workflow CI (GitHub Actions) |
+| MLOps / deployment | 14 deployable FastAPI scoring services across 4 Mega Projects (4 + 2 + 4 + 4), every one requiring real authentication (an `X-API-Key` header **or** an OAuth2/JWT Bearer token from the service's own `POST /token`) with real per-request explainability, Docker Compose orchestration per Mega Project (non-root containers + real health checks), pytest coverage (bit-identical service verification), 2-workflow CI (GitHub Actions) |
 | Software engineering | Shared library (`src/`) instead of copy-pasted logic across problems, enforced resource ceilings before any heavy import, fixed-seed reproducibility, a real verification protocol (below) — not "it ran on my machine" |
 | Communication | Executive rollup in HTML + Word + Excel per Mega Project, SMART-format insights, one model card per problem written for a non-modeler to read |
 
@@ -209,7 +209,7 @@ versions) — this repo never reports a number it hasn't measured.
 | Real problems covered (suite-wide) | 25 (5 per Mega Project × 5) |
 | Notebooks (suite-wide) | 30 — 5 problem notebooks + 1 executive rollup, ×5 |
 | Deployment verdicts (from your own real reruns) | 24 / 25 problems statistically robust and recommended for production. The 1 exception: Mega Project 3 Problem 3 (Repayment Behavior Segmentation) — not yet statistically robust, fails the `cramers_v_ci_excludes_zero` gate; disclosed in its own model card |
-| Deployable scoring services (Mega Projects 1-4) | 14 total — 4 (MP1) + 2 (MP2) + 4 (MP3) + 4 (MP4), all FastAPI, real `X-API-Key` auth + per-request explainability, Docker Compose per Mega Project. Mega Project 5's Problem 4 service code exists but is not yet counted here until verified against a real run (see Mega Project 5's own README) |
+| Deployable scoring services (Mega Projects 1-4) | 14 total — 4 (MP1) + 2 (MP2) + 4 (MP3) + 4 (MP4), all FastAPI, real `X-API-Key` **or** OAuth2/JWT auth + per-request explainability, Docker Compose per Mega Project. Mega Project 5's Problem 4 service code exists but is not yet counted here until verified against a real run (see Mega Project 5's own README) |
 | Verification protocol per notebook | Mega Projects 1-3 + MP4 Problems 1-2: execute end-to-end (0 errors) → clear outputs → `nbformat` validate → LibreOffice headless recalc on every generated workbook → Playwright network-blocked check on every dashboard. MP4 Problems 3-6 (per the 2026-09-01 policy change): hand-built test cases + syntax/AST check + `nbformat` validate, no fixture run |
 | Model cards | 1 per problem where present — 23 exist today (Mega Projects 1-4; Mega Project 1's own executive-rollup card is not yet written), 6 more for Mega Project 5 in progress |
 | Reproducibility | `RANDOM_SEED = 42` everywhere randomness is involved |

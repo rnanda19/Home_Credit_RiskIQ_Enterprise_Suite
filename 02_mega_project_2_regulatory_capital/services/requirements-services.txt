@@ -11,3 +11,8 @@ scipy>=1.11
 # functions) has a module-level `import polars as pl` even though these 2
 # services never touch a DataFrame -- pulled in so that import succeeds.
 polars>=0.20
+
+# 2026-09-08 hardening: real OAuth2/JWT token issuance & verification (see
+# src/serving/auth_common.py's add_token_route()/require_auth()).
+python-jose[cryptography]>=3.3
+python-multipart>=0.0.9  # required by OAuth2PasswordRequestForm (POST /token)

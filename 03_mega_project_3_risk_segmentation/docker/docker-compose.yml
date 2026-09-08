@@ -16,6 +16,7 @@ services:
     command: ["uvicorn", "risk_tier_assignment_service:app", "--host", "0.0.0.0", "--port", "8007"]
     environment:
       - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
       - HEALTHCHECK_PORT=8007
     ports:
       - "8007:8007"
@@ -27,6 +28,7 @@ services:
     command: ["uvicorn", "bureau_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8008"]
     environment:
       - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
       - HEALTHCHECK_PORT=8008
     ports:
       - "8008:8008"
@@ -38,6 +40,7 @@ services:
     command: ["uvicorn", "repayment_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8009"]
     environment:
       - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
       - HEALTHCHECK_PORT=8009
     ports:
       - "8009:8009"
@@ -49,6 +52,7 @@ services:
     command: ["uvicorn", "utilization_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8010"]
     environment:
       - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
       - HEALTHCHECK_PORT=8010
     ports:
       - "8010:8010"

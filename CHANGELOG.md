@@ -3,6 +3,59 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.3] - 2026-09-08
+
+### Enterprise production-readiness gap-closing pass
+
+Closes several real gaps from an enterprise production-readiness review
+(security posture, CI rigor, and now real OAuth2/JWT authentication),
+each verified by actually running the affected test suites before and
+after, not just written and assumed correct.
+
+- **Real OAuth2/JWT authentication**, replacing the single shared static
+  API key as the suite's primary auth mechanism: `src/serving/auth_common.py`
+  gained `add_token_route()` (a real `POST /token` OAuth2
+  client-credentials-style exchange, reusing each service's existing
+  `API_KEY` as the client secret) and `require_auth()` (accepts either a
+  valid `X-API-Key` header -- kept as a documented secondary path for
+  simple machine-to-machine batch callers -- or a valid, unexpired Bearer
+  JWT carrying the `api:access` scope). Wired into all 14 deployable
+  services across Mega Projects 1-4 (both shared factory modules,
+  `scoring_service_common.py` and `segment_assignment_common.py`, plus
+  the 5 standalone services that import `auth_common` directly). 9 new
+  tests added to `src/tests/test_serving_common.py` covering token
+  issuance, valid/invalid/expired/wrong-scope JWTs, and confirming the
+  pre-existing `X-API-Key` path is completely unaffected. Every existing
+  test suite in the repo (`src/tests/` + all 5 Mega Projects' `tests/`)
+  was re-run after this change with 0 regressions.
+- **CI lint gate flipped from advisory to blocking**: `black --check` and
+  `pyflakes` in `.github/workflows/code-quality.yml` no longer have a
+  `|| true` fallback. A repo-wide `black` reformat (38 files, pure style,
+  zero logic change) was applied first so this doesn't break the next
+  push -- every test suite was re-verified passing after the reformat too.
+- **Verified container build & run, for real, in CI**: added
+  `.github/workflows/docker-build-verify.yml`, a 5-way matrix job that
+  builds each Mega Project's actual Dockerfile on GitHub Actions'
+  `ubuntu-latest` runners (Docker ships preinstalled there) and curls
+  each image's real `/health` endpoint inside the running container.
+  `scripts/generate_ci_fixture_bundles.py` provides small, clearly-labeled
+  synthetic model bundles at the exact paths each Dockerfile expects
+  (real bundles are `.gitignore`d and only exist after running a notebook
+  against the real dataset). This proves the Dockerfile/dependencies/
+  startup command are correct and the service genuinely starts inside a
+  container -- it proves nothing about model quality, which stays
+  validated separately at the notebook level.
+- **`MODEL_REGISTRY.md`**: a real, file-based model registry mapping all
+  6 owned model artifacts across the 5 Mega Projects, their
+  cross-Mega-Project consumers, and a promotion log for future retrains.
+- **`DATA_PRIVACY.md`**: closes the disclosed 0-hits-for-GDPR/CCPA/PII
+  documentation gap.
+- **Security hardening**: `.github/dependabot.yml` (weekly dependency
+  vulnerability alerts), `.github/workflows/codeql.yml` (native GitHub
+  CodeQL scanning), `SECURITY.md` (responsible disclosure policy),
+  broadened `.gitignore` secret-pattern coverage, and `.github/CODEOWNERS`
+  (requires owner review before any pull request can merge).
+
 ## [2.1.2] - 2026-09-08
 
 ### Changed license from MIT to All Rights Reserved

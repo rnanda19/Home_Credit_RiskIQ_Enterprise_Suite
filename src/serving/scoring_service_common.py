@@ -41,7 +41,7 @@ objects (not strings) here sidesteps that lookup entirely.
 
 HARDENING (2026-09-02): every service built by this factory now requires a
 real `X-API-Key` header on `/schema` and `/score` (never `/health`, so
-liveness probes stay unauthenticated) via `serving.auth_common.require_api_key`,
+liveness probes stay unauthenticated) via `serving.auth_common.require_auth` (X-API-Key or OAuth2/JWT Bearer -- 2026-09-08 hardening),
 and `/score` now returns a real, per-request `top_reasons` explanation via
 `serving.explainability_common.top_reason_codes` -- the exact real change in
 predicted probability from resetting each real feature that differs from its
@@ -58,7 +58,7 @@ import numpy as np
 from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel, Field, create_model
 
-from serving.auth_common import require_api_key
+from serving.auth_common import add_token_route, require_auth
 from serving.explainability_common import top_reason_codes
 
 
@@ -137,6 +137,7 @@ def build_scoring_app(
         pass
 
     app = FastAPI(title=title, description=description, version="1.0.0")
+    add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
     @app.get("/health")
     def health():
@@ -147,7 +148,7 @@ def build_scoring_app(
             "n_categorical_features": len(categorical_features),
         }
 
-    @app.get("/schema", dependencies=[Depends(require_api_key)])
+    @app.get("/schema", dependencies=[Depends(require_auth)])
     def schema():
         return {
             "numeric_features": numeric_features,
@@ -155,7 +156,7 @@ def build_scoring_app(
             "champion_model": champion_name,
         }
 
-    @app.post("/score", dependencies=[Depends(require_api_key)])
+    @app.post("/score", dependencies=[Depends(require_auth)])
     def score(request: RequestModel):
         payload = request.model_dump()
         try:

@@ -48,7 +48,7 @@ the same way).
 
 HARDENING (2026-09-02): every service built by this factory now requires a
 real `X-API-Key` header on `/schema` and `/score` (never `/health`) via
-`serving.auth_common.require_api_key`, and `/score` now returns real,
+`serving.auth_common.require_auth` (X-API-Key or OAuth2/JWT Bearer -- 2026-09-08 hardening), and `/score` now returns real,
 per-request `distance_to_each_segment` transparency -- the real Euclidean
 distance (in the same real fitted-`StandardScaler` space `kmeans.predict()`
 itself scores in) from this request's real feature vector to every real
@@ -65,7 +65,7 @@ import numpy as np
 from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel, Field, create_model
 
-from serving.auth_common import require_api_key
+from serving.auth_common import add_token_route, require_auth
 
 
 def load_bundle(bundle_path: Path) -> dict:
@@ -157,6 +157,7 @@ def build_segment_app(
         pass
 
     app = FastAPI(title=title, description=description, version="1.0.0")
+    add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
     @app.get("/health")
     def health():
@@ -168,7 +169,7 @@ def build_segment_app(
             "note": history_flag_note,
         }
 
-    @app.get("/schema", dependencies=[Depends(require_api_key)])
+    @app.get("/schema", dependencies=[Depends(require_auth)])
     def schema():
         return {
             "feature_names": feature_names,
@@ -177,7 +178,7 @@ def build_segment_app(
             "winsorize_bounds": bundle.get("winsorize_report"),
         }
 
-    @app.post("/score", dependencies=[Depends(require_api_key)])
+    @app.post("/score", dependencies=[Depends(require_auth)])
     def score(request: RequestModel):
         payload = request.model_dump()
         try:

@@ -37,7 +37,7 @@ from fastapi import Depends, FastAPI
 from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from serving.auth_common import require_api_key
+from serving.auth_common import add_token_route, require_auth
 
 
 class RepaymentCapacityRequest(BaseModel):
@@ -54,6 +54,7 @@ app = FastAPI(
     description="Real, deterministic repayment-capacity ratio formulas from Notebook 04 (no trained model).",
     version="1.0.0",
 )
+add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -61,7 +62,7 @@ def health():
     return {"status": "ok", "note": "Deterministic formulas, no trained model -- see module docstring."}
 
 
-@app.post("/score", dependencies=[Depends(require_api_key)])
+@app.post("/score", dependencies=[Depends(require_auth)])
 def score(request: RepaymentCapacityRequest):
     repayment_capacity_ratio = None
     total_debt_burden_ratio = None

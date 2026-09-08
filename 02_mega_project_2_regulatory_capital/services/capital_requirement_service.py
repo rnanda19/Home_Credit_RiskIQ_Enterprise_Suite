@@ -43,7 +43,7 @@ from features.regulatory_capital_features import (
     other_retail_correlation,
     basel_retail_capital_k,
 )
-from serving.auth_common import require_api_key
+from serving.auth_common import add_token_route, require_auth
 
 
 def _assign_segment(name_contract_type: str, flag_own_realty: str, flag_own_car: str) -> str:
@@ -83,6 +83,7 @@ app = FastAPI(
     description="Real Basel retail-IRB Vasicek/ASRF capital calculation, identical to Notebook 01.",
     version="1.0.0",
 )
+add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -93,7 +94,7 @@ def health():
     }
 
 
-@app.get("/schema", dependencies=[Depends(require_api_key)])
+@app.get("/schema", dependencies=[Depends(require_auth)])
 def schema():
     return {
         "segment_order": SEGMENT_ORDER,
@@ -104,7 +105,7 @@ def schema():
     }
 
 
-@app.post("/score", dependencies=[Depends(require_api_key)])
+@app.post("/score", dependencies=[Depends(require_auth)])
 def score(request: CapitalRequest):
     try:
         segment = _assign_segment(
