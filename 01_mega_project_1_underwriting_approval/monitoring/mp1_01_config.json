@@ -1,0 +1,8 @@
+{
+  "thresholds": {
+    "default_rate_swing_pp": 3.0,
+    "psi_watch": 0.10,
+    "psi_alert": 0.25
+  },
+  "_comment": "psi_watch/psi_alert use the standard, widely-published PSI convention (< 0.10 = no significant shift, 0.10-0.25 = moderate/watch, >= 0.25 = significant/alert -- see e.g. Siddiqi, Credit Risk Scorecards). default_rate_swing_pp=3.0 is this repo's own chosen operating threshold, not a value derived from data -- tune it once a real baseline and a real production window are both available."
+}

@@ -3,6 +3,44 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.4] - 2026-09-08
+
+### Real MP2 Docker build fix + real production drift monitoring
+
+- **Fixed a real MP2 Docker image bug**, found by the Docker Build & Run
+  Verification job added in [2.1.3] on its very first real run against
+  GitHub's own Docker daemon: `02_mega_project_2_regulatory_capital/docker/Dockerfile`
+  never copied `src/serving/` into the image, even though both of its
+  services import `require_auth`/`add_token_route` from
+  `serving.auth_common`. Every other Mega Project's Dockerfile already
+  had this `COPY` line; MP2's was missing it, so its container crashed on
+  import at startup and never served `/health`. This bug predates the
+  OAuth2/JWT work above (the same import existed for `require_api_key`
+  before) and was invisible until a real image was actually built and
+  run for the first time -- exactly the kind of gap that CI job exists to
+  catch. Fixed with a one-line `COPY` addition; no Python logic changed,
+  verified via a full `src/tests/` re-run.
+- **Real production drift monitoring**, closing the gap the enterprise
+  production-readiness review found ("PSI is used as a validation concept
+  inside notebooks, but no dedicated monitoring/ directory or monitoring
+  job exists anywhere in the tracked repo"): added `src/monitoring/monitoring_common.py`
+  (a real, full two-sided Population Stability Index calculation) and
+  `src/monitoring/monitoring_job.py` (a real scheduled CLI job -- checks
+  default-rate swing and per-feature PSI against a model's baseline,
+  exits 1 on any `ALERT` so a scheduler can act on it), plus
+  `scripts/generate_monitoring_baseline.py` (computes a model's real
+  baseline from its real bundle + real reference data). Ported and
+  generalized from the AMEX RiskIQ Enterprise Credit Risk Platform's own
+  real `monitoring_job.py` (built for its Problem 1) rather than
+  re-invented. Wired for one flagship model today -- Mega Project 1
+  Problem 1, Credit Default Prediction -- with the real baseline itself
+  not yet generated (no real, locally-downloaded Kaggle data exists in
+  this build environment); verified structurally instead via 11 new
+  tests in `src/tests/test_monitoring_job.py` and
+  `src/tests/test_generate_monitoring_baseline.py`. See `MONITORING.md`
+  for the full, honest scope -- what's covered, what isn't yet, and the
+  one command that generates a real baseline once a real bundle exists.
+
 ## [2.1.3] - 2026-09-08
 
 ### Enterprise production-readiness gap-closing pass

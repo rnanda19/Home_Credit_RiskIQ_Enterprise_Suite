@@ -108,6 +108,24 @@ its own `README.md`/`CHANGELOG.md` for current status.
   real dataset).
 - **File-based model registry**: done -- see `MODEL_REGISTRY.md`.
 - **Data privacy/PII documentation**: done -- see `DATA_PRIVACY.md`.
+- **OAuth2/JWT authentication**: done -- every service now accepts a real
+  OAuth2/JWT Bearer token (issued by its own `POST /token`, HS256-signed,
+  scoped, real expiry) as an alternative to the existing `X-API-Key`
+  header, via `serving.auth_common.require_auth`. The static API key is
+  kept as a documented secondary path for simple machine-to-machine batch
+  callers, not removed -- see `README.md`/`CHANGELOG.md` [2.1.3].
+- **MP2 Docker image bug found and fixed by the new Docker verification
+  job, on its very first real run**: `02_mega_project_2_regulatory_capital/docker/Dockerfile`
+  was missing `COPY src/serving /app/src/serving`, so its container
+  crashed on import at startup and never served `/health` -- invisible
+  until a real `docker build`/`docker run` was performed against it for
+  the first time. Fixed; all 5 Mega Projects now build, run, and pass
+  their `/health` check in CI.
+- **Production drift monitoring**: done for one flagship model -- see
+  `MONITORING.md` for the real job, the real baseline generator, and the
+  honest scope of what's covered so far (Mega Project 1 Problem 1 only;
+  extending to the other 24 problems is unstarted, same shape of gap the
+  AMEX platform discloses for its own monitoring job).
 
 ## Immediate next steps (in order)
 

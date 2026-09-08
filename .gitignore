@@ -45,3 +45,11 @@ dist/
 .env.*
 !.env.example
 !**/.env.example
+
+# real monitoring baselines/logs (2026-09-08) -- a model's monitoring_baseline.json
+# is derived from real training data, the same way a trained .joblib bundle is --
+# regenerate it with scripts/generate_monitoring_baseline.py, never commit one
+# built from real Home Credit data. The job's own append-only log is local
+# run history, not source.
+**/monitoring/*_baseline.json
+**/monitoring/*_job_log.csv
