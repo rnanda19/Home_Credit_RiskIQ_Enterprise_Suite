@@ -3,6 +3,27 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.2] - 2026-09-08
+
+### Changed license from MIT to All Rights Reserved
+
+- `LICENSE` replaced: the repository is no longer MIT-licensed. It now
+  carries an All Rights Reserved license -- viewing is welcome (this repo
+  stays public for recruiters and hiring managers to review), but no
+  permission is granted to copy, modify, redistribute, or reuse the code
+  without the copyright holder's prior written consent.
+- This reverses the deliberate MIT choice logged in [1.1.0] below ("License
+  intentionally left as MIT... made when aligning this repo's conventions
+  with the rest of the portfolio") -- the rest of the portfolio (the AMEX
+  RiskIQ platform) has since moved to an All Rights Reserved license of its
+  own, and this repo is being brought back into alignment with that, not
+  left on the earlier MIT choice.
+- `README.md`'s license badge and License section, and `pyproject.toml`'s
+  `license` field, updated to match.
+- **What did NOT change**: no notebook's computed results, statistics,
+  model, or check logic changed -- this entry is a licensing and
+  documentation change only.
+
 ## [2.1.1] - 2026-09-02
 
 ### Closed the real, disclosed hardening gaps: Mega Project 5 service/Docker/tests, Mega Project 1's missing model card, a real MP3 test bug, and a suite-wide pyflakes/bandit/pytest verification pass

@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Home Credit Default Risk — real, end-to-end credit-risk enterprise suite (shared feature/reporting/serving library + Mega Project notebooks)"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = { text = "All-Rights-Reserved" }
 authors = [{ name = "Nandagopal R" }]
 dependencies = [
     "polars>=1.20",

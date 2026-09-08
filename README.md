@@ -4,7 +4,7 @@
 [![Code Quality](https://github.com/rnanda19/Home_Credit_RiskIQ_Enterprise_Suite/actions/workflows/code-quality.yml/badge.svg)](https://github.com/rnanda19/Home_Credit_RiskIQ_Enterprise_Suite/actions/workflows/code-quality.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Methodology](https://img.shields.io/badge/methodology-CRISP--DM-informational)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey)
 
 **A credit-risk engineering suite built to a financial-institution bar, not
 a Kaggle-notebook bar**: real trained models, real statistical validation
@@ -415,8 +415,10 @@ change is written up in [`CHANGELOG.md`](CHANGELOG.md), most recently:
 
 ## License
 
-Code is [MIT licensed](LICENSE). The Home Credit Default Risk dataset
-itself is **not** redistributed in this repository — it's a Kaggle
+All Rights Reserved — this repository is shared publicly for portfolio and
+demonstration purposes only. It is not licensed for reuse, modification, or
+redistribution; see `LICENSE` for details. The Home Credit Default Risk
+dataset itself is **not** redistributed in this repository — it's a Kaggle
 competition dataset under Kaggle's own terms; download it directly from
 Kaggle.
 
