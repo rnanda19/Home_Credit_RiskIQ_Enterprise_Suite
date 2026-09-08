@@ -222,11 +222,13 @@ folder — see the comment at the top of `docker/docker-compose.yml`):
 docker compose -f 02_mega_project_2_regulatory_capital/docker/docker-compose.yml up --build
 ```
 
-**Honesty note**: same as Mega Project 1 — the Docker files were verified
-structurally (`docker compose config`, plus a static COPY-path resolution
-check); there is no Docker daemon in the build sandbox, so an actual
-`docker build`/`docker run` has **not** been performed. Treat it as
-untested until you build it yourself.
+**Update, 2026-09-08**: same as Mega Project 1 — a real `docker build`/
+`docker run` of this exact image (including the real fix for a missing
+`COPY src/serving` that a real CI run caught, see the root `CHANGELOG.md`)
+now runs on every push in `.github/workflows/docker-build-verify.yml`.
+This build sandbox still has no local Docker daemon, so local
+verification here remains structural only, but the image is no longer
+untested — it builds, runs, and passes a real `/health` check in CI.
 
 Chain Mega Project 1's real PD output into either service for a fully
 real, end-to-end PD → capital pipeline: `POST` MP1's

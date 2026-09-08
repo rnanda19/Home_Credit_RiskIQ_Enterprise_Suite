@@ -317,10 +317,19 @@ uvicorn revolving_distress_scoring_service:app --port 8013      # Problem 3
 uvicorn pos_cash_trajectory_scoring_service:app --port 8014     # Problem 4
 ```
 
-Every `/schema` and `/score` endpoint requires a real `X-API-Key` header
+Every `/schema`, `/score`, and (2026-09-08) `/adverse-action-notice`
+endpoint requires real authentication — either an `X-API-Key` header, or an
+OAuth2/JWT Bearer token issued by the service's own `POST /token`
 (`/health` stays open, for liveness probes) — see
-[`src/serving/auth_common.py`](../src/serving/auth_common.py). Set a real
-`API_KEY` before running:
+[`src/serving/auth_common.py`](../src/serving/auth_common.py). All four
+authenticated routes are also real, tested, per-client-IP rate limited
+(`/token`: 10/minute; the rest: 60/minute) — see
+[`src/serving/rate_limit_common.py`](../src/serving/rate_limit_common.py)
+and the root `CHANGELOG.md` [2.1.5]. `/adverse-action-notice` turns each
+service's existing real explainability output into an ECOA/Reg B-style
+"specific reasons" notice, with sex/marital-status/age and known
+fair-lending-proxy features structurally excluded — see the root
+`ADVERSE_ACTION.md`. Set a real `API_KEY` before running:
 
 ```bash
 export API_KEY=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
@@ -335,12 +344,12 @@ folder — see the comment at the top of `docker/docker-compose.yml`; copy
 docker compose -f 04_mega_project_4_delinquency_prevention/docker/docker-compose.yml up --build
 ```
 
-**Honesty note**: the Docker files were verified structurally in this
-build's environment (`docker compose config`, plus a static COPY-path
-resolution check) — there is no Docker daemon or registry access in the
-build sandbox, so an actual `docker build`/`docker run` has **not** been
-performed by this project. Treat it as untested until you build it
-yourself; see `BENCHMARKS.md` at the suite root.
+**Update, 2026-09-08**: same as the other Mega Projects — a real
+`docker build`/`docker run` of this exact image now runs on every push in
+`.github/workflows/docker-build-verify.yml`. This build sandbox still has
+no local Docker daemon, so local verification here remains structural
+only, but the image is no longer untested — it builds, runs, and passes a
+real `/health` check in CI.
 
 ## Tests
 

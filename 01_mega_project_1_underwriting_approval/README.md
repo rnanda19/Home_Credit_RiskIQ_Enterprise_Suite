@@ -140,12 +140,17 @@ folder — see the comment at the top of `docker/docker-compose.yml`):
 docker compose -f 01_mega_project_1_underwriting_approval/docker/docker-compose.yml up --build
 ```
 
-**Honesty note**: the Docker files were verified structurally in this
-build's environment (`docker compose config`, plus a static COPY-path
-resolution check) — there is no Docker daemon or registry access in the
-build sandbox, so an actual `docker build`/`docker run` has **not** been
-performed by this project. Treat it as untested until you build it
-yourself; see `BENCHMARKS.md` at the suite root.
+**Update, 2026-09-08**: a real `docker build`/`docker run` of this exact
+image now runs on every push, on GitHub Actions' own `ubuntu-latest`
+runners (which ship Docker preinstalled) — see
+`.github/workflows/docker-build-verify.yml` and the root `ROADMAP.md`'s
+"Fixed since" section. This build sandbox still has no local Docker
+daemon, so local verification here remains structural only
+(`docker compose config` + a static COPY-path check), but the image
+itself is no longer untested — it builds, runs, and passes a real
+`/health` check in CI, and for this Mega Project's flagship service also
+passes a real TLS-termination check (self-signed cert + nginx + HTTPS
+curl) — see `TLS.md` at the suite root.
 
 ## Tests
 

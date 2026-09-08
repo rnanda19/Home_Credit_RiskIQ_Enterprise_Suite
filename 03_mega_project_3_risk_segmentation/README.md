@@ -327,10 +327,12 @@ folder — see the comment at the top of `docker/docker-compose.yml`):
 docker compose -f 03_mega_project_3_risk_segmentation/docker/docker-compose.yml up --build
 ```
 
-**Honesty note**: same as Mega Projects 1 and 2 — the Docker files were
-verified structurally (`docker compose config`, plus a static COPY-path
-resolution check); there is no Docker daemon in the build sandbox, so an
-actual `docker build`/`docker run` has **not** been performed.
+**Update, 2026-09-08**: same as Mega Projects 1 and 2 — a real
+`docker build`/`docker run` of this exact image now runs on every push in
+`.github/workflows/docker-build-verify.yml`. This build sandbox still has
+no local Docker daemon, so local verification here remains structural
+only, but the image is no longer untested — it builds, runs, and passes a
+real `/health` check in CI.
 
 **A real, disclosed scope boundary**: Problems 2-4's services take the
 ALREADY-ENGINEERED real feature vector as input (one field per name in

@@ -76,15 +76,22 @@ finished in minutes at real production scale rather than hours.
 
 ## What is *not* benchmarked here
 
-- **Docker image build/run time and container resource usage** — not
-  measured, because no Docker daemon or registry is available in the build
-  sandbox. The `Dockerfile`/`docker-compose.yml` were verified structurally
-  (via `docker compose config` and a static COPY-path resolution check)
-  but never actually built or run. Treat this as untested until you build
-  it yourself.
-- **FastAPI service latency/throughput** under load — the 5 pytest tests in
-  `test_scoring_services.py` verify correctness (service output matches an
-  independent reference computation), not latency or concurrency behavior.
+- **Docker image build/run time and container resource usage** — still not
+  measured here (no Docker daemon or registry is available in this build
+  sandbox), but no longer untested overall: `.github/workflows/docker-build-verify.yml`
+  performs a real `docker build`/`docker run` for all 5 Mega Projects on
+  GitHub Actions' own `ubuntu-latest` runners on every push, including a
+  real TLS-termination check (self-signed cert + nginx + HTTPS curl) for
+  one flagship service — see `ROADMAP.md`'s "Fixed since" section and
+  `TLS.md`. What's still missing is build-time/runtime *resource usage*
+  timing specifically, not build/run correctness.
+- **FastAPI service latency/throughput under load** — still true suite-wide
+  for the pytest tests themselves (`test_scoring_services.py` verifies
+  correctness, not latency/concurrency), but no longer true for every
+  service: a real Locust load test against MP1 Problem 1's live service
+  produced real measured latency (median 5ms, p90 10ms, p99 110ms) and
+  surfaced a real rate-limiter interaction under concurrent load — see
+  `LOAD_TESTING.md`. The other 19 services remain unmeasured under load.
 - **Real wall-clock for every other notebook in the suite** — only the
   figures in the table above have been reported back by the user so far;
   every other notebook's real-data runtime is still unmeasured. Add real
