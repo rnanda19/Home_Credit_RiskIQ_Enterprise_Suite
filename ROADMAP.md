@@ -149,6 +149,19 @@ its own `README.md`/`CHANGELOG.md` for current status.
   in `LOAD_TESTING.md`: one service, synthetic local load from one
   machine, not genuine unpredictable production traffic.
 
+- **Real ECOA/Reg B adverse-action notices**: done -- see
+  `ADVERSE_ACTION.md`. `src/serving/adverse_action_common.py` turns this
+  suite's existing real explainability output into plain-English,
+  ECOA/Reg B-style "specific reasons," with sex/marital-status/age and two
+  real fair-lending-proxy features (social-circle default history, coarse
+  geography) structurally removed from the customer-facing reason list at
+  generation time, not just documented as a risk. Wired into every
+  factory-built classifier service via `build_scoring_app()`'s new
+  `POST /adverse-action-notice` endpoint (HYPER). 13 new tests, full suite
+  65/65 passing. Does not audit the underlying model for disparate impact
+  -- that remains the separate, permanently-open fair-lending/bias-audit
+  gap.
+
 ## Immediate next steps (in order)
 
 1. Re-run Mega Project 5 Notebook 4 to produce the real `.joblib` bundle,

@@ -3,6 +3,49 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.7] - 2026-09-08
+
+### Real ECOA/Reg B adverse-action notices
+
+Closes a real, previously-disclosed gap: "No mechanism exists to translate
+a model's decision into the plain-English, specific reasons a denied
+applicant is legally entitled to (ECOA/Reg B 'statement of specific
+reasons')."
+
+- Added `src/serving/adverse_action_common.py`: a curated, real-feature-
+  grounded `REASON_CODE_MAP` (grounded in this suite's real 218 engineered
+  feature names, `grep`-verified against `src/features/*.py`) plus a
+  mechanical fallback humanizer for unmapped features, and
+  `render_adverse_action_notice()`, built on this suite's existing real
+  occlusion-based explainability path (`serving.explainability_common.top_reason_codes`).
+- **Structural fair-lending safeguard, not just a documented risk**: sex,
+  marital status, and age (`CODE_GENDER`, `NAME_FAMILY_STATUS`, `DAYS_BIRTH`,
+  `AGE_YEARS` -- ECOA's own named protected bases) and two well-documented
+  proxy-discrimination risks this suite's real feature set also contains
+  (social-circle default history, coarse geography) are removed from the
+  customer-facing reason list at generation time and reported separately as
+  `suppressed_factors`, rather than only disclosed in a doc.
+- Wired as a new `POST /adverse-action-notice` endpoint on the shared
+  `build_scoring_app()` factory -- every factory-built classifier service
+  gets it automatically (HYPER). `adverse_direction` is derived generically
+  from each service's own `score_label`, so this works correctly whether
+  the underlying score rises with a bad outcome (default-probability/risk
+  style) or falls with one (approval-probability style), with no
+  per-service hardcoding.
+- 13 new tests (`test_adverse_action_common.py`, `test_adverse_action_endpoint.py`):
+  curated + fallback humanization, protected-basis and fair-lending-proxy
+  suppression with correct categorization, correct sign handling in both
+  score directions, auth enforcement, and a real end-to-end round trip
+  through a real, freshly fitted `LogisticRegression` bundle via
+  `TestClient`. Full suite: 65/65 passing.
+- Honest scope in `ADVERSE_ACTION.md`: this addresses HOW a reason is
+  worded, not whether the underlying model itself is disparate-impact-free
+  -- that remains the separate, permanently-open fair-lending/bias-audit
+  gap this repo documents as a real, structural "No." Reason-code coverage
+  is curated, not exhaustive across all 218 real feature names; untested
+  against a real trained bundle from this suite's own notebooks on real
+  Kaggle data.
+
 ## [2.1.6] - 2026-09-08
 
 ### Real load testing

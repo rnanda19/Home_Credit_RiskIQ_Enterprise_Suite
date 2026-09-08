@@ -37,7 +37,8 @@ function (a local, not a module global), so that lookup fails silently and
 FastAPI falls back to treating `request` as a query parameter instead of a
 JSON body (reproduced and confirmed via a real 422 "field required: query.
 request" error before this was found and fixed). Keeping real annotation
-objects (not strings) here sidesteps that lookup entirely.
+objects (not strings) here sidesteps that lookup entirely -- the same reason
+AdverseActionRequest below (2026-09-08) is also a real, non-string annotation.
 
 HARDENING (2026-09-02): every service built by this factory now requires a
 real `X-API-Key` header on `/schema` and `/score` (never `/health`, so
@@ -48,6 +49,18 @@ predicted probability from resetting each real feature that differs from its
 own real baseline (None -- the same value this module's own preprocessing
 already imputes/encodes as "missing", so no new baseline convention is
 invented). See CHANGELOG.md for the real gap this closes.
+
+ADVERSE ACTION (2026-09-08): every service built by this factory now also
+exposes a real `POST /adverse-action-notice` endpoint that turns the same
+real `top_reason_codes` explanation into an ECOA/Reg B-style "statement of
+specific reasons," with sex/marital-status/age and known fair-lending-proxy
+features (social-circle default history, coarse geography) structurally
+excluded from the customer-facing reason list -- see
+serving.adverse_action_common for the full real design and disclosed scope.
+`adverse_direction` is derived once, generically, from `score_label` alone
+(HYPER: no per-service hardcoding) so this works correctly whether the
+underlying score is a default-probability-style risk score (rises with a bad
+outcome) or an approval-probability-style score (falls with a bad outcome).
 """
 
 from pathlib import Path
@@ -58,6 +71,7 @@ import numpy as np
 from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field, create_model
 
+from serving.adverse_action_common import render_adverse_action_notice
 from serving.auth_common import add_token_route, require_auth
 from serving.explainability_common import top_reason_codes
 from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
@@ -133,6 +147,21 @@ def build_scoring_app(
     champion_name = bundle.get("champion_name", "unknown")
 
     RequestModel = build_request_model(title.replace(" ", ""), numeric_features, categorical_features)
+    # Same real feature fields as RequestModel, plus a caller-supplied
+    # decision threshold -- this factory makes no accept/reject decision of
+    # its own (see loan_approval_scoring_service.py's docstring), so the
+    # threshold that defines "adverse" has to come from the caller.
+    AdverseActionRequest = create_model(
+        f"{title.replace(' ', '')}AdverseActionRequest",
+        threshold=(float, Field(..., description="Caller-supplied decision threshold on the model's score.")),
+        __base__=RequestModel,
+    )
+    # HYPER: derived from score_label alone so every factory-built service
+    # gets a correct adverse-direction without per-service hardcoding. A
+    # default-probability/risk/capital-requirement style score rises with a
+    # worse outcome ("positive"); an approval-probability style score falls
+    # with a worse outcome ("negative"). See adverse_action_common.py.
+    adverse_direction = "negative" if "approval" in score_label.lower() else "positive"
 
     class ScoreResponse(BaseModel):
         pass
@@ -174,5 +203,31 @@ def build_scoring_app(
             baseline_payload=baseline_payload,
         )
         return {score_label: proba, "champion_model": champion_name, "top_reasons": top_reasons}
+
+    @app.post("/adverse-action-notice", dependencies=[Depends(require_auth)])
+    @limiter.limit(DEFAULT_RATE_LIMIT)
+    def adverse_action_notice(request: Request, body: AdverseActionRequest):
+        payload = body.model_dump(exclude={"threshold"})
+        try:
+            proba = score_one(bundle, payload)
+        except Exception as e:
+            raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
+        baseline_payload = {f: None for f in numeric_features + categorical_features}
+        # A wider candidate pool than /score's default (n=3) -- some of the
+        # highest-magnitude real factors may be structurally suppressed
+        # (protected-basis/fair-lending-proxy) before max_reasons is applied.
+        top_reasons = top_reason_codes(
+            predict_fn=lambda p: score_one(bundle, p),
+            raw_payload=payload,
+            baseline_payload=baseline_payload,
+            n=max(12, len(payload)),
+        )
+        notice = render_adverse_action_notice(
+            top_reasons,
+            score=proba,
+            threshold=body.threshold,
+            adverse_direction=adverse_direction,
+        )
+        return {"champion_model": champion_name, **notice}
 
     return app
