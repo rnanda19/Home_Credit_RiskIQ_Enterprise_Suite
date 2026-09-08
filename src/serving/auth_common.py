@@ -39,9 +39,12 @@ Environment variables:
 Usage in a service module:
     from fastapi import Depends
     from serving.auth_common import require_auth, add_token_route
-    add_token_route(app)  # exposes POST /token
+    from serving.rate_limit_common import install_rate_limiting, DEFAULT_RATE_LIMIT
+    limiter = install_rate_limiting(app)      # 2026-09-08 hardening -- real rate limiting
+    add_token_route(app, limiter=limiter)     # exposes POST /token, itself rate-limited
     @app.post("/score", dependencies=[Depends(require_auth)])
-    def score(...): ...
+    @limiter.limit(DEFAULT_RATE_LIMIT)
+    def score(request: Request, body: ...): ...
 """
 
 import logging
@@ -50,9 +53,11 @@ import secrets
 import time
 from typing import Optional
 
-from fastapi import Depends, HTTPException, Security
+from fastapi import Depends, HTTPException, Request, Security
 from fastapi.security import APIKeyHeader, OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
+
+from serving.rate_limit_common import TOKEN_RATE_LIMIT
 
 _logger = logging.getLogger(__name__)
 
@@ -158,7 +163,7 @@ def require_auth(
     )
 
 
-def add_token_route(app, scopes: tuple = (API_ACCESS_SCOPE,)) -> None:
+def add_token_route(app, scopes: tuple = (API_ACCESS_SCOPE,), limiter=None) -> None:
     """Adds a real POST /token endpoint to `app` -- a real OAuth2
     client-credentials-style exchange: standard `OAuth2PasswordRequestForm`
     contract (form fields `username` [ignored, any value accepted -- this
@@ -166,10 +171,15 @@ def add_token_route(app, scopes: tuple = (API_ACCESS_SCOPE,)) -> None:
     `password` [must equal this service's configured API_KEY]). Returns a
     real, short-lived, signed JWT on success. Deliberately reuses the
     existing API_KEY as the client secret rather than inventing a second
-    credential to provision and rotate."""
+    credential to provision and rotate.
 
-    @app.post("/token")
-    def issue_token(form: OAuth2PasswordRequestForm = Depends()):
+    HARDENING (2026-09-08): pass `limiter` (the object `serving.rate_limit_common
+    .install_rate_limiting(app)` returns) to real-rate-limit this endpoint at
+    `TOKEN_RATE_LIMIT` -- the credential-guessing surface, kept tight on
+    purpose. `limiter=None` (the default) keeps this endpoint unlimited,
+    for callers that haven't installed rate limiting on `app` at all."""
+
+    def issue_token(request: Request, form: OAuth2PasswordRequestForm = Depends()):
         expected_key = configured_api_key()
         if not secrets.compare_digest(form.password, expected_key):
             raise HTTPException(status_code=401, detail="Invalid client credentials.")
@@ -180,3 +190,7 @@ def add_token_route(app, scopes: tuple = (API_ACCESS_SCOPE,)) -> None:
             "expires_in": JWT_DEFAULT_EXPIRE_MINUTES * 60,
             "scope": " ".join(scopes),
         }
+
+    if limiter is not None:
+        issue_token = limiter.limit(TOKEN_RATE_LIMIT)(issue_token)
+    app.post("/token")(issue_token)

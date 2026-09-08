@@ -62,10 +62,11 @@ from pathlib import Path
 
 import joblib
 import numpy as np
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field, create_model
 
 from serving.auth_common import add_token_route, require_auth
+from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 
 def load_bundle(bundle_path: Path) -> dict:
@@ -157,7 +158,8 @@ def build_segment_app(
         pass
 
     app = FastAPI(title=title, description=description, version="1.0.0")
-    add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+    limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
+    add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
     @app.get("/health")
     def health():
@@ -170,7 +172,8 @@ def build_segment_app(
         }
 
     @app.get("/schema", dependencies=[Depends(require_auth)])
-    def schema():
+    @limiter.limit(DEFAULT_RATE_LIMIT)
+    def schema(request: Request):
         return {
             "feature_names": feature_names,
             "segment_labels": segment_labels,
@@ -179,8 +182,9 @@ def build_segment_app(
         }
 
     @app.post("/score", dependencies=[Depends(require_auth)])
-    def score(request: RequestModel):
-        payload = request.model_dump()
+    @limiter.limit(DEFAULT_RATE_LIMIT)
+    def score(request: Request, body: RequestModel):
+        payload = body.model_dump()
         try:
             segment, idx = assign_segment(bundle, payload)
         except Exception as e:

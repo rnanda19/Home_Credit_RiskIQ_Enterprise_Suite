@@ -33,11 +33,12 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request
 from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from serving.auth_common import add_token_route, require_auth
+from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 
 class RepaymentCapacityRequest(BaseModel):
@@ -54,7 +55,8 @@ app = FastAPI(
     description="Real, deterministic repayment-capacity ratio formulas from Notebook 04 (no trained model).",
     version="1.0.0",
 )
-add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
+add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -63,14 +65,15 @@ def health():
 
 
 @app.post("/score", dependencies=[Depends(require_auth)])
-def score(request: RepaymentCapacityRequest):
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def score(request: Request, body: RepaymentCapacityRequest):
     repayment_capacity_ratio = None
     total_debt_burden_ratio = None
-    if request.AMT_ANNUITY is not None:
-        repayment_capacity_ratio = request.AMT_INCOME_TOTAL / (request.AMT_ANNUITY + 1.0)
-    if request.AMT_CREDIT is not None:
-        bureau_debt = request.BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL or 0.0
-        total_debt_burden_ratio = (bureau_debt + request.AMT_CREDIT) / (request.AMT_INCOME_TOTAL + 1.0)
+    if body.AMT_ANNUITY is not None:
+        repayment_capacity_ratio = body.AMT_INCOME_TOTAL / (body.AMT_ANNUITY + 1.0)
+    if body.AMT_CREDIT is not None:
+        bureau_debt = body.BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL or 0.0
+        total_debt_burden_ratio = (bureau_debt + body.AMT_CREDIT) / (body.AMT_INCOME_TOTAL + 1.0)
     return {
         "repayment_capacity_ratio": repayment_capacity_ratio,
         "total_debt_burden_ratio": total_debt_burden_ratio,

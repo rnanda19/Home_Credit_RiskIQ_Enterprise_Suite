@@ -55,11 +55,12 @@ from typing import Optional
 
 import joblib
 import numpy as np
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field, create_model
 
 from serving.auth_common import add_token_route, require_auth
 from serving.explainability_common import top_reason_codes
+from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 
 def load_bundle(bundle_path: Path) -> dict:
@@ -137,7 +138,8 @@ def build_scoring_app(
         pass
 
     app = FastAPI(title=title, description=description, version="1.0.0")
-    add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+    limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
+    add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
     @app.get("/health")
     def health():
@@ -149,7 +151,8 @@ def build_scoring_app(
         }
 
     @app.get("/schema", dependencies=[Depends(require_auth)])
-    def schema():
+    @limiter.limit(DEFAULT_RATE_LIMIT)
+    def schema(request: Request):
         return {
             "numeric_features": numeric_features,
             "categorical_features": categorical_features,
@@ -157,8 +160,9 @@ def build_scoring_app(
         }
 
     @app.post("/score", dependencies=[Depends(require_auth)])
-    def score(request: RequestModel):
-        payload = request.model_dump()
+    @limiter.limit(DEFAULT_RATE_LIMIT)
+    def score(request: Request, body: RequestModel):
+        payload = body.model_dump()
         try:
             proba = score_one(bundle, payload)
         except Exception as e:

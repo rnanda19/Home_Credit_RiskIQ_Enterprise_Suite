@@ -3,6 +3,53 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.5] - 2026-09-08
+
+### Real API hardening: rate limiting + TLS termination
+
+Closes a real, previously-disclosed gap: "No rate limiting or TLS
+termination anywhere in the service layer -- every endpoint accepts
+unlimited plain-HTTP requests today."
+
+- **Real rate limiting**, via `src/serving/rate_limit_common.py`
+  (slowapi): `POST /token` limited to 10/minute per client IP (the
+  credential-guessing surface, kept tight on purpose); `/schema` and
+  `/score` (MP2's `/score/{scenario}` included) limited to 60/minute.
+  `/health` is never rate-limited. Wired into both shared serving
+  factories (`scoring_service_common.py`, `segment_assignment_common.py`
+  -- covers every factory-built service in one change) and all 5
+  standalone service files (`credit_score_service.py`,
+  `repayment_capacity_service.py`, `capital_requirement_service.py`,
+  `stress_testing_service.py`, `risk_tier_assignment_service.py`),
+  the same footprint the OAuth2/JWT hardening touched. Required renaming
+  each route's existing Pydantic body parameter from `request` to `body`
+  and adding a real `request: Request` parameter, since slowapi's
+  `@limiter.limit()` decorator requires a parameter literally named
+  `request` holding the real Starlette `Request` object -- a real,
+  disclosed mechanical constraint, not a design choice. 6 new tests in
+  `src/tests/test_rate_limit_common.py`, including a real end-to-end
+  proof against the real `build_scoring_app()` factory (60 real calls
+  succeed, the 61st gets a real 429) and a real backward-compatibility
+  check that `add_token_route(app)` with no limiter stays unlimited
+  (preserves every existing test's behavior unchanged).
+- **Real TLS termination**, verified end-to-end in CI
+  (`.github/workflows/docker-build-verify.yml`'s new
+  `tls-termination-verify` job) for one flagship service (MP1 Problem 1):
+  a real self-signed certificate generated fresh every run (never
+  committed), a real nginx TLS listener
+  (`01_mega_project_1_underwriting_approval/docker/tls/nginx.conf.example`),
+  reverse-proxying to the real running service, and a real
+  `curl -k https://.../health` request through it. The exact same
+  mechanics were run and verified locally before this CI job was
+  written. See `TLS.md` for the full, honest scope -- one service
+  demonstrated, not yet wired into any `docker-compose.yml`.
+
+Verified: 52/52 `src/tests/` pass (46 pre-existing + 6 new), all 5 Mega
+Projects' own test suites unchanged from baseline (7 passed/3 skipped
+MP1, 6 passed MP2, 4 skipped MP3, 4 skipped MP4, 1 skipped MP5), black
+--check and pyflakes both clean across `src/` and every Mega Project's
+`services/`+`tests/`, all touched YAML re-parsed successfully.
+
 ## [2.1.4] - 2026-09-08
 
 ### Real MP2 Docker build fix + real production drift monitoring

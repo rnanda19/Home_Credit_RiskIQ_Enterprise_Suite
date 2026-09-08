@@ -1,0 +1,37 @@
+# Real TLS-termination reverse-proxy config, verified end-to-end in
+# .github/workflows/docker-build-verify.yml's tls-termination-verify job:
+# a real self-signed cert, a real nginx TLS listener, a real running
+# instance of this Mega Project's credit-default-prediction service
+# behind it. Demonstrated for MP1 Problem 1 (this suite's flagship,
+# most-reused model -- see MODEL_REGISTRY.md) as the real, disclosed
+# scope; not yet wired into the other 4 Mega Projects' docker-compose.yml
+# files -- see TLS.md's "Extending to more services" section.
+#
+# __CERT__ / __KEY__ are substituted with real file paths at run time
+# (see the CI job, or substitute them yourself for a local run) --
+# nothing here bakes in a real cert or key.
+worker_processes 1;
+error_log /dev/stderr;
+pid /tmp/nginx.pid;
+
+events {
+    worker_connections 64;
+}
+
+http {
+    server {
+        listen 8443 ssl;
+        server_name localhost;
+
+        ssl_certificate __CERT__;
+        ssl_certificate_key __KEY__;
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        location / {
+            proxy_pass http://127.0.0.1:8001;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+}

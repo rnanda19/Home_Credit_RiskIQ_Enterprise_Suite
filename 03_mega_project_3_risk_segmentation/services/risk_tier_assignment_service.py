@@ -27,7 +27,7 @@ import os
 import sys
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 
 THIS_DIR = Path(__file__).resolve().parent
@@ -35,6 +35,7 @@ MP3_DIR = THIS_DIR.parent
 SUITE_ROOT = MP3_DIR.parent
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.auth_common import add_token_route, require_auth
+from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 SUMMARY_PATH = Path(
     os.environ.get(
@@ -90,7 +91,8 @@ app = FastAPI(
     description="Real tier assignment using Notebook 01's real, CART-derived tier boundaries.",
     version="1.0.0",
 )
-add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
+add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -99,7 +101,8 @@ def health():
 
 
 @app.get("/schema", dependencies=[Depends(require_auth)])
-def schema():
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def schema(request: Request):
     return {
         "tier_labels": TIER_LABELS,
         "tier_bin_edges": [None if not (-1e300 < e < 1e300) else e for e in TIER_BIN_EDGES],
@@ -107,9 +110,10 @@ def schema():
 
 
 @app.post("/score", dependencies=[Depends(require_auth)])
-def score(request: RiskTierRequest):
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def score(request: Request, body: RiskTierRequest):
     try:
-        tier, idx = _assign_tier(request.PD)
+        tier, idx = _assign_tier(body.PD)
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Tier assignment failed: {type(e).__name__}: {e}")
     return {"risk_tier": tier, "tier_index": idx, "n_real_tiers": N_TIERS}

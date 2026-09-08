@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 
 THIS_DIR = Path(__file__).resolve().parent
 MP1_DIR = THIS_DIR.parent
@@ -36,6 +36,7 @@ SUITE_ROOT = MP1_DIR.parent
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.scoring_service_common import load_bundle, score_one, build_request_model
 from serving.auth_common import add_token_route, require_auth
+from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 from serving.explainability_common import top_reason_codes
 
 BUNDLE_PATH = Path(
@@ -69,7 +70,8 @@ app = FastAPI(
     description="Real PDO scorecard score, built on Notebook 01's real trained champion model.",
     version="1.0.0",
 )
-add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
+add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -82,7 +84,8 @@ def health():
 
 
 @app.get("/schema", dependencies=[Depends(require_auth)])
-def schema():
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def schema(request: Request):
     return {
         "numeric_features": _numeric_features,
         "categorical_features": _categorical_features,
@@ -91,8 +94,9 @@ def schema():
 
 
 @app.post("/score", dependencies=[Depends(require_auth)])
-def score(request: RequestModel):
-    payload = request.model_dump()
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def score(request: Request, body: RequestModel):
+    payload = body.model_dump()
     try:
         pd_value = score_one(_bundle, payload)
         pd_clipped = float(np.clip(pd_value, 1e-6, 1 - 1e-6))

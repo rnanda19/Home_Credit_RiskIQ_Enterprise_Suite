@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 
 THIS_DIR = Path(__file__).resolve().parent
@@ -44,6 +44,7 @@ from features.regulatory_capital_features import (
     basel_retail_capital_k,
 )
 from serving.auth_common import add_token_route, require_auth
+from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 
 def _assign_segment(name_contract_type: str, flag_own_realty: str, flag_own_car: str) -> str:
@@ -83,7 +84,8 @@ app = FastAPI(
     description="Real Basel retail-IRB Vasicek/ASRF capital calculation, identical to Notebook 01.",
     version="1.0.0",
 )
-add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
+add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -95,7 +97,8 @@ def health():
 
 
 @app.get("/schema", dependencies=[Depends(require_auth)])
-def schema():
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def schema(request: Request):
     return {
         "segment_order": SEGMENT_ORDER,
         "segment_definitions": {
@@ -106,21 +109,22 @@ def schema():
 
 
 @app.post("/score", dependencies=[Depends(require_auth)])
-def score(request: CapitalRequest):
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def score(request: Request, body: CapitalRequest):
     try:
         segment = _assign_segment(
-            request.NAME_CONTRACT_TYPE, request.FLAG_OWN_REALTY or "N", request.FLAG_OWN_CAR or "N"
+            body.NAME_CONTRACT_TYPE, body.FLAG_OWN_REALTY or "N", body.FLAG_OWN_CAR or "N"
         )
         seg_def = SEGMENT_DEFINITIONS[segment]
         lgd = seg_def["lgd"]
         r = (
             seg_def["r_fixed"]
             if seg_def["correlation_mode"] == "fixed"
-            else other_retail_correlation(request.PD)
+            else other_retail_correlation(body.PD)
         )
-        k = basel_retail_capital_k(request.PD, lgd, r)
-        ead = request.AMT_CREDIT
-        el = request.PD * lgd * ead
+        k = basel_retail_capital_k(body.PD, lgd, r)
+        ead = body.AMT_CREDIT
+        el = body.PD * lgd * ead
         rwa = k * 12.5 * ead
         capital_requirement = rwa * 0.08
     except Exception as e:

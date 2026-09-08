@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from scipy.stats import norm
 
@@ -42,6 +42,7 @@ from features.regulatory_capital_features import (
     basel_retail_capital_k,
 )
 from serving.auth_common import add_token_route, require_auth
+from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 # Real, disclosed ASSUMPTION -- identical constants to pipeline_mp2_nb04.py
 # Section 5. Kept in one place here so the notebook and this service can
@@ -93,7 +94,8 @@ app = FastAPI(
     description="Real, documented macro stress scenarios applied via the same Vasicek capital formula as Problem 1.",
     version="1.0.0",
 )
-add_token_route(app)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
+add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -102,12 +104,14 @@ def health():
 
 
 @app.get("/schema", dependencies=[Depends(require_auth)])
-def schema():
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def schema(request: Request):
     return {"scenarios": SCENARIOS}
 
 
 @app.post("/score/{scenario}", dependencies=[Depends(require_auth)])
-def score(scenario: str, request: StressRequest):
+@limiter.limit(DEFAULT_RATE_LIMIT)
+def score(scenario: str, request: Request, body: StressRequest):
     if scenario not in SCENARIOS:
         raise HTTPException(
             status_code=404,
@@ -115,7 +119,7 @@ def score(scenario: str, request: StressRequest):
         )
     try:
         segment = _assign_segment(
-            request.NAME_CONTRACT_TYPE, request.FLAG_OWN_REALTY or "N", request.FLAG_OWN_CAR or "N"
+            body.NAME_CONTRACT_TYPE, body.FLAG_OWN_REALTY or "N", body.FLAG_OWN_CAR or "N"
         )
         seg_def = SEGMENT_DEFINITIONS[segment]
         base_lgd = seg_def["lgd"]
@@ -125,19 +129,19 @@ def score(scenario: str, request: StressRequest):
         r = (
             seg_def["r_fixed"]
             if seg_def["correlation_mode"] == "fixed"
-            else other_retail_correlation(request.PD)
+            else other_retail_correlation(body.PD)
         )
         if scenario == "Baseline":
-            stressed_pd = request.PD
+            stressed_pd = body.PD
         else:
-            pd_clipped = min(max(request.PD, 1e-6), 1 - 1e-6)
+            pd_clipped = min(max(body.PD, 1e-6), 1 - 1e-6)
             a = norm.ppf(pd_clipped) / (1 - r) ** 0.5
             b = (r / (1 - r)) ** 0.5
             stressed_pd = float(min(max(norm.cdf(a - b * z), 1e-6), 1 - 1e-6))
         stressed_lgd = min(base_lgd * scen["lgd_multiplier"], 1.0)
 
         k = basel_retail_capital_k(stressed_pd, stressed_lgd, r)
-        ead = request.AMT_CREDIT
+        ead = body.AMT_CREDIT
         el = stressed_pd * stressed_lgd * ead
         rwa = k * 12.5 * ead
         capital_requirement = rwa * 0.08
@@ -150,7 +154,7 @@ def score(scenario: str, request: StressRequest):
         "z_shock": z,
         "lgd_multiplier": scen["lgd_multiplier"],
         "capital_segment": segment,
-        "unstressed_pd": request.PD,
+        "unstressed_pd": body.PD,
         "stressed_pd": stressed_pd,
         "stressed_lgd": stressed_lgd,
         "correlation_r": r,

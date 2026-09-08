@@ -126,6 +126,18 @@ its own `README.md`/`CHANGELOG.md` for current status.
   honest scope of what's covered so far (Mega Project 1 Problem 1 only;
   extending to the other 24 problems is unstarted, same shape of gap the
   AMEX platform discloses for its own monitoring job).
+- **Real API hardening -- rate limiting + TLS termination**: done.
+  `src/serving/rate_limit_common.py` adds real, tested, per-process
+  slowapi rate limiting to every `/token`, `/schema`, `/score` (and MP2's
+  `/score/{scenario}`) route across all 20 services (both shared
+  factories + all 5 standalone services) -- 6 new tests, including a real
+  end-to-end proof against the real scoring-service factory (60 real
+  calls succeed, the 61st gets a real 429). TLS termination is verified
+  end-to-end in CI (`tls-termination-verify` job) for one flagship
+  service -- a real self-signed cert, a real nginx TLS listener, a real
+  HTTPS request reaching the real running service -- see `TLS.md` for the
+  honest scope (one service demonstrated, not yet wired into
+  `docker-compose.yml` for local/production use).
 
 ## Immediate next steps (in order)
 
