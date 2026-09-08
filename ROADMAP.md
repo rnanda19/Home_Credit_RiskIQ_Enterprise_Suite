@@ -85,14 +85,29 @@ its own `README.md`/`CHANGELOG.md` for current status.
   wired into CI (the test skips cleanly, not a failure, until the bundle
   exists) — re-run Notebook 04 to produce the real `.joblib` bundle, then
   the service can be verified for real.
-- **An actual `docker build`/`docker run`** has not been performed for
-  any of the hardened Mega Projects — verification so far is structural
-  only (`docker compose config` + static `COPY`-path existence checks),
-  because this build environment has no Docker daemon. See
-  `BENCHMARKS.md`.
-- **A repo-wide `black` reformat** is still deferred — lint is currently
-  advisory (`|| true` in CI, `-black` in the Makefile), not blocking.
 - **Kaggle notebook/dataset packaging** hasn't been done yet.
+
+## Fixed since the above was written (2026-09-08)
+
+- **Repo-wide `black` reformat**: done. All 38 files `black --check` used
+  to flag are reformatted (pure style, zero logic change -- every existing
+  test suite re-verified passing afterward). CI's lint gate
+  (`.github/workflows/code-quality.yml`) is now blocking, not advisory --
+  the `|| true` fallback on both `pyflakes` and `black --check` is gone.
+- **Verified container build & run**: done, for real, in CI --
+  `.github/workflows/docker-build-verify.yml` builds and runs all 5 Mega
+  Projects' Docker images on GitHub Actions' own `ubuntu-latest` runners
+  (Docker ships preinstalled there) and curls each one's real `/health`
+  endpoint inside the running container. This build environment still has
+  no local Docker daemon, so local verification remains structural only --
+  but the actual `docker build && docker run` this file used to say had
+  never been performed now runs on every push, using synthetic fixture
+  model bundles (`scripts/generate_ci_fixture_bundles.py` -- proves the
+  image builds and the service starts, proves nothing about model
+  quality, which is validated separately at the notebook level on the
+  real dataset).
+- **File-based model registry**: done -- see `MODEL_REGISTRY.md`.
+- **Data privacy/PII documentation**: done -- see `DATA_PRIVACY.md`.
 
 ## Immediate next steps (in order)
 

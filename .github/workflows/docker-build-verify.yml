@@ -1,0 +1,97 @@
+# Verified container build & run -- closes the gap ROADMAP.md previously
+# disclosed: "An actual docker build/docker run has not been performed for
+# any of the hardened Mega Projects -- verification so far is structural
+# only (docker compose config + static COPY-path existence checks), because
+# this build environment has no Docker daemon." GitHub Actions' own
+# ubuntu-latest runners ship Docker preinstalled, so this closes that gap at
+# zero cost -- no local Docker Desktop required.
+#
+# Real trained model bundles are `.gitignore`d by design (see
+# MODEL_REGISTRY.md) -- they only exist after actually running a notebook
+# against the real, locally-downloaded Kaggle dataset. This job does NOT do
+# that. It uses scripts/generate_ci_fixture_bundles.py to write small,
+# clearly-synthetic bundles at the exact paths each Dockerfile expects, so
+# the image can build and its service can start. This proves the Dockerfile,
+# dependencies, and startup command are correct and that the service
+# actually serves /health inside a real running container -- it proves
+# NOTHING about model quality, which is validated separately at the
+# notebook level on the real dataset (see each problem's MODEL_CARD.md).
+name: Docker Build & Run Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker-build-verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "MP1 -- Underwriting & Approval"
+            dockerfile: 01_mega_project_1_underwriting_approval/docker/Dockerfile
+            image: hc-mp1-services
+            port: 8001
+          - name: "MP2 -- Regulatory Capital (formula-only, no model bundle)"
+            dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
+            image: hc-mp2-services
+            port: 8005
+          - name: "MP3 -- Risk Segmentation"
+            dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+            image: hc-mp3-services
+            port: 8007
+          - name: "MP4 -- Delinquency Prevention"
+            dockerfile: 04_mega_project_4_delinquency_prevention/docker/Dockerfile
+            image: hc-mp4-services
+            port: 8011
+          - name: "MP5 -- Liquidity & Cashflow"
+            dockerfile: 05_mega_project_5_liquidity_cashflow/docker/Dockerfile
+            image: hc-mp5-services
+            port: 8015
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install fixture-generation dependencies
+        run: pip install joblib numpy scikit-learn
+
+      - name: Generate synthetic CI fixture bundles (not real models -- see script docstring)
+        run: python scripts/generate_ci_fixture_bundles.py
+
+      - name: docker build -- ${{ matrix.name }}
+        run: docker build -f ${{ matrix.dockerfile }} -t ${{ matrix.image }} .
+
+      - name: docker run -- ${{ matrix.name }}
+        run: |
+          docker run -d --name ${{ matrix.image }} \
+            -p ${{ matrix.port }}:${{ matrix.port }} \
+            -e HEALTHCHECK_PORT=${{ matrix.port }} \
+            ${{ matrix.image }}
+
+      - name: Wait for /health -- ${{ matrix.name }}
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf "http://127.0.0.1:${{ matrix.port }}/health" > /dev/null; then
+              echo "Service healthy after ${i} attempt(s)."
+              curl -s "http://127.0.0.1:${{ matrix.port }}/health"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Service never became healthy -- container logs:"
+          docker logs ${{ matrix.image }}
+          exit 1
+
+      - name: Container logs (always shown for visibility)
+        if: always()
+        run: docker logs ${{ matrix.image }} || true
+
+      - name: Stop and remove container
+        if: always()
+        run: docker rm -f ${{ matrix.image }} || true
