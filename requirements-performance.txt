@@ -15,7 +15,7 @@ numba>=0.60                # @njit(parallel=True) — WARP standard for the rare
                             # Polars vectorization alone cannot express
 
 # --- Fast numerical expression evaluation & NaN-aware array ops ------------------------
-numexpr>=2.10               # used internally by pandas for large elementwise expressions;
+numexpr>=2.14.1               # used internally by pandas for large elementwise expressions;
                              # also directly usable for custom vectorized formulas
 bottleneck>=1.4              # fast NaN-aware numpy reductions (nanmean/nanstd/etc.), a
                               # drop-in speed-up pandas will pick up automatically once installed
