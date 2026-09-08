@@ -211,14 +211,14 @@ versions) — this repo never reports a number it hasn't measured.
 | Deployment verdicts (from your own real reruns) | 24 / 25 problems statistically robust and recommended for production. The 1 exception: Mega Project 3 Problem 3 (Repayment Behavior Segmentation) — not yet statistically robust, fails the `cramers_v_ci_excludes_zero` gate; disclosed in its own model card |
 | Deployable scoring services (Mega Projects 1-4) | 14 total — 4 (MP1) + 2 (MP2) + 4 (MP3) + 4 (MP4), all FastAPI, real `X-API-Key` **or** OAuth2/JWT auth + per-request explainability, Docker Compose per Mega Project. Mega Project 5's Problem 4 service code exists but is not yet counted here until verified against a real run (see Mega Project 5's own README) |
 | Verification protocol per notebook | Mega Projects 1-3 + MP4 Problems 1-2: execute end-to-end (0 errors) → clear outputs → `nbformat` validate → LibreOffice headless recalc on every generated workbook → Playwright network-blocked check on every dashboard. MP4 Problems 3-6 (per the 2026-09-01 policy change): hand-built test cases + syntax/AST check + `nbformat` validate, no fixture run |
-| Model cards | 1 per problem where present — 23 exist today (Mega Projects 1-4; Mega Project 1's own executive-rollup card is not yet written), 6 more for Mega Project 5 in progress |
+| Model cards | 30 total — one per problem across all 5 Mega Projects (5 problems + 1 executive-rollup card each), all written |
 | Reproducibility | `RANDOM_SEED = 42` everywhere randomness is involved |
 
 ## Repository Structure
 
 ```
 .
-├── 00_executive_rollup_report/             # suite-wide rollup — honest placeholder until MP4-5 exist too
+├── 00_executive_rollup_report/             # suite-wide rollup — real, consolidates all 5 Mega Projects (see its own README.md)
 ├── src/                                     # shared library (pip installable, see below)
 │   ├── features/                              # feature engineering
 │   ├── reporting/                              # HTML + Word + Excel report builder
