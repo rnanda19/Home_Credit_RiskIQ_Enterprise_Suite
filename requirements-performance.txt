@@ -7,7 +7,7 @@
 # requirements.txt, not exact pins, so security/perf patches are picked up automatically.
 
 # --- Thread-pool introspection & control -----------------------------------------------
-threadpoolctl>=3.5        # runtime BLAS thread-pool control (the C-level "second guard" used
+threadpoolctl>=3.6.0        # runtime BLAS thread-pool control (the C-level "second guard" used
                            # by threadpool_guard() in src/utils/performance_setup.py)
 
 # --- JIT compilation for any loop that genuinely cannot be vectorized -------------------
