@@ -162,6 +162,16 @@ its own `README.md`/`CHANGELOG.md` for current status.
   -- that remains the separate, permanently-open fair-lending/bias-audit
   gap.
 
+- **Real end-to-end integration testing**: done -- see `E2E_TESTING.md`.
+  `src/testing/e2e_process_harness.py` launches a real service as a real
+  `uvicorn` subprocess and talks to it over real HTTP (`requests`, a real
+  socket), closing the gap that every prior service test used in-process
+  `TestClient` only. Two real end-to-end test files (MP1's classifier
+  service, MP3's clustering service -- deliberately different app shapes)
+  wired into the existing CI matrix job for free. 8 new tests, full suite
+  re-verified passing on-device. 2 of 20 services covered this way; the
+  other 18 remain `TestClient`-only.
+
 ## Immediate next steps (in order)
 
 1. Re-run Mega Project 5 Notebook 4 to produce the real `.joblib` bundle,

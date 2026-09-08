@@ -81,7 +81,7 @@ jobs:
           if [ -f "${{ matrix.project }}/services/requirements-services.txt" ]; then
             pip install -r ${{ matrix.project }}/services/requirements-services.txt
           fi
-          pip install pytest httpx
+          pip install pytest httpx requests
         if: hashFiles(format('{0}/tests/**', matrix.project)) != ''
       - name: Run scoring-service tests
         run: |
@@ -99,3 +99,9 @@ jobs:
         # stays unauthenticated on every service. The matrix includes Mega
         # Project 4 with a hashFiles guard so this job does not fail before
         # MP4's own tests/ directory exists yet.
+        # 2026-09-08: this same `pytest tests/ -v` step also picks up MP1's
+        # and MP3's new tests/test_e2e_live_service.py -- a REAL end-to-end
+        # integration test that launches the real service as a real `uvicorn`
+        # subprocess (not in-process TestClient) and talks to it over real
+        # HTTP via `requests`, added to this job's install line above. See
+        # src/testing/e2e_process_harness.py and E2E_TESTING.md.

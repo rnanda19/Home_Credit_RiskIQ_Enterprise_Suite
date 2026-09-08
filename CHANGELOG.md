@@ -3,6 +3,47 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.8] - 2026-09-08
+
+### Real end-to-end integration testing
+
+Closes a real, previously-disclosed gap: "No end-to-end integration test
+suite exists -- every existing service test uses in-process `TestClient`,
+which never exercises the real `uvicorn` startup path, real networking, or
+real process lifecycle."
+
+- Added `src/testing/e2e_process_harness.py`: a HYPER shared
+  `run_service_subprocess()` component that launches a real service as a
+  real OS subprocess (`uvicorn <module>:app`), polls its real `/health`
+  over real HTTP until ready, yields the running base URL, and guarantees
+  real teardown -- raising with the real captured subprocess stdout/stderr
+  on a startup failure, verified by deliberately breaking a bundle path and
+  confirming the real traceback surfaces.
+- Two new real end-to-end test files, each a real HTTP round trip (via
+  `requests`, a real socket) against a real running subprocess -- not
+  `TestClient`: `01_mega_project_1_underwriting_approval/tests/test_e2e_live_service.py`
+  (MP1 Problem 1's classifier service: real `/health`, real 401s on
+  missing auth, a real OAuth2 token exchange, a real X-API-Key-authenticated
+  `/score` call, and a real `/adverse-action-notice` call) and
+  `03_mega_project_3_risk_segmentation/tests/test_e2e_live_service.py` (MP3
+  Problem 2's clustering service -- a deliberately different app shape,
+  proving the harness generalizes). Both reuse the exact same synthetic
+  fixture bundle `scripts/generate_ci_fixture_bundles.py` already uses for
+  Docker verification -- no real Kaggle data or notebook run needed.
+- Wired into CI for free: the existing `unit-tests` matrix job already runs
+  `pytest tests/ -v` per Mega Project, so it picked these up the moment
+  `requests` was added to that job's install line -- no new workflow.
+- 8 new tests, all passing on the real device (the authoritative
+  environment): 5 for MP1, 3 for MP3. Full suite re-verified: `src/tests/`
+  65/65, MP1's `tests/` 12 passed + 3 skipped (real-bundle-only tests,
+  unaffected), MP3's `tests/` 3 passed + 4 skipped. `pyflakes`/`black
+  --check` clean across every directory CI lints.
+- Honest scope in `E2E_TESTING.md`: 2 of 20 services covered this way (one
+  classifier, one clustering -- the suite's two real app shapes); the other
+  18 remain covered by `TestClient`-based tests only. Does not re-prove
+  rate-limiting-under-load or load-test latency -- both already real and
+  covered elsewhere, not duplicated here.
+
 ## [2.1.7] - 2026-09-08
 
 ### Real ECOA/Reg B adverse-action notices
