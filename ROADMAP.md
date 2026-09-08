@@ -80,11 +80,6 @@ its own `README.md`/`CHANGELOG.md` for current status.
 
 ## What's not yet done
 
-- **Mega Project 5's Problem 4 service is unverified against real data.**
-  The service, Docker image, and integration test all exist and are
-  wired into CI (the test skips cleanly, not a failure, until the bundle
-  exists) — re-run Notebook 04 to produce the real `.joblib` bundle, then
-  the service can be verified for real.
 - **Kaggle notebook/dataset packaging** hasn't been done yet.
 
 ## Fixed since the above was written (2026-09-08)

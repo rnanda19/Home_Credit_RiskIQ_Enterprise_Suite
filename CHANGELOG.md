@@ -3,6 +3,33 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.9] - 2026-09-08
+
+### Mega Project 5 Problem 4: real bundle produced, service verified
+
+Closes the last remaining real, disclosed gap in the suite: "Mega Project
+5's Problem 4 service is unverified against real data."
+
+- Re-ran Notebook 04 end-to-end on the real, full-scale Home Credit
+  dataset. It now saves a real fitted clustering bundle
+  (`decision_engine/artifacts/notebook_04_segment_model.joblib` --
+  gitignored, real k=3 KMeans, real fitted StandardScaler over 8 real
+  features).
+- Verified the deployable service
+  (`services/prepayment_segment_assignment_service.py`) against that real
+  bundle three ways: the existing `tests/test_scoring_services.py` check
+  (service output matches Notebook 04's own real segment assignment for a
+  real applicant), a real live subprocess + real HTTP check, and a new
+  permanent CI-safe test.
+- Added `05_mega_project_5_liquidity_cashflow/tests/test_e2e_live_service.py`
+  -- the third real end-to-end test built on `e2e_process_harness.py`
+  (MP1 and MP3 already had one), using the suite's standard synthetic
+  fixture bundle so it runs in CI without real data.
+- Updated MP5's own README, model card, `services/prepayment_segment_assignment_service.py`'s
+  docstring, the root README's suite-status table, `ROADMAP.md`, and
+  `E2E_TESTING.md` to honestly reflect the verified status -- no other
+  claims changed.
+
 ## [2.1.8] - 2026-09-08
 
 ### Real end-to-end integration testing

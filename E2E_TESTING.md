@@ -32,7 +32,7 @@ failure it raises with the real captured subprocess stdout/stderr attached
 — a bare timeout with no diagnosis was the wrong failure mode for a test
 whose whole point is closing a "harder to debug" gap.
 
-Two real end-to-end test files built on it, each hitting a real running
+Three real end-to-end test files built on it, each hitting a real running
 subprocess over real HTTP via `requests` (not `TestClient`):
 
 - `01_mega_project_1_underwriting_approval/tests/test_e2e_live_service.py`
@@ -48,6 +48,9 @@ subprocess over real HTTP via `requests` (not `TestClient`):
   `segment_assignment_common`-built **clustering** service — a genuinely
   different app shape from MP1's classifier). Proves the harness is a real,
   generalized component, not hardcoded to one service's shape.
+- `05_mega_project_5_liquidity_cashflow/tests/test_e2e_live_service.py` —
+  MP5 Problem 4's `prepayment_segment_assignment_service.py`, the third
+  Mega Project and third real service now covered by this harness.
 
 Both tests use the exact same synthetic fixture bundle
 `scripts/generate_ci_fixture_bundles.py` already uses to verify this
@@ -63,10 +66,10 @@ needed was adding `requests` to that job's install line.
 
 ## Real, disclosed scope limits
 
-- Two services out of 20 are covered this way (one classifier, one
+- Three services out of 20 are covered this way (one classifier, two
   clustering — the two real app shapes this suite's shared serving
-  factories produce). The other 18 remain covered by `TestClient`-based
-  tests only. Extending to another service means copying either test
+  factories produce). The other 17 remain covered by `TestClient`-based
+  tests only. Extending to another service means copying any existing test
   file's shape and pointing it at that service's module name, port, and
   bundle-path env var — the harness itself needs no changes.
 - This proves the real process *starts* and *serves real traffic

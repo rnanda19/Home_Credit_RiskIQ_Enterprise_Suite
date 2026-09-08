@@ -12,11 +12,11 @@ segment-assignment services and Mega Project 4's Notebook 02 service --
 all three share this same `src/serving/segment_assignment_common.py`
 factory unchanged.
 
-STATUS (2026-09-02): the notebook has not yet been re-run since this
-persistence code was added, so no bundle exists on disk yet and this
-service is unverified -- it will fail fast and loudly at startup
-(`load_bundle()` raises) until `notebook_04_segment_model.joblib` exists.
-See the Problem 4 model card for the current status.
+STATUS (2026-09-08, VERIFIED): Notebook 04 has been re-run for real and
+the bundle exists on disk. This service has been verified against that
+real bundle -- its real `/score` output for a real applicant matches
+Notebook 04's own real segment assignment exactly. See the Problem 4
+model card for full verification detail.
 
 Run locally:
     uvicorn prepayment_segment_assignment_service:app --host 0.0.0.0 --port 8015

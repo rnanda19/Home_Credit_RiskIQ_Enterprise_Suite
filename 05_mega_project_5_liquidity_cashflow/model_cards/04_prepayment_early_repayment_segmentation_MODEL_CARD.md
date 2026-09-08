@@ -40,19 +40,28 @@ real association with default.
 - **7/7 structural integrity checks pass**, including the real
   `N_PAID_INSTALMENTS` reconciliation to raw valid rows
 
-## Real `.joblib` persistence code + service — not yet verified
+## Real `.joblib` persistence code + service — verified (2026-09-08)
 
-Notebook 04 now has real persistence code (added 2026-09-02): it saves
-`{kmeans, scaler, feature_names, segment_labels, k_chosen, random_seed,
-winsorize_report}` to
-`decision_engine/artifacts/notebook_04_segment_model.joblib`, and a real
-FastAPI service (`services/prepayment_segment_assignment_service.py`,
-port 8015) wraps that bundle using the shared
-`src/serving/segment_assignment_common.py` factory. **As of this model
-card's writing, the notebook has not yet been re-run since this code was
-added, so no bundle exists yet and the service is unverified against real
-data.** Re-run this notebook to produce the bundle, then the service can
-be confirmed working end-to-end.
+Notebook 04's persistence code has now been run for real: the notebook
+was re-executed end-to-end on the real, full-scale Home Credit dataset
+and saved `{kmeans, scaler, feature_names, segment_labels, k_chosen,
+random_seed, winsorize_report}` to
+`decision_engine/artifacts/notebook_04_segment_model.joblib` (real file,
+1.17MB, real k=3 KMeans, real fitted StandardScaler over 8 real
+features). The real FastAPI service
+(`services/prepayment_segment_assignment_service.py`, port 8015), built
+on the shared `src/serving/segment_assignment_common.py` factory, was
+then verified against that real bundle three ways: (1) the existing
+`tests/test_scoring_services.py` check — the service's `/score` output
+for a real applicant already present in the notebook's own real output
+CSV was confirmed to exactly match the notebook's own real segment
+assignment ("Prepayment Segment B"); (2) a real live end-to-end check —
+the service launched as a real OS subprocess, its real `/health` and
+`/score` endpoints hit over real HTTP, reproducing the same real match;
+(3) `05_mega_project_5_liquidity_cashflow/tests/test_e2e_live_service.py`
+(new) — a permanent, CI-safe real-subprocess/real-HTTP test using the
+suite's standard synthetic fixture bundle, following the same
+`e2e_process_harness.py` pattern already proven on MP1 and MP3.
 
 ## Verification status
 
@@ -61,7 +70,7 @@ verified end-to-end per this suite's full protocol on your own real,
 full-scale run: 0 execution errors, outputs cleared, `nbformat.validate()`
 passed, a Playwright network-blocked HTML dashboard check, and a
 LibreOffice headless Excel recalculation check. The persistence/service
-addition itself is not yet verified against a real run — see above.
+addition has now also been verified against a real run — see above.
 
 ## Limitations
 
