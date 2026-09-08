@@ -25,6 +25,7 @@ RUN pip install --no-cache-dir -r /app/requirements-services.txt
 # Shared HYPER feature module + this project's services.
 COPY src/features/regulatory_capital_features.py /app/src/features/regulatory_capital_features.py
 COPY src/features/__init__.py /app/src/features/__init__.py
+COPY src/serving /app/src/serving
 COPY src/__init__.py /app/src/__init__.py
 COPY 02_mega_project_2_regulatory_capital/services /app/services
 
