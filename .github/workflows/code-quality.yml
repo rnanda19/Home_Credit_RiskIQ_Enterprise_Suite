@@ -16,10 +16,11 @@ jobs:
           python-version: "3.11"
       - name: Install lint tools
         run: pip install pyflakes black
-      - name: pyflakes (advisory - does not fail the build)
-        run: pyflakes src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ 04_mega_project_4_delinquency_prevention/services/ 04_mega_project_4_delinquency_prevention/tests/ 05_mega_project_5_liquidity_cashflow/services/ 05_mega_project_5_liquidity_cashflow/tests/ || true
-      - name: black --check (advisory - repo-wide reformat deliberately deferred)
-        run: black --check --diff src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ 04_mega_project_4_delinquency_prevention/services/ 04_mega_project_4_delinquency_prevention/tests/ 05_mega_project_5_liquidity_cashflow/services/ 05_mega_project_5_liquidity_cashflow/tests/ || true
+      - name: pyflakes (BLOCKING as of 2026-09-08 -- was advisory-only; repo is clean, 0 findings)
+        run: pyflakes src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ 04_mega_project_4_delinquency_prevention/services/ 04_mega_project_4_delinquency_prevention/tests/ 05_mega_project_5_liquidity_cashflow/services/ 05_mega_project_5_liquidity_cashflow/tests/
+      - name: black --check (BLOCKING as of 2026-09-08 -- was advisory-only; repo-wide
+          reformat applied in the same commit that flipped this gate on)
+        run: black --check --diff src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ 04_mega_project_4_delinquency_prevention/services/ 04_mega_project_4_delinquency_prevention/tests/ 05_mega_project_5_liquidity_cashflow/services/ 05_mega_project_5_liquidity_cashflow/tests/
 
   security-scan:
     runs-on: ubuntu-latest
