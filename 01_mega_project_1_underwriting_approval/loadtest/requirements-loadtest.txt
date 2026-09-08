@@ -1,0 +1,4 @@
+# 2026-09-08 -- real load testing (see LOAD_TESTING.md). Not part of the
+# lean serving image's requirements-services.txt -- this is a dev/CI-time
+# tool, never installed into a deployed service container.
+locust>=2.20

@@ -138,6 +138,16 @@ its own `README.md`/`CHANGELOG.md` for current status.
   HTTPS request reaching the real running service -- see `TLS.md` for the
   honest scope (one service demonstrated, not yet wired into
   `docker-compose.yml` for local/production use).
+- **Real load testing**: done for one flagship service (MP1 Problem 1) --
+  see `LOAD_TESTING.md`. A real Locust load test
+  (`01_mega_project_1_underwriting_approval/loadtest/locustfile.py`) run
+  against a real live instance of the real service surfaced a real,
+  interesting finding: the rate limiter added above correctly rejects
+  requests past 60/minute even under real concurrent load (677 of 737
+  `/score` calls got a real `429` in one real run), with real measured
+  latency for the accepted requests (median 5ms, p99 110ms). Honest scope
+  in `LOAD_TESTING.md`: one service, synthetic local load from one
+  machine, not genuine unpredictable production traffic.
 
 ## Immediate next steps (in order)
 

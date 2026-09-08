@@ -3,6 +3,34 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.6] - 2026-09-08
+
+### Real load testing
+
+Closes a real, previously-disclosed gap: "No evidence any service has
+ever been tested under concurrent load -- real-world request-per-second
+and latency-under-load are both unknown."
+
+- Added `01_mega_project_1_underwriting_approval/loadtest/locustfile.py`
+  -- a real Locust load test against MP1 Problem 1's real service. Each
+  simulated user performs the real, full authenticated flow: a real
+  `POST /token` OAuth2 exchange, then repeated real `POST /score` calls.
+- Actually ran it (not just written): 10 simulated users ramping at
+  5/second for 30 real seconds against a real live instance of the real
+  service (real fitted model, real rate limiting, real auth). Real,
+  disclosed finding in `LOAD_TESTING.md`: 677 of 737 `/score` requests
+  got a real `429` -- the rate limiter added in [2.1.5] correctly
+  enforcing its 60/minute-per-IP limit under real concurrent load, not a
+  load-testing failure (737 - 677 = 60, exactly the configured limit,
+  since every simulated user in a single-machine run shares one IP's
+  budget). Real measured latency for the accepted requests: median 5ms,
+  p90 10ms, p95 31ms, p99 110ms, max 168ms. `/health` never failed (152
+  requests, 0 failures), confirming liveness probes stay unaffected.
+- Honest scope in `LOAD_TESTING.md`: one flagship service, synthetic
+  local load from a single machine (so it measures one shared rate-limit
+  budget, not genuine multi-tenant capacity), not unpredictable real
+  production traffic -- per this gap's own fillability assessment.
+
 ## [2.1.5] - 2026-09-08
 
 ### Real API hardening: rate limiting + TLS termination
