@@ -26,6 +26,7 @@ Endpoints:
     POST /score   -- {"payment_pattern": str, "segment_index": int, "k_chosen": int,
                        "distance_to_each_segment": [...]}
 """
+
 import os
 import sys
 from pathlib import Path
@@ -38,18 +39,20 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.segment_assignment_common import build_segment_app
 
 BUNDLE_PATH = Path(
-    os.environ.get("NB02_KMEANS_MODEL_PATH",
-                    str(MP4_DIR / "decision_engine" / "artifacts" / "notebook_02_kmeans_model.joblib"))
+    os.environ.get(
+        "NB02_KMEANS_MODEL_PATH",
+        str(MP4_DIR / "decision_engine" / "artifacts" / "notebook_02_kmeans_model.joblib"),
+    )
 )
 
 app = build_segment_app(
     bundle_path=BUNDLE_PATH,
     title="Home Credit — Installment Payment Behavior Detection (Problem 2)",
     description="Real payment-pattern assignment using Notebook 02's fitted K-Means model on real "
-                 "installment-payment behavioral features.",
+    "installment-payment behavioral features.",
     segment_field_name="payment_pattern",
     history_flag_note="Applicants with zero real installment history have no behavioral signal to cluster "
-                       "-- this single-record API assumes the caller already knows real installment "
-                       "history exists; it does not itself decide that (identical scope boundary to "
-                       "Notebook 01's own scoring service).",
+    "-- this single-record API assumes the caller already knows real installment "
+    "history exists; it does not itself decide that (identical scope boundary to "
+    "Notebook 01's own scoring service).",
 )

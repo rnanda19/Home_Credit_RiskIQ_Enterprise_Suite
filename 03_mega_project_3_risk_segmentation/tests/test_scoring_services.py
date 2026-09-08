@@ -6,6 +6,7 @@ already-engineered feature vector is fed through the service, and the
 returned segment/tier is checked to match the CSV's own real assignment
 exactly -- not a mocked or fabricated expectation.
 """
+
 import sys
 from pathlib import Path
 
@@ -44,17 +45,29 @@ skip_no_nb01 = pytest.mark.skipif(not NB01_SUMMARY_PATH.exists(), reason="Notebo
 # Now the guard also requires the specific raw fixture file(s) each test
 # reads, so a missing fixture/ directory is a clean skip, not a crash.
 skip_no_nb02 = pytest.mark.skipif(
-    not (NB02_BUNDLE_PATH.exists() and NB02_CSV.exists()
-         and (FIXTURE_DIR / "bureau.csv").exists() and (FIXTURE_DIR / "bureau_balance.csv").exists()),
-    reason="Notebook 02 has not been run yet, or raw fixture CSVs are not present locally")
+    not (
+        NB02_BUNDLE_PATH.exists()
+        and NB02_CSV.exists()
+        and (FIXTURE_DIR / "bureau.csv").exists()
+        and (FIXTURE_DIR / "bureau_balance.csv").exists()
+    ),
+    reason="Notebook 02 has not been run yet, or raw fixture CSVs are not present locally",
+)
 skip_no_nb03 = pytest.mark.skipif(
-    not (NB03_BUNDLE_PATH.exists() and NB03_CSV.exists()
-         and (FIXTURE_DIR / "installments_payments.csv").exists() and (FIXTURE_DIR / "POS_CASH_balance.csv").exists()),
-    reason="Notebook 03 has not been run yet, or raw fixture CSVs are not present locally")
+    not (
+        NB03_BUNDLE_PATH.exists()
+        and NB03_CSV.exists()
+        and (FIXTURE_DIR / "installments_payments.csv").exists()
+        and (FIXTURE_DIR / "POS_CASH_balance.csv").exists()
+    ),
+    reason="Notebook 03 has not been run yet, or raw fixture CSVs are not present locally",
+)
 skip_no_nb04 = pytest.mark.skipif(
-    not (NB04_BUNDLE_PATH.exists() and NB04_CSV.exists()
-         and (FIXTURE_DIR / "credit_card_balance.csv").exists()),
-    reason="Notebook 04 has not been run yet, or raw fixture CSVs are not present locally")
+    not (
+        NB04_BUNDLE_PATH.exists() and NB04_CSV.exists() and (FIXTURE_DIR / "credit_card_balance.csv").exists()
+    ),
+    reason="Notebook 04 has not been run yet, or raw fixture CSVs are not present locally",
+)
 
 # 2026-09-02 hardening: every service now requires a real X-API-Key header on
 # /schema and /score (never /health) -- see src/serving/auth_common.py. Only
@@ -83,8 +96,17 @@ def test_risk_tier_service_matches_notebook_bin_edges(monkeypatch):
     assert resp.json()["risk_tier"] == real_row["RISK_TIER"]
 
 
-def _cross_check_segment_service(monkeypatch, env_var, bundle_path, csv_path, module_name,
-                                  segment_col, feature_module_fn, feature_module_args, response_key):
+def _cross_check_segment_service(
+    monkeypatch,
+    env_var,
+    bundle_path,
+    csv_path,
+    module_name,
+    segment_col,
+    feature_module_fn,
+    feature_module_args,
+    response_key,
+):
     monkeypatch.setenv(env_var, str(bundle_path))
     sys.modules.pop(module_name, None)
     __import__(module_name)
@@ -121,9 +143,14 @@ def test_bureau_segment_service_matches_notebook_assignment(monkeypatch):
     bureau_balance = pl.read_csv(FIXTURE_DIR / "bureau_balance.csv")
 
     _cross_check_segment_service(
-        monkeypatch, "NB02_SEGMENT_MODEL_PATH", NB02_BUNDLE_PATH, NB02_CSV,
-        "bureau_segment_assignment_service", "BUREAU_SEGMENT",
-        engineer_bureau_behavior_features, (nb01.select("SK_ID_CURR"), bureau, bureau_balance),
+        monkeypatch,
+        "NB02_SEGMENT_MODEL_PATH",
+        NB02_BUNDLE_PATH,
+        NB02_CSV,
+        "bureau_segment_assignment_service",
+        "BUREAU_SEGMENT",
+        engineer_bureau_behavior_features,
+        (nb01.select("SK_ID_CURR"), bureau, bureau_balance),
         "bureau_segment",
     )
 
@@ -137,8 +164,12 @@ def test_repayment_segment_service_matches_notebook_assignment(monkeypatch):
     pos_cash = pl.read_csv(FIXTURE_DIR / "POS_CASH_balance.csv")
 
     _cross_check_segment_service(
-        monkeypatch, "NB03_SEGMENT_MODEL_PATH", NB03_BUNDLE_PATH, NB03_CSV,
-        "repayment_segment_assignment_service", "REPAYMENT_SEGMENT",
+        monkeypatch,
+        "NB03_SEGMENT_MODEL_PATH",
+        NB03_BUNDLE_PATH,
+        NB03_CSV,
+        "repayment_segment_assignment_service",
+        "REPAYMENT_SEGMENT",
         lambda ids, i, p: engineer_repayment_behavior_features(ids, i, p)[:2],
         (nb01.select("SK_ID_CURR"), installments, pos_cash),
         "repayment_segment",
@@ -153,8 +184,12 @@ def test_utilization_segment_service_matches_notebook_assignment(monkeypatch):
     credit_card = pl.read_csv(FIXTURE_DIR / "credit_card_balance.csv")
 
     _cross_check_segment_service(
-        monkeypatch, "NB04_SEGMENT_MODEL_PATH", NB04_BUNDLE_PATH, NB04_CSV,
-        "utilization_segment_assignment_service", "UTILIZATION_SEGMENT",
+        monkeypatch,
+        "NB04_SEGMENT_MODEL_PATH",
+        NB04_BUNDLE_PATH,
+        NB04_CSV,
+        "utilization_segment_assignment_service",
+        "UTILIZATION_SEGMENT",
         lambda ids, c: engineer_revolving_credit_utilization_features(ids, c)[:2],
         (nb01.select("SK_ID_CURR"), credit_card),
         "utilization_segment",

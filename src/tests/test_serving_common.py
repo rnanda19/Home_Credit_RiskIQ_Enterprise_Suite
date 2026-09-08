@@ -10,6 +10,7 @@ no-fixture-for-business-data verification policy. Every assertion is
 computed by direct execution of the real functions under test, never a
 mocked or fabricated expectation.
 """
+
 import sys
 from pathlib import Path
 
@@ -29,10 +30,10 @@ from serving.scoring_service_common import load_bundle as load_scoring_bundle  #
 from serving.segment_assignment_common import build_segment_app  # noqa: E402
 from serving.segment_assignment_common import load_bundle as load_segment_bundle  # noqa: E402
 
-
 # --------------------------------------------------------------------------
 # auth_common.py
 # --------------------------------------------------------------------------
+
 
 def _tiny_app() -> FastAPI:
     app = FastAPI()
@@ -108,12 +109,15 @@ def test_require_api_key_uses_constant_time_comparison():
 # explainability_common.py
 # --------------------------------------------------------------------------
 
+
 def _linear_predict_fn(weights: dict, base: float):
     """A real, hand-computable scoring function: base + sum(weight * value)
     for each feature, so every occlusion contribution below is independently
     verifiable by hand, not just "does it run"."""
+
     def _predict(payload: dict) -> float:
         return base + sum(weights.get(f, 0.0) * (payload.get(f) or 0.0) for f in payload)
+
     return _predict
 
 
@@ -175,6 +179,7 @@ def test_top_reason_codes_skips_only_the_features_already_at_baseline():
 # tests, no business data.
 # --------------------------------------------------------------------------
 
+
 def _fit_classifier_bundle_no_categoricals(tmp_path):
     from sklearn.impute import SimpleImputer
     from sklearn.linear_model import LogisticRegression
@@ -183,8 +188,12 @@ def _fit_classifier_bundle_no_categoricals(tmp_path):
     y = np.array([0, 1, 0, 1])
     imputer = SimpleImputer(strategy="median").fit(X)
     model = LogisticRegression().fit(imputer.transform(X), y)
-    bundle = {"model": model, "imputer": imputer, "feature_cols": ["f1", "f2"],
-              "champion_name": "LogisticRegression"}
+    bundle = {
+        "model": model,
+        "imputer": imputer,
+        "feature_cols": ["f1", "f2"],
+        "champion_name": "LogisticRegression",
+    }
     bundle_path = tmp_path / "bundle.joblib"
     joblib.dump(bundle, bundle_path)
     return bundle_path
@@ -210,9 +219,15 @@ def test_load_bundle_leaves_existing_categorical_fields_untouched(tmp_path):
     imputer = SimpleImputer(strategy="median").fit(X)
     model = LogisticRegression().fit(imputer.transform(X), y)
     enc = OrdinalEncoder().fit([["A"], ["B"]])
-    bundle = {"model": model, "imputer": imputer, "ordinal_encoder": enc,
-              "feature_cols": ["f1", "cat1"], "numeric_features": ["f1"],
-              "categorical_features": ["cat1"], "champion_name": "LogisticRegression"}
+    bundle = {
+        "model": model,
+        "imputer": imputer,
+        "ordinal_encoder": enc,
+        "feature_cols": ["f1", "cat1"],
+        "numeric_features": ["f1"],
+        "categorical_features": ["cat1"],
+        "champion_name": "LogisticRegression",
+    }
     bundle_path = tmp_path / "bundle.joblib"
     joblib.dump(bundle, bundle_path)
 
@@ -229,8 +244,7 @@ def test_load_bundle_leaves_existing_categorical_fields_untouched(tmp_path):
 def test_build_scoring_app_serves_a_bundle_with_no_categorical_split(tmp_path, monkeypatch):
     monkeypatch.setenv("API_KEY", "testkey")
     bundle_path = _fit_classifier_bundle_no_categoricals(tmp_path)
-    app = build_scoring_app(bundle_path, title="TestScoring", description="test",
-                             score_label="probability")
+    app = build_scoring_app(bundle_path, title="TestScoring", description="test", score_label="probability")
     client = TestClient(app)
 
     health = client.get("/health")
@@ -254,8 +268,14 @@ def _fit_clustering_bundle_alt_key_names(tmp_path):
     X = np.array([[1.0, 1.0], [1.1, 0.9], [8.0, 8.0], [8.1, 7.9]])
     scaler = StandardScaler().fit(X)
     kmeans = KMeans(n_clusters=2, random_state=0, n_init=10).fit(scaler.transform(X))
-    bundle = {"kmeans": kmeans, "scaler": scaler, "feature_cols": ["a", "b"],
-              "pattern_labels": ["Low", "High"], "k_chosen": 2, "silhouette_chosen": 0.9}
+    bundle = {
+        "kmeans": kmeans,
+        "scaler": scaler,
+        "feature_cols": ["a", "b"],
+        "pattern_labels": ["Low", "High"],
+        "k_chosen": 2,
+        "silhouette_chosen": 0.9,
+    }
     bundle_path = tmp_path / "cbundle.joblib"
     joblib.dump(bundle, bundle_path)
     return bundle_path
@@ -277,8 +297,13 @@ def test_segment_load_bundle_leaves_canonical_keys_untouched(tmp_path):
     X = np.array([[1.0, 1.0], [8.0, 8.0]])
     scaler = StandardScaler().fit(X)
     kmeans = KMeans(n_clusters=1, random_state=0, n_init=10).fit(scaler.transform(X))
-    bundle = {"kmeans": kmeans, "scaler": scaler, "feature_names": ["x", "y"],
-              "segment_labels": ["Only"], "k_chosen": 1}
+    bundle = {
+        "kmeans": kmeans,
+        "scaler": scaler,
+        "feature_names": ["x", "y"],
+        "segment_labels": ["Only"],
+        "k_chosen": 1,
+    }
     bundle_path = tmp_path / "cbundle.joblib"
     joblib.dump(bundle, bundle_path)
 
@@ -290,8 +315,13 @@ def test_segment_load_bundle_leaves_canonical_keys_untouched(tmp_path):
 def test_build_segment_app_serves_a_bundle_with_alternate_key_names(tmp_path, monkeypatch):
     monkeypatch.setenv("API_KEY", "testkey")
     bundle_path = _fit_clustering_bundle_alt_key_names(tmp_path)
-    app = build_segment_app(bundle_path, title="TestSegment", description="test",
-                             segment_field_name="pattern", history_flag_note="note")
+    app = build_segment_app(
+        bundle_path,
+        title="TestSegment",
+        description="test",
+        segment_field_name="pattern",
+        history_flag_note="note",
+    )
     client = TestClient(app)
 
     health = client.get("/health")

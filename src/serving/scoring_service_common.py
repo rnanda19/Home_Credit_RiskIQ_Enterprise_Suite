@@ -49,6 +49,7 @@ own real baseline (None -- the same value this module's own preprocessing
 already imputes/encodes as "missing", so no new baseline convention is
 invented). See CHANGELOG.md for the real gap this closes.
 """
+
 from pathlib import Path
 from typing import Optional
 
@@ -100,6 +101,7 @@ def score_one(bundle: dict, payload: dict) -> float:
     model = bundle["model"]
 
     import pandas as pd
+
     row = {c: payload.get(c) for c in feature_cols}
     pdf = pd.DataFrame([row])
     for c in categorical_features:
@@ -138,14 +140,20 @@ def build_scoring_app(
 
     @app.get("/health")
     def health():
-        return {"status": "ok", "champion_model": champion_name,
-                "n_numeric_features": len(numeric_features),
-                "n_categorical_features": len(categorical_features)}
+        return {
+            "status": "ok",
+            "champion_model": champion_name,
+            "n_numeric_features": len(numeric_features),
+            "n_categorical_features": len(categorical_features),
+        }
 
     @app.get("/schema", dependencies=[Depends(require_api_key)])
     def schema():
-        return {"numeric_features": numeric_features, "categorical_features": categorical_features,
-                "champion_model": champion_name}
+        return {
+            "numeric_features": numeric_features,
+            "categorical_features": categorical_features,
+            "champion_model": champion_name,
+        }
 
     @app.post("/score", dependencies=[Depends(require_api_key)])
     def score(request: RequestModel):

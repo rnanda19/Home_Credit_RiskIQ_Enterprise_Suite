@@ -25,6 +25,7 @@ Usage in a service module:
     @app.post("/score", dependencies=[Depends(require_api_key)])
     def score(...): ...
 """
+
 import logging
 import os
 import secrets
@@ -47,7 +48,8 @@ def configured_api_key() -> str:
         _logger.warning(
             "API_KEY is not set -- falling back to the published dev-only default "
             "(%s). Set API_KEY before deploying this service anywhere reachable by "
-            "anyone but you.", DEV_DEFAULT_API_KEY,
+            "anyone but you.",
+            DEV_DEFAULT_API_KEY,
         )
         return DEV_DEFAULT_API_KEY
     return key

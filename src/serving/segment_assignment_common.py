@@ -57,6 +57,7 @@ confidence score, the same real distances scikit-learn's own `predict()`
 already compares internally to pick the assigned segment. See CHANGELOG.md
 for the real gap this closes.
 """
+
 from pathlib import Path
 
 import joblib
@@ -159,13 +160,22 @@ def build_segment_app(
 
     @app.get("/health")
     def health():
-        return {"status": "ok", "k_chosen": k_chosen, "n_features": len(feature_names),
-                "winsorization_applied": has_winsorize, "note": history_flag_note}
+        return {
+            "status": "ok",
+            "k_chosen": k_chosen,
+            "n_features": len(feature_names),
+            "winsorization_applied": has_winsorize,
+            "note": history_flag_note,
+        }
 
     @app.get("/schema", dependencies=[Depends(require_api_key)])
     def schema():
-        return {"feature_names": feature_names, "segment_labels": segment_labels, "k_chosen": k_chosen,
-                "winsorize_bounds": bundle.get("winsorize_report")}
+        return {
+            "feature_names": feature_names,
+            "segment_labels": segment_labels,
+            "k_chosen": k_chosen,
+            "winsorize_bounds": bundle.get("winsorize_report"),
+        }
 
     @app.post("/score", dependencies=[Depends(require_api_key)])
     def score(request: RequestModel):
@@ -175,7 +185,11 @@ def build_segment_app(
         except Exception as e:
             raise HTTPException(status_code=422, detail=f"Segment assignment failed: {type(e).__name__}: {e}")
         distances = _distance_to_each_segment(bundle, payload)
-        return {segment_field_name: segment, "segment_index": idx, "k_chosen": k_chosen,
-                "distance_to_each_segment": distances}
+        return {
+            segment_field_name: segment,
+            "segment_index": idx,
+            "k_chosen": k_chosen,
+            "distance_to_each_segment": distances,
+        }
 
     return app

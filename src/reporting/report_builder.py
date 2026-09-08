@@ -30,6 +30,7 @@ Produces, from one real notebook run's own computed results:
                               Insights & SMART Recommendations section, and a
                               searchable/filterable sampled-records table
 """
+
 from __future__ import annotations
 
 import inspect
@@ -259,8 +260,8 @@ def build_word_report(
 # ---------------------------------------------------------------------------
 # Excel workbook (openpyxl, formula-driven, multi-sheet)
 # ---------------------------------------------------------------------------
-INPUT_FONT = Font(color="0000FF", bold=True)          # blue font
-INPUT_FILL = PatternFill("solid", fgColor="FFFF00")   # yellow fill -- xlsx skill
+INPUT_FONT = Font(color="0000FF", bold=True)  # blue font
+INPUT_FILL = PatternFill("solid", fgColor="FFFF00")  # yellow fill -- xlsx skill
 HEADER_FONT = Font(color="FFFFFF", bold=True)
 HEADER_FILL = PatternFill("solid", fgColor="1F3864")
 THIN = Border(*(Side(style="thin"),) * 4)
@@ -335,21 +336,24 @@ def build_excel_workbook(
         last_col = get_column_letter(len(sheet["headers"]))
         if last_row >= 2:
             from openpyxl.worksheet.table import Table, TableStyleInfo
+
             tbl_name = "T" + "".join(ch for ch in sheet["name"] if ch.isalnum())[:20]
             table_ref = f"A1:{last_col}{last_row}"
             excel_tbl = Table(displayName=tbl_name, ref=table_ref)
-            excel_tbl.tableStyleInfo = TableStyleInfo(
-                name="TableStyleMedium2", showRowStripes=True
-            )
+            excel_tbl.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showRowStripes=True)
             ws.add_table(excel_tbl)
             highlight_col = sheet.get("highlight_col")
             if highlight_col and highlight_col in sheet["headers"]:
                 col_idx = sheet["headers"].index(highlight_col) + 1
                 col_letter = get_column_letter(col_idx)
                 rule = ColorScaleRule(
-                    start_type="min", start_color="F8696B",
-                    mid_type="percentile", mid_value=50, mid_color="FFEB84",
-                    end_type="max", end_color="63BE7B",
+                    start_type="min",
+                    start_color="F8696B",
+                    mid_type="percentile",
+                    mid_value=50,
+                    mid_color="FFEB84",
+                    end_type="max",
+                    end_color="63BE7B",
                 )
                 ws.conditional_formatting.add(f"{col_letter}2:{col_letter}{last_row}", rule)
         for i, header in enumerate(sheet["headers"], start=1):
@@ -378,9 +382,13 @@ def build_excel_workbook(
         for i, item in enumerate(insights_sheet["items"], start=1):
             color = VIVID_PALETTE[(i - 1) % len(VIVID_PALETTE)]
             row = [
-                i, item.get("headline", ""), item.get("specific", ""),
-                item.get("measurable", ""), item.get("achievable", ""),
-                item.get("relevant", ""), item.get("timebound", ""),
+                i,
+                item.get("headline", ""),
+                item.get("specific", ""),
+                item.get("measurable", ""),
+                item.get("achievable", ""),
+                item.get("relevant", ""),
+                item.get("timebound", ""),
             ]
             ws.append(row)
             fill = PatternFill("solid", fgColor=color.lstrip("#"))
@@ -629,7 +637,8 @@ def build_html_dashboard(
             facet_html = "\n".join(
                 f'<div class="facet"><span class="chip">{code}</span>'
                 f'<span class="txt"><b>{label}:</b> {text}</span></div>'
-                for code, label, text in facets if text
+                for code, label, text in facets
+                if text
             )
             cards.append(
                 f'<div class="insight-card" style="--ic:{accent}">'
@@ -646,7 +655,9 @@ def build_html_dashboard(
         accent = ch.get("accent", VIVID_PALETTE[i % len(VIVID_PALETTE)])
         views = ch.get("views")
         if not views:
-            views = [{"key": "default", "label": "Default", "labels": ch["labels"], "datasets": ch["datasets"]}]
+            views = [
+                {"key": "default", "label": "Default", "labels": ch["labels"], "datasets": ch["datasets"]}
+            ]
         filter_html = ""
         if len(views) > 1:
             options = "\n".join(f'<option value="{v["key"]}">{v["label"]}</option>' for v in views)
@@ -662,10 +673,15 @@ def build_html_dashboard(
             f'<div class="chart-head"><h3>{ch["title"]}</h3>{filter_html}</div>'
             f'<canvas id="{ch["id"]}"></canvas>{note}{story_html}</div>'
         )
-        chart_configs.append({
-            "id": ch["id"], "type": ch["type"], "views": views,
-            "showLegend": ch.get("showLegend", True), "options": ch.get("options"),
-        })
+        chart_configs.append(
+            {
+                "id": ch["id"],
+                "type": ch["type"],
+                "views": views,
+                "showLegend": ch.get("showLegend", True),
+                "options": ch.get("options"),
+            }
+        )
 
     table_section = ""
     table_data_json, table_cols_json, table_filter_json = "[]", "[]", "null"
@@ -689,8 +705,7 @@ def build_html_dashboard(
         table_filter_json = json.dumps(filter_col) if filter_col else "null"
 
     html = (
-        _HTML_TEMPLATE
-        .replace("__CHARTJS_INLINE__", _load_chartjs_source())
+        _HTML_TEMPLATE.replace("__CHARTJS_INLINE__", _load_chartjs_source())
         .replace("__TITLE__", title)
         .replace("__SUBTITLE__", subtitle)
         .replace("__KPI_HTML__", kpi_html)

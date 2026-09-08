@@ -45,6 +45,7 @@ these exact environment variable names). No specific speedup number is claimed a
 this module — this suite never runs on your real hardware, so any number would be invented.
 Run verify_performance_setup.py on your own machine to see your own real numbers.
 """
+
 import os
 import time
 import gc
@@ -64,15 +65,18 @@ _CONFIGURED = {"done": False, "config": None}
 
 def _detect_hardware():
     import psutil
+
     logical = psutil.cpu_count(logical=True) or multiprocessing.cpu_count() or 1
     physical = psutil.cpu_count(logical=False) or logical
-    total_ram_gb = psutil.virtual_memory().total / (1024 ** 3)
+    total_ram_gb = psutil.virtual_memory().total / (1024**3)
     return {"logical_cores": logical, "physical_cores": physical, "total_ram_gb": total_ram_gb}
 
 
-def configure_performance(ram_ceiling_fraction: float = RAM_CEILING_FRACTION,
-                           cpu_ceiling_fraction: float = CPU_CEILING_FRACTION,
-                           verbose: bool = True) -> dict:
+def configure_performance(
+    ram_ceiling_fraction: float = RAM_CEILING_FRACTION,
+    cpu_ceiling_fraction: float = CPU_CEILING_FRACTION,
+    verbose: bool = True,
+) -> dict:
     """Detect this machine's real cores/RAM and set every BLAS/OpenMP/Polars thread-count
     environment variable to one shared, safe ceiling. Call this BEFORE importing numpy,
     pandas, polars, scikit-learn, xgboost, lightgbm, or catboost. Idempotent — calling it
@@ -88,8 +92,12 @@ def configure_performance(ram_ceiling_fraction: float = RAM_CEILING_FRACTION,
     ram_ceiling_gb = hw["total_ram_gb"] * ram_ceiling_fraction
 
     thread_vars = [
-        "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
-        "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "BLIS_NUM_THREADS",
+        "OMP_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+        "VECLIB_MAXIMUM_THREADS",
+        "BLIS_NUM_THREADS",
         "POLARS_MAX_THREADS",
     ]
     for var in thread_vars:
@@ -115,13 +123,19 @@ def configure_performance(ram_ceiling_fraction: float = RAM_CEILING_FRACTION,
     _CONFIGURED["config"] = config
 
     if verbose:
-        print(f"[PERF] Detected: {hw['logical_cores']} logical / {hw['physical_cores']} physical cores, "
-              f"{hw['total_ram_gb']:.1f} GB RAM")
-        print(f"[PERF] Thread ceiling set to {n_threads} ({cpu_ceiling_fraction:.0%} of logical cores) "
-              f"across OMP/OpenBLAS/MKL/NumExpr/Polars — one number, one source of truth, "
-              f"so no library is left to guess and oversubscribe")
-        print(f"[PERF] RAM ceiling: {ram_ceiling_gb:.1f} GB ({ram_ceiling_fraction:.0%} of "
-              f"{hw['total_ram_gb']:.1f} GB total) — checked on demand via check_ram_headroom()")
+        print(
+            f"[PERF] Detected: {hw['logical_cores']} logical / {hw['physical_cores']} physical cores, "
+            f"{hw['total_ram_gb']:.1f} GB RAM"
+        )
+        print(
+            f"[PERF] Thread ceiling set to {n_threads} ({cpu_ceiling_fraction:.0%} of logical cores) "
+            f"across OMP/OpenBLAS/MKL/NumExpr/Polars — one number, one source of truth, "
+            f"so no library is left to guess and oversubscribe"
+        )
+        print(
+            f"[PERF] RAM ceiling: {ram_ceiling_gb:.1f} GB ({ram_ceiling_fraction:.0%} of "
+            f"{hw['total_ram_gb']:.1f} GB total) — checked on demand via check_ram_headroom()"
+        )
 
     return config
 
@@ -169,19 +183,24 @@ def pin_cpu_affinity(config: dict = None, verbose: bool = True) -> list:
     macOS has no equivalent user-space API and does not need this fix.
     """
     import psutil
+
     config = config or _CONFIGURED.get("config") or configure_performance(verbose=False)
     try:
         proc = psutil.Process()
         all_cores = list(range(config["logical_cores"]))
         proc.cpu_affinity(all_cores)
         if verbose:
-            print(f"[PERF] CPU affinity pinned to all {len(all_cores)} detected logical cores "
-                  f"(removes any pre-existing OS-level core restriction on this process).")
+            print(
+                f"[PERF] CPU affinity pinned to all {len(all_cores)} detected logical cores "
+                f"(removes any pre-existing OS-level core restriction on this process)."
+            )
         return all_cores
     except (AttributeError, NotImplementedError, OSError, psutil.Error) as e:
         if verbose:
-            print(f"[PERF] CPU affinity pinning not applied on this platform ({type(e).__name__}: {e}) "
-                  f"— safe to ignore, thread-count env vars above still apply.")
+            print(
+                f"[PERF] CPU affinity pinning not applied on this platform ({type(e).__name__}: {e}) "
+                f"— safe to ignore, thread-count env vars above still apply."
+            )
         return []
 
 
@@ -196,7 +215,11 @@ def threadpool_guard(n_threads: int = None):
     except ImportError:
         yield
         return
-    n = n_threads or (_CONFIGURED.get("config") or {}).get("n_threads") or max(1, multiprocessing.cpu_count() - 1)
+    n = (
+        n_threads
+        or (_CONFIGURED.get("config") or {}).get("n_threads")
+        or max(1, multiprocessing.cpu_count() - 1)
+    )
     with threadpool_limits(limits=n):
         yield
 
@@ -218,13 +241,16 @@ def check_ram_headroom(config: dict = None, hard_stop: bool = False) -> bool:
     runaway load is caught with a clear message instead of the machine silently grinding
     into swap and appearing frozen."""
     import psutil
+
     config = config or _CONFIGURED.get("config") or configure_performance(verbose=False)
     vm = psutil.virtual_memory()
-    used_gb = vm.used / (1024 ** 3)
+    used_gb = vm.used / (1024**3)
     ceiling_gb = config["ram_ceiling_gb"]
     ok = used_gb < ceiling_gb
-    print(f"[PERF] RAM in use: {used_gb:.1f} GB / ceiling {ceiling_gb:.1f} GB "
-          f"({'OK' if ok else 'OVER CEILING'})")
+    print(
+        f"[PERF] RAM in use: {used_gb:.1f} GB / ceiling {ceiling_gb:.1f} GB "
+        f"({'OK' if ok else 'OVER CEILING'})"
+    )
     if not ok and hard_stop:
         raise MemoryError(
             f"RAM in use ({used_gb:.1f} GB) exceeds the configured {ceiling_gb:.1f} GB ceiling. "
@@ -241,6 +267,7 @@ def scan_large_csv(path, **scan_kwargs):
     the entire file in RAM immediately and is the most direct route to a laptop-freezing
     27-million-row load."""
     import polars as pl
+
     defaults = {"null_values": ["", "NA", "XNA"]}
     defaults.update(scan_kwargs)
     return pl.scan_csv(path, **defaults)
@@ -264,21 +291,26 @@ def load_csv_cached(path, cache_dir, verbose: bool = True, **read_csv_kwargs):
     Zero-fabrication note: this only changes how fast the same real numbers are read off
     disk. Every row and column value in the returned DataFrame is identical either way."""
     import polars as pl
+
     path = Path(path)
     cache_dir = Path(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_path = cache_dir / f"{path.stem}.parquet"
     if cache_path.exists() and cache_path.stat().st_mtime >= path.stat().st_mtime:
         if verbose:
-            print(f"[PERF] {path.name}: reading cached Parquet ({cache_path.name}) — "
-                  f"faster than re-parsing the real CSV.")
+            print(
+                f"[PERF] {path.name}: reading cached Parquet ({cache_path.name}) — "
+                f"faster than re-parsing the real CSV."
+            )
         return pl.read_parquet(cache_path)
     df = pl.read_csv(path, **read_csv_kwargs)
     try:
         df.write_parquet(cache_path)
         if verbose:
-            print(f"[PERF] {path.name}: read real CSV, wrote Parquet cache for future runs "
-                  f"({cache_path.name}).")
+            print(
+                f"[PERF] {path.name}: read real CSV, wrote Parquet cache for future runs "
+                f"({cache_path.name})."
+            )
     except OSError as e:
         if verbose:
             print(f"[PERF] {path.name}: read real CSV; Parquet cache write skipped ({e}).")
@@ -292,6 +324,7 @@ def progress(iterable, **kwargs):
     as a freeze, even when nothing is wrong."""
     try:
         from tqdm.auto import tqdm
+
         return tqdm(iterable, **kwargs)
     except ImportError:
         return iterable
@@ -300,6 +333,7 @@ def progress(iterable, **kwargs):
 def timer(label: str = ""):
     """Decorator: prints real wall-clock time for the function it wraps — cheap, honest
     timing feedback so a long real-data cell's completion is visible, not just assumed."""
+
     def decorator(fn):
         @functools.wraps(fn)
         def wrapper(*args, **kwargs):
@@ -307,5 +341,7 @@ def timer(label: str = ""):
             result = fn(*args, **kwargs)
             print(f"[PERF] {label or fn.__name__} completed in {time.time() - t0:.1f}s")
             return result
+
         return wrapper
+
     return decorator

@@ -26,6 +26,7 @@ Endpoints:
     GET  /schema  -- the real feature list this model expects
     POST /score   -- {"probability": float, "champion_model": str, "top_reasons": [...]}
 """
+
 import os
 import sys
 from pathlib import Path
@@ -38,14 +39,16 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.scoring_service_common import build_scoring_app
 
 BUNDLE_PATH = Path(
-    os.environ.get("NB01_BUNDLE_PATH",
-                    str(MP4_DIR / "decision_engine" / "artifacts" / "notebook_01_champion_model.joblib"))
+    os.environ.get(
+        "NB01_BUNDLE_PATH",
+        str(MP4_DIR / "decision_engine" / "artifacts" / "notebook_01_champion_model.joblib"),
+    )
 )
 
 app = build_scoring_app(
     bundle_path=BUNDLE_PATH,
     title="Home Credit — Early Delinquency Risk Scoring (Problem 1)",
     description="Real early-delinquency-risk scoring using Notebook 01's trained champion model on real "
-                 "installment-payment behavioral features.",
+    "installment-payment behavioral features.",
     score_label="probability",
 )

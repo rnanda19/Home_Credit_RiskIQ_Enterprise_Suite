@@ -78,6 +78,7 @@ tuning it per-run to pass a specific dataset would defeat the purpose of
 having a documented, disclosed threshold at all, and this suite does not
 do that.
 """
+
 from __future__ import annotations
 
 import math
@@ -156,16 +157,18 @@ def monotonic_within_noise(
             significant = p_value < corrected_alpha
             material = magnitude >= min_practical_difference
             violation = significant and material
-            row.update({
-                "z": float(z) if math.isfinite(z) else None,
-                "p_value": float(p_value),
-                "alpha_used_bonferroni_corrected": corrected_alpha,
-                "statistically_significant_reversal": bool(significant),
-                "reversal_magnitude": float(magnitude),
-                "min_practical_difference_used": float(min_practical_difference),
-                "practically_material_reversal": bool(material),
-                "counted_as_violation": bool(violation),
-            })
+            row.update(
+                {
+                    "z": float(z) if math.isfinite(z) else None,
+                    "p_value": float(p_value),
+                    "alpha_used_bonferroni_corrected": corrected_alpha,
+                    "statistically_significant_reversal": bool(significant),
+                    "reversal_magnitude": float(magnitude),
+                    "min_practical_difference_used": float(min_practical_difference),
+                    "practically_material_reversal": bool(material),
+                    "counted_as_violation": bool(violation),
+                }
+            )
             if violation:
                 holds = False
         detail.append(row)

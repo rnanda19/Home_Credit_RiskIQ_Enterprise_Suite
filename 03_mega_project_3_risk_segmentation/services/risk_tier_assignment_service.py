@@ -21,6 +21,7 @@ Endpoints:
     GET  /schema   -- the real tier boundaries this service applies
     POST /score    -- {"PD": float} -> {"risk_tier": str, "tier_index": int}
 """
+
 import json
 import os
 import sys
@@ -36,8 +37,9 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.auth_common import require_api_key
 
 SUMMARY_PATH = Path(
-    os.environ.get("NB01_SUMMARY_PATH",
-                    str(MP3_DIR / "decision_engine" / "artifacts" / "notebook_01_summary.json"))
+    os.environ.get(
+        "NB01_SUMMARY_PATH", str(MP3_DIR / "decision_engine" / "artifacts" / "notebook_01_summary.json")
+    )
 )
 if not SUMMARY_PATH.exists():
     raise FileNotFoundError(
@@ -52,9 +54,10 @@ _raw_edges = _summary["tiering_config"]["tier_bin_edges"]
 # Real edges as saved: None marks the two non-finite boundaries pd.cut() used
 # (Notebook 01 substitutes None for +/-inf before JSON serialization -- inf
 # is not valid JSON). Reconstructed here exactly as pd.cut() needs them.
-TIER_BIN_EDGES = [float("-inf") if i == 0 and e is None else
-                  (float("inf") if i == len(_raw_edges) - 1 and e is None else e)
-                  for i, e in enumerate(_raw_edges)]
+TIER_BIN_EDGES = [
+    float("-inf") if i == 0 and e is None else (float("inf") if i == len(_raw_edges) - 1 and e is None else e)
+    for i, e in enumerate(_raw_edges)
+]
 N_TIERS = len(TIER_BIN_EDGES) - 1
 TIER_LABELS = [f"Tier {i + 1}" for i in range(N_TIERS)]
 
@@ -67,13 +70,19 @@ def _assign_tier(pd_value: float) -> tuple[str, int]:
         lo, hi = TIER_BIN_EDGES[i], TIER_BIN_EDGES[i + 1]
         if (i == 0 and lo <= pd_value <= hi) or (i > 0 and lo < pd_value <= hi):
             return TIER_LABELS[i], i
-    raise ValueError(f"Real PD {pd_value} falls outside every real tier boundary "
-                      f"{TIER_BIN_EDGES} -- this should be unreachable for a PD in [0, 1].")
+    raise ValueError(
+        f"Real PD {pd_value} falls outside every real tier boundary "
+        f"{TIER_BIN_EDGES} -- this should be unreachable for a PD in [0, 1]."
+    )
 
 
 class RiskTierRequest(BaseModel):
-    PD: float = Field(..., ge=0.0, le=1.0, description="Real probability of default (0-1) -- from "
-                                                         "Mega Project 1's real champion model.")
+    PD: float = Field(
+        ...,
+        ge=0.0,
+        le=1.0,
+        description="Real probability of default (0-1) -- from " "Mega Project 1's real champion model.",
+    )
 
 
 app = FastAPI(
@@ -90,8 +99,10 @@ def health():
 
 @app.get("/schema", dependencies=[Depends(require_api_key)])
 def schema():
-    return {"tier_labels": TIER_LABELS, "tier_bin_edges": [None if not (-1e300 < e < 1e300) else e
-                                                             for e in TIER_BIN_EDGES]}
+    return {
+        "tier_labels": TIER_LABELS,
+        "tier_bin_edges": [None if not (-1e300 < e < 1e300) else e for e in TIER_BIN_EDGES],
+    }
 
 
 @app.post("/score", dependencies=[Depends(require_api_key)])

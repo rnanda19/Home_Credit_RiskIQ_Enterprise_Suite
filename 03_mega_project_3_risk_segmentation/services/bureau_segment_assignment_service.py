@@ -18,6 +18,7 @@ Endpoints:
     GET  /schema  -- the real feature list this model expects
     POST /score   -- {"bureau_segment": str, "segment_index": int, "k_chosen": int}
 """
+
 import os
 import sys
 from pathlib import Path
@@ -30,8 +31,10 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.segment_assignment_common import build_segment_app
 
 BUNDLE_PATH = Path(
-    os.environ.get("NB02_SEGMENT_MODEL_PATH",
-                    str(MP3_DIR / "decision_engine" / "artifacts" / "notebook_02_segment_model.joblib"))
+    os.environ.get(
+        "NB02_SEGMENT_MODEL_PATH",
+        str(MP3_DIR / "decision_engine" / "artifacts" / "notebook_02_segment_model.joblib"),
+    )
 )
 
 app = build_segment_app(
@@ -40,6 +43,6 @@ app = build_segment_app(
     description="Real bureau behavioral segment assignment using Notebook 02's fitted K-Means model.",
     segment_field_name="bureau_segment",
     history_flag_note="Applicants with zero real bureau history get 'No Bureau History' in the notebook's "
-                       "own population — this single-record API assumes the caller already knows whether "
-                       "real bureau history exists; it does not itself decide that.",
+    "own population — this single-record API assumes the caller already knows whether "
+    "real bureau history exists; it does not itself decide that.",
 )

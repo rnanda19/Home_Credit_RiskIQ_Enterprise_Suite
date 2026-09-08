@@ -7,6 +7,7 @@ These are exact, independently-computed reference values (a manual
 two-proportion z-test), not just "does it run" smoke tests -- consistent
 with this suite's standing testing convention (see test_scoring_services.py).
 """
+
 import math
 import sys
 from pathlib import Path

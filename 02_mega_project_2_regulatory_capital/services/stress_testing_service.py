@@ -22,6 +22,7 @@ Endpoints:
                               capital requirement for that one named scenario
                               ("Baseline", "Adverse", or "Severely Adverse")
 """
+
 import sys
 from pathlib import Path
 from typing import Optional
@@ -36,7 +37,9 @@ SUITE_ROOT = MP2_DIR.parent
 
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 from features.regulatory_capital_features import (
-    SEGMENT_DEFINITIONS, other_retail_correlation, basel_retail_capital_k,
+    SEGMENT_DEFINITIONS,
+    other_retail_correlation,
+    basel_retail_capital_k,
 )
 from serving.auth_common import require_api_key
 
@@ -44,15 +47,24 @@ from serving.auth_common import require_api_key
 # Section 5. Kept in one place here so the notebook and this service can
 # never silently drift apart.
 SCENARIOS = {
-    "Baseline": {"z_shock": 0.0, "lgd_multiplier": 1.0,
-                 "description": "No shock -- the real, unmodified input PD/LGD."},
-    "Adverse": {"z_shock": -1.6449, "lgd_multiplier": 1.0,
-                "description": "Standard-normal 95th-percentile adverse value (Phi^-1(0.05) = -1.645, "
-                                "a documented '1-in-20' downturn severity convention)."},
-    "Severely Adverse": {"z_shock": -3.0902, "lgd_multiplier": 1.25,
-                          "description": "Phi^-1(0.001) = -3.09 -- the SAME 99.9th-percentile severity "
-                                          "Basel's own closed-form capital function is calibrated to, plus "
-                                          "a documented 25% relative LGD downturn add-on (capped at 100%)."},
+    "Baseline": {
+        "z_shock": 0.0,
+        "lgd_multiplier": 1.0,
+        "description": "No shock -- the real, unmodified input PD/LGD.",
+    },
+    "Adverse": {
+        "z_shock": -1.6449,
+        "lgd_multiplier": 1.0,
+        "description": "Standard-normal 95th-percentile adverse value (Phi^-1(0.05) = -1.645, "
+        "a documented '1-in-20' downturn severity convention).",
+    },
+    "Severely Adverse": {
+        "z_shock": -3.0902,
+        "lgd_multiplier": 1.25,
+        "description": "Phi^-1(0.001) = -3.09 -- the SAME 99.9th-percentile severity "
+        "Basel's own closed-form capital function is calibrated to, plus "
+        "a documented 25% relative LGD downturn add-on (capped at 100%).",
+    },
 }
 
 
@@ -69,7 +81,9 @@ def _assign_segment(name_contract_type: str, flag_own_realty: str, flag_own_car:
 class StressRequest(BaseModel):
     PD: float = Field(..., ge=0.0, le=1.0, description="Real, unstressed probability of default (0-1).")
     AMT_CREDIT: float = Field(..., gt=0.0, description="Real disbursed/approved credit amount (EAD proxy).")
-    NAME_CONTRACT_TYPE: str = Field(..., description="Real Home Credit field: 'Cash loans' or 'Revolving loans'.")
+    NAME_CONTRACT_TYPE: str = Field(
+        ..., description="Real Home Credit field: 'Cash loans' or 'Revolving loans'."
+    )
     FLAG_OWN_REALTY: Optional[str] = Field(default="N")
     FLAG_OWN_CAR: Optional[str] = Field(default="N")
 
@@ -94,17 +108,24 @@ def schema():
 @app.post("/score/{scenario}", dependencies=[Depends(require_api_key)])
 def score(scenario: str, request: StressRequest):
     if scenario not in SCENARIOS:
-        raise HTTPException(status_code=404, detail=f"Unknown scenario '{scenario}'. Choose one of: "
-                                                      f"{list(SCENARIOS.keys())}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Unknown scenario '{scenario}'. Choose one of: " f"{list(SCENARIOS.keys())}",
+        )
     try:
-        segment = _assign_segment(request.NAME_CONTRACT_TYPE, request.FLAG_OWN_REALTY or "N",
-                                   request.FLAG_OWN_CAR or "N")
+        segment = _assign_segment(
+            request.NAME_CONTRACT_TYPE, request.FLAG_OWN_REALTY or "N", request.FLAG_OWN_CAR or "N"
+        )
         seg_def = SEGMENT_DEFINITIONS[segment]
         base_lgd = seg_def["lgd"]
         scen = SCENARIOS[scenario]
         z = scen["z_shock"]
 
-        r = seg_def["r_fixed"] if seg_def["correlation_mode"] == "fixed" else other_retail_correlation(request.PD)
+        r = (
+            seg_def["r_fixed"]
+            if seg_def["correlation_mode"] == "fixed"
+            else other_retail_correlation(request.PD)
+        )
         if scenario == "Baseline":
             stressed_pd = request.PD
         else:
@@ -124,8 +145,17 @@ def score(scenario: str, request: StressRequest):
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
     return {
-        "scenario": scenario, "z_shock": z, "lgd_multiplier": scen["lgd_multiplier"],
-        "capital_segment": segment, "unstressed_pd": request.PD, "stressed_pd": stressed_pd,
-        "stressed_lgd": stressed_lgd, "correlation_r": r, "capital_k": k, "ead_proxy": ead,
-        "expected_loss": el, "rwa": rwa, "capital_requirement": capital_requirement,
+        "scenario": scenario,
+        "z_shock": z,
+        "lgd_multiplier": scen["lgd_multiplier"],
+        "capital_segment": segment,
+        "unstressed_pd": request.PD,
+        "stressed_pd": stressed_pd,
+        "stressed_lgd": stressed_lgd,
+        "correlation_r": r,
+        "capital_k": k,
+        "ead_proxy": ead,
+        "expected_loss": el,
+        "rwa": rwa,
+        "capital_requirement": capital_requirement,
     }

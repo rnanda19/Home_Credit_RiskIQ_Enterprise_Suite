@@ -26,6 +26,7 @@ Endpoints:
     GET  /schema  -- the real feature list + real winsorize bounds this model expects
     POST /score   -- {"prepayment_segment": str, "segment_index": int, "k_chosen": int}
 """
+
 import os
 import sys
 from pathlib import Path
@@ -38,8 +39,10 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.segment_assignment_common import build_segment_app
 
 BUNDLE_PATH = Path(
-    os.environ.get("NB04_SEGMENT_MODEL_PATH",
-                    str(MP5_DIR / "decision_engine" / "artifacts" / "notebook_04_segment_model.joblib"))
+    os.environ.get(
+        "NB04_SEGMENT_MODEL_PATH",
+        str(MP5_DIR / "decision_engine" / "artifacts" / "notebook_04_segment_model.joblib"),
+    )
 )
 
 app = build_segment_app(
@@ -48,6 +51,6 @@ app = build_segment_app(
     description="Real prepayment-behavior segment assignment using Notebook 04's fitted, winsorized K-Means model.",
     segment_field_name="prepayment_segment",
     history_flag_note="Applicants with zero real prior loan-servicing history get 'No Payment History' "
-                       "in the notebook's own population — this single-record API assumes the caller "
-                       "already knows whether real payment history exists; it does not itself decide that.",
+    "in the notebook's own population — this single-record API assumes the caller "
+    "already knows whether real payment history exists; it does not itself decide that.",
 )

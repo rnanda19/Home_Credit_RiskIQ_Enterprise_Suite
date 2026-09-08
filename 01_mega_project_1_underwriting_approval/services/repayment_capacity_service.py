@@ -28,6 +28,7 @@ Endpoints:
                       "total_debt_burden_ratio": float | null,
                       "note": str}
 """
+
 import sys
 from pathlib import Path
 from typing import Optional
@@ -44,7 +45,8 @@ class RepaymentCapacityRequest(BaseModel):
     AMT_ANNUITY: Optional[float] = Field(default=None, description="Real requested loan annuity.")
     AMT_CREDIT: Optional[float] = Field(default=None, description="Real requested loan principal.")
     BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL: Optional[float] = Field(
-        default=0.0, description="Real existing bureau-reported debt total (0 if none on file).")
+        default=0.0, description="Real existing bureau-reported debt total (0 if none on file)."
+    )
 
 
 app = FastAPI(
@@ -71,6 +73,8 @@ def score(request: RepaymentCapacityRequest):
     return {
         "repayment_capacity_ratio": repayment_capacity_ratio,
         "total_debt_burden_ratio": total_debt_burden_ratio,
-        "note": ("REPAYMENT_TIER is population-relative (a real quintile of Notebook 04's full scored "
-                 "population) and is not reproducible from a single record -- see this file's docstring."),
+        "note": (
+            "REPAYMENT_TIER is population-relative (a real quintile of Notebook 04's full scored "
+            "population) and is not reproducible from a single record -- see this file's docstring."
+        ),
     }

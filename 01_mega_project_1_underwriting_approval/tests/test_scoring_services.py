@@ -4,6 +4,7 @@ pass). Each service is verified BIT-IDENTICAL against the notebook's own
 direct computation on a real sample row from that notebook's own model bundle
 -- not a mocked or fabricated expectation.
 """
+
 import sys
 from pathlib import Path
 
@@ -87,9 +88,9 @@ def test_credit_default_scoring_service_matches_direct_computation(monkeypatch):
     resp = client.post("/score", json=row, headers=AUTH)
     assert resp.status_code == 200
     got = resp.json()["probability_of_default"]
-    assert got == pytest.approx(expected, abs=1e-6), (
-        f"Service score {got} does not bit-match direct computation {expected}"
-    )
+    assert got == pytest.approx(
+        expected, abs=1e-6
+    ), f"Service score {got} does not bit-match direct computation {expected}"
     assert 0.0 <= got <= 1.0
     assert isinstance(resp.json()["top_reasons"], list)
 
@@ -152,8 +153,12 @@ def test_repayment_capacity_service_formulas(monkeypatch):
     import repayment_capacity_service as svc
 
     client = TestClient(svc.app)
-    payload = {"AMT_INCOME_TOTAL": 200000.0, "AMT_ANNUITY": 24000.0, "AMT_CREDIT": 500000.0,
-               "BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL": 100000.0}
+    payload = {
+        "AMT_INCOME_TOTAL": 200000.0,
+        "AMT_ANNUITY": 24000.0,
+        "AMT_CREDIT": 500000.0,
+        "BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL": 100000.0,
+    }
     unauth = client.post("/score", json=payload)
     assert unauth.status_code == 401
 

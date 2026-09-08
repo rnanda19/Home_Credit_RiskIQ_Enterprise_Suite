@@ -21,6 +21,7 @@ Endpoints:
     GET  /schema  -- the real feature list this model expects
     POST /score   -- {"probability": float, "champion_model": str, "top_reasons": [...]}
 """
+
 import os
 import sys
 from pathlib import Path
@@ -33,14 +34,16 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.scoring_service_common import build_scoring_app
 
 BUNDLE_PATH = Path(
-    os.environ.get("NB03_BUNDLE_PATH",
-                    str(MP4_DIR / "decision_engine" / "artifacts" / "notebook_03_champion_model.joblib"))
+    os.environ.get(
+        "NB03_BUNDLE_PATH",
+        str(MP4_DIR / "decision_engine" / "artifacts" / "notebook_03_champion_model.joblib"),
+    )
 )
 
 app = build_scoring_app(
     bundle_path=BUNDLE_PATH,
     title="Home Credit — Revolving/Credit-Card Distress Early Warning (Problem 3)",
     description="Real revolving-distress-risk scoring using Notebook 03's trained champion model on real "
-                 "credit-card utilization and payment behavioral features.",
+    "credit-card utilization and payment behavioral features.",
     score_label="probability",
 )

@@ -9,6 +9,7 @@ Built once, imported everywhere (HYPER standing rule) -- this is the module Note
 and Notebook 03 both import, instead of each notebook carrying its own inline copy of
 this logic.
 """
+
 import polars as pl
 
 
@@ -19,9 +20,8 @@ def engineer_credit_default_features(app: pl.DataFrame, bureau: pl.DataFrame):
     Returns (df, numeric_features, categorical_features) where df has columns
     ["SK_ID_CURR"] + (["TARGET"] if present in app) + numeric_features + categorical_features.
     """
-    bureau_agg = (
-        bureau.group_by("SK_ID_CURR")
-        .agg([
+    bureau_agg = bureau.group_by("SK_ID_CURR").agg(
+        [
             pl.len().alias("BUREAU_CNT_CREDITS"),
             (pl.col("CREDIT_ACTIVE") == "Active").sum().alias("BUREAU_CNT_ACTIVE"),
             pl.col("AMT_CREDIT_SUM").sum().alias("BUREAU_AMT_CREDIT_SUM_TOTAL"),
@@ -30,41 +30,80 @@ def engineer_credit_default_features(app: pl.DataFrame, bureau: pl.DataFrame):
             pl.col("CREDIT_DAY_OVERDUE").max().alias("BUREAU_MAX_DAYS_OVERDUE"),
             pl.col("DAYS_CREDIT").min().alias("BUREAU_DAYS_CREDIT_MIN"),
             pl.col("CNT_CREDIT_PROLONG").sum().alias("BUREAU_CNT_PROLONGED"),
-        ])
+        ]
     )
     bureau_agg = bureau_agg.with_columns(
-        (pl.col("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL") / (pl.col("BUREAU_AMT_CREDIT_SUM_TOTAL") + 1.0))
-        .alias("BUREAU_DEBT_TO_CREDIT_RATIO")
+        (pl.col("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL") / (pl.col("BUREAU_AMT_CREDIT_SUM_TOTAL") + 1.0)).alias(
+            "BUREAU_DEBT_TO_CREDIT_RATIO"
+        )
     )
 
     df = app.join(bureau_agg, on="SK_ID_CURR", how="left")
     bureau_feature_cols = [c for c in bureau_agg.columns if c != "SK_ID_CURR"]
     df = df.with_columns([pl.col(c).fill_null(0) for c in bureau_feature_cols])
 
-    df = df.with_columns([
-        (-pl.col("DAYS_BIRTH") / 365.25).alias("AGE_YEARS"),
-        pl.when(pl.col("DAYS_EMPLOYED") == 365243).then(None).otherwise(-pl.col("DAYS_EMPLOYED") / 365.25)
-          .alias("YEARS_EMPLOYED"),
-        (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("CREDIT_TO_INCOME_RATIO"),
-        (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("ANNUITY_TO_INCOME_RATIO"),
-        (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias("ANNUITY_TO_CREDIT_RATIO"),
-    ])
+    df = df.with_columns(
+        [
+            (-pl.col("DAYS_BIRTH") / 365.25).alias("AGE_YEARS"),
+            pl.when(pl.col("DAYS_EMPLOYED") == 365243)
+            .then(None)
+            .otherwise(-pl.col("DAYS_EMPLOYED") / 365.25)
+            .alias("YEARS_EMPLOYED"),
+            (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("CREDIT_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("ANNUITY_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias("ANNUITY_TO_CREDIT_RATIO"),
+        ]
+    )
 
-    numeric_features = [c for c in [
-        "AMT_INCOME_TOTAL", "AMT_CREDIT", "AMT_ANNUITY", "AMT_GOODS_PRICE",
-        "REGION_POPULATION_RELATIVE", "AGE_YEARS", "YEARS_EMPLOYED", "CNT_CHILDREN",
-        "CNT_FAM_MEMBERS", "CREDIT_TO_INCOME_RATIO", "ANNUITY_TO_INCOME_RATIO",
-        "ANNUITY_TO_CREDIT_RATIO", "EXT_SOURCE_1", "EXT_SOURCE_2", "EXT_SOURCE_3",
-        "OBS_30_CNT_SOCIAL_CIRCLE", "DEF_30_CNT_SOCIAL_CIRCLE", "DAYS_LAST_PHONE_CHANGE",
-        "AMT_REQ_CREDIT_BUREAU_YEAR", "REGION_RATING_CLIENT",
-    ] + bureau_feature_cols if c in df.columns]
-    categorical_features = [c for c in [
-        "NAME_CONTRACT_TYPE", "CODE_GENDER", "FLAG_OWN_CAR", "FLAG_OWN_REALTY",
-        "NAME_INCOME_TYPE", "NAME_EDUCATION_TYPE", "NAME_FAMILY_STATUS",
-        "NAME_HOUSING_TYPE", "OCCUPATION_TYPE",
-    ] if c in df.columns]
+    numeric_features = [
+        c
+        for c in [
+            "AMT_INCOME_TOTAL",
+            "AMT_CREDIT",
+            "AMT_ANNUITY",
+            "AMT_GOODS_PRICE",
+            "REGION_POPULATION_RELATIVE",
+            "AGE_YEARS",
+            "YEARS_EMPLOYED",
+            "CNT_CHILDREN",
+            "CNT_FAM_MEMBERS",
+            "CREDIT_TO_INCOME_RATIO",
+            "ANNUITY_TO_INCOME_RATIO",
+            "ANNUITY_TO_CREDIT_RATIO",
+            "EXT_SOURCE_1",
+            "EXT_SOURCE_2",
+            "EXT_SOURCE_3",
+            "OBS_30_CNT_SOCIAL_CIRCLE",
+            "DEF_30_CNT_SOCIAL_CIRCLE",
+            "DAYS_LAST_PHONE_CHANGE",
+            "AMT_REQ_CREDIT_BUREAU_YEAR",
+            "REGION_RATING_CLIENT",
+        ]
+        + bureau_feature_cols
+        if c in df.columns
+    ]
+    categorical_features = [
+        c
+        for c in [
+            "NAME_CONTRACT_TYPE",
+            "CODE_GENDER",
+            "FLAG_OWN_CAR",
+            "FLAG_OWN_REALTY",
+            "NAME_INCOME_TYPE",
+            "NAME_EDUCATION_TYPE",
+            "NAME_FAMILY_STATUS",
+            "NAME_HOUSING_TYPE",
+            "OCCUPATION_TYPE",
+        ]
+        if c in df.columns
+    ]
 
-    keep_cols = ["SK_ID_CURR"] + (["TARGET"] if "TARGET" in df.columns else []) + numeric_features + categorical_features
+    keep_cols = (
+        ["SK_ID_CURR"]
+        + (["TARGET"] if "TARGET" in df.columns else [])
+        + numeric_features
+        + categorical_features
+    )
     return df.select(keep_cols), numeric_features, categorical_features
 
 
@@ -124,14 +163,15 @@ def engineer_credit_default_features_v2(
     engineer_credit_default_features_v2(...)`) is a drop-in replacement for v1.
     """
     from features.applicant_credit_history_features import (
-        engineer_bureau_history_features, engineer_prev_loan_servicing_features_loo,
+        engineer_bureau_history_features,
+        engineer_prev_loan_servicing_features_loo,
         engineer_previous_application_features,
     )
 
     bureau_agg, bureau_feature_cols = engineer_bureau_history_features(bureau, bureau_balance)
     prevapp_agg, prevapp_feature_cols = engineer_previous_application_features(previous_application)
-    servicing_totals_df, _servicing_own_df, _servicing_feature_names = engineer_prev_loan_servicing_features_loo(
-        pos_cash, installments, credit_card
+    servicing_totals_df, _servicing_own_df, _servicing_feature_names = (
+        engineer_prev_loan_servicing_features_loo(pos_cash, installments, credit_card)
     )
 
     df = app.join(bureau_agg, on="SK_ID_CURR", how="left")
@@ -146,48 +186,102 @@ def engineer_credit_default_features_v2(
     # derives from its LOO-subtracted values -- here from the TOTAL-only block,
     # which is the correct, leakage-safe choice at this notebook's SK_ID_CURR
     # target granularity (see docstring above).
-    df = df.with_columns([
-        pl.col("POS_N_TOT").alias("POS_CNT_RECORDS"),
-        pl.col("POS_N_COMPLETED_TOT").alias("POS_CNT_COMPLETED"),
-        (pl.col("POS_SUM_SK_DPD_DEF_TOT") / (pl.col("POS_N_TOT") + 1.0)).alias("POS_MEAN_SK_DPD_DEF"),
-        pl.col("INSTAL_N_TOT").alias("INSTAL_CNT_PAYMENTS"),
-        (pl.col("INSTAL_SUM_PAY_RATIO_TOT") / (pl.col("INSTAL_N_TOT") + 1.0)).alias("INSTAL_MEAN_PAYMENT_RATIO"),
-        (pl.col("INSTAL_N_LATE_TOT") / (pl.col("INSTAL_N_TOT") + 1.0)).alias("INSTAL_PCT_LATE"),
-        (pl.col("INSTAL_SUM_DAYS_LATE_TOT") / (pl.col("INSTAL_N_LATE_TOT") + 1.0)).alias("INSTAL_MEAN_DAYS_LATE_WHEN_LATE"),
-        pl.col("CC_N_TOT").alias("CC_CNT_RECORDS"),
-        (pl.col("CC_SUM_UTILIZATION_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias("CC_MEAN_UTILIZATION"),
-        (pl.col("CC_SUM_BALANCE_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias("CC_MEAN_BALANCE"),
-        pl.col("CC_SUM_SK_DPD_TOT").alias("CC_SUM_SK_DPD"),
-    ])
+    df = df.with_columns(
+        [
+            pl.col("POS_N_TOT").alias("POS_CNT_RECORDS"),
+            pl.col("POS_N_COMPLETED_TOT").alias("POS_CNT_COMPLETED"),
+            (pl.col("POS_SUM_SK_DPD_DEF_TOT") / (pl.col("POS_N_TOT") + 1.0)).alias("POS_MEAN_SK_DPD_DEF"),
+            pl.col("INSTAL_N_TOT").alias("INSTAL_CNT_PAYMENTS"),
+            (pl.col("INSTAL_SUM_PAY_RATIO_TOT") / (pl.col("INSTAL_N_TOT") + 1.0)).alias(
+                "INSTAL_MEAN_PAYMENT_RATIO"
+            ),
+            (pl.col("INSTAL_N_LATE_TOT") / (pl.col("INSTAL_N_TOT") + 1.0)).alias("INSTAL_PCT_LATE"),
+            (pl.col("INSTAL_SUM_DAYS_LATE_TOT") / (pl.col("INSTAL_N_LATE_TOT") + 1.0)).alias(
+                "INSTAL_MEAN_DAYS_LATE_WHEN_LATE"
+            ),
+            pl.col("CC_N_TOT").alias("CC_CNT_RECORDS"),
+            (pl.col("CC_SUM_UTILIZATION_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias("CC_MEAN_UTILIZATION"),
+            (pl.col("CC_SUM_BALANCE_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias("CC_MEAN_BALANCE"),
+            pl.col("CC_SUM_SK_DPD_TOT").alias("CC_SUM_SK_DPD"),
+        ]
+    )
     servicing_derived_cols = [
-        "POS_CNT_RECORDS", "POS_CNT_COMPLETED", "POS_MEAN_SK_DPD_DEF",
-        "INSTAL_CNT_PAYMENTS", "INSTAL_MEAN_PAYMENT_RATIO", "INSTAL_PCT_LATE", "INSTAL_MEAN_DAYS_LATE_WHEN_LATE",
-        "CC_CNT_RECORDS", "CC_MEAN_UTILIZATION", "CC_MEAN_BALANCE", "CC_SUM_SK_DPD",
+        "POS_CNT_RECORDS",
+        "POS_CNT_COMPLETED",
+        "POS_MEAN_SK_DPD_DEF",
+        "INSTAL_CNT_PAYMENTS",
+        "INSTAL_MEAN_PAYMENT_RATIO",
+        "INSTAL_PCT_LATE",
+        "INSTAL_MEAN_DAYS_LATE_WHEN_LATE",
+        "CC_CNT_RECORDS",
+        "CC_MEAN_UTILIZATION",
+        "CC_MEAN_BALANCE",
+        "CC_SUM_SK_DPD",
     ]
     df = df.with_columns([pl.col(c).fill_null(0) for c in servicing_derived_cols])
 
-    df = df.with_columns([
-        (-pl.col("DAYS_BIRTH") / 365.25).alias("AGE_YEARS"),
-        pl.when(pl.col("DAYS_EMPLOYED") == 365243).then(None).otherwise(-pl.col("DAYS_EMPLOYED") / 365.25)
-          .alias("YEARS_EMPLOYED"),
-        (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("CREDIT_TO_INCOME_RATIO"),
-        (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("ANNUITY_TO_INCOME_RATIO"),
-        (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias("ANNUITY_TO_CREDIT_RATIO"),
-    ])
+    df = df.with_columns(
+        [
+            (-pl.col("DAYS_BIRTH") / 365.25).alias("AGE_YEARS"),
+            pl.when(pl.col("DAYS_EMPLOYED") == 365243)
+            .then(None)
+            .otherwise(-pl.col("DAYS_EMPLOYED") / 365.25)
+            .alias("YEARS_EMPLOYED"),
+            (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("CREDIT_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("ANNUITY_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias("ANNUITY_TO_CREDIT_RATIO"),
+        ]
+    )
 
-    numeric_features = [c for c in [
-        "AMT_INCOME_TOTAL", "AMT_CREDIT", "AMT_ANNUITY", "AMT_GOODS_PRICE",
-        "REGION_POPULATION_RELATIVE", "AGE_YEARS", "YEARS_EMPLOYED", "CNT_CHILDREN",
-        "CNT_FAM_MEMBERS", "CREDIT_TO_INCOME_RATIO", "ANNUITY_TO_INCOME_RATIO",
-        "ANNUITY_TO_CREDIT_RATIO", "EXT_SOURCE_1", "EXT_SOURCE_2", "EXT_SOURCE_3",
-        "OBS_30_CNT_SOCIAL_CIRCLE", "DEF_30_CNT_SOCIAL_CIRCLE", "DAYS_LAST_PHONE_CHANGE",
-        "AMT_REQ_CREDIT_BUREAU_YEAR", "REGION_RATING_CLIENT",
-    ] + bureau_feature_cols + prevapp_feature_cols + servicing_derived_cols if c in df.columns]
-    categorical_features = [c for c in [
-        "NAME_CONTRACT_TYPE", "CODE_GENDER", "FLAG_OWN_CAR", "FLAG_OWN_REALTY",
-        "NAME_INCOME_TYPE", "NAME_EDUCATION_TYPE", "NAME_FAMILY_STATUS",
-        "NAME_HOUSING_TYPE", "OCCUPATION_TYPE",
-    ] if c in df.columns]
+    numeric_features = [
+        c
+        for c in [
+            "AMT_INCOME_TOTAL",
+            "AMT_CREDIT",
+            "AMT_ANNUITY",
+            "AMT_GOODS_PRICE",
+            "REGION_POPULATION_RELATIVE",
+            "AGE_YEARS",
+            "YEARS_EMPLOYED",
+            "CNT_CHILDREN",
+            "CNT_FAM_MEMBERS",
+            "CREDIT_TO_INCOME_RATIO",
+            "ANNUITY_TO_INCOME_RATIO",
+            "ANNUITY_TO_CREDIT_RATIO",
+            "EXT_SOURCE_1",
+            "EXT_SOURCE_2",
+            "EXT_SOURCE_3",
+            "OBS_30_CNT_SOCIAL_CIRCLE",
+            "DEF_30_CNT_SOCIAL_CIRCLE",
+            "DAYS_LAST_PHONE_CHANGE",
+            "AMT_REQ_CREDIT_BUREAU_YEAR",
+            "REGION_RATING_CLIENT",
+        ]
+        + bureau_feature_cols
+        + prevapp_feature_cols
+        + servicing_derived_cols
+        if c in df.columns
+    ]
+    categorical_features = [
+        c
+        for c in [
+            "NAME_CONTRACT_TYPE",
+            "CODE_GENDER",
+            "FLAG_OWN_CAR",
+            "FLAG_OWN_REALTY",
+            "NAME_INCOME_TYPE",
+            "NAME_EDUCATION_TYPE",
+            "NAME_FAMILY_STATUS",
+            "NAME_HOUSING_TYPE",
+            "OCCUPATION_TYPE",
+        ]
+        if c in df.columns
+    ]
 
-    keep_cols = ["SK_ID_CURR"] + (["TARGET"] if "TARGET" in df.columns else []) + numeric_features + categorical_features
+    keep_cols = (
+        ["SK_ID_CURR"]
+        + (["TARGET"] if "TARGET" in df.columns else [])
+        + numeric_features
+        + categorical_features
+    )
     return df.select(keep_cols), numeric_features, categorical_features

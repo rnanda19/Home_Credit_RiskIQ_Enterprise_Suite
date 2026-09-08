@@ -16,6 +16,7 @@ they are not exercised for real in this sandbox, per the standing
 was verified separately, against hand-built bundles, in
 src/tests/test_serving_common.py).
 """
+
 import sys
 from pathlib import Path
 
@@ -85,29 +86,36 @@ def _classifier_service_case(monkeypatch, env_var, bundle_path, module_name, res
     resp = client.post("/score", json=row, headers=AUTH)
     assert resp.status_code == 200
     got = resp.json()[response_key]
-    assert got == pytest.approx(expected, abs=1e-6), (
-        f"Service score {got} does not bit-match direct computation {expected}"
-    )
+    assert got == pytest.approx(
+        expected, abs=1e-6
+    ), f"Service score {got} does not bit-match direct computation {expected}"
     assert 0.0 <= got <= 1.0
     assert isinstance(resp.json()["top_reasons"], list)
 
 
 @skip_no_nb01
 def test_early_delinquency_scoring_service_matches_direct_computation(monkeypatch):
-    _classifier_service_case(monkeypatch, "NB01_BUNDLE_PATH", NB01_BUNDLE_PATH,
-                              "early_delinquency_scoring_service", "probability")
+    _classifier_service_case(
+        monkeypatch, "NB01_BUNDLE_PATH", NB01_BUNDLE_PATH, "early_delinquency_scoring_service", "probability"
+    )
 
 
 @skip_no_nb03
 def test_revolving_distress_scoring_service_matches_direct_computation(monkeypatch):
-    _classifier_service_case(monkeypatch, "NB03_BUNDLE_PATH", NB03_BUNDLE_PATH,
-                              "revolving_distress_scoring_service", "probability")
+    _classifier_service_case(
+        monkeypatch, "NB03_BUNDLE_PATH", NB03_BUNDLE_PATH, "revolving_distress_scoring_service", "probability"
+    )
 
 
 @skip_no_nb04
 def test_pos_cash_trajectory_scoring_service_matches_direct_computation(monkeypatch):
-    _classifier_service_case(monkeypatch, "NB04_BUNDLE_PATH", NB04_BUNDLE_PATH,
-                              "pos_cash_trajectory_scoring_service", "probability")
+    _classifier_service_case(
+        monkeypatch,
+        "NB04_BUNDLE_PATH",
+        NB04_BUNDLE_PATH,
+        "pos_cash_trajectory_scoring_service",
+        "probability",
+    )
 
 
 @skip_no_nb02

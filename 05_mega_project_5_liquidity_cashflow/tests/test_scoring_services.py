@@ -21,6 +21,7 @@ SKIPS CLEANLY (does not fail CI) until Notebook 04 has been re-run with
 the segment-model persistence code -- as of this hardening pass, it has
 not been, so no bundle/CSV exist yet.
 """
+
 import sys
 from pathlib import Path
 
@@ -83,7 +84,9 @@ def test_prepayment_segment_service_matches_notebook_assignment(monkeypatch):
     seg_df = pd.read_csv(_find_nb04_csv())
     real_with_segment = seg_df[seg_df["PREPAYMENT_SEGMENT"] != "No Payment History"]
     if real_with_segment.empty:
-        pytest.skip("No real applicant with an assigned prepayment segment found in the notebook's own output")
+        pytest.skip(
+            "No real applicant with an assigned prepayment segment found in the notebook's own output"
+        )
     real_row = real_with_segment.iloc[0]
     expected_segment = real_row["PREPAYMENT_SEGMENT"]
     payload = {f: float(real_row[f]) for f in feature_names}

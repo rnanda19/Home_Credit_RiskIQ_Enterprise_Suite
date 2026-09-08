@@ -18,6 +18,7 @@ Endpoints:
                      UPSTREAM_PD_FROM_NB01 only if Notebook 02 was run with it)
     POST /score   -- {"approval_probability": float, "champion_model": str}
 """
+
 import os
 import sys
 from pathlib import Path
@@ -30,7 +31,10 @@ sys.path.insert(0, str(SUITE_ROOT / "src"))
 from serving.scoring_service_common import build_scoring_app
 
 BUNDLE_PATH = Path(
-    os.environ.get("NB02_BUNDLE_PATH", str(MP1_DIR / "decision_engine" / "artifacts" / "notebook_02_champion_model.joblib"))
+    os.environ.get(
+        "NB02_BUNDLE_PATH",
+        str(MP1_DIR / "decision_engine" / "artifacts" / "notebook_02_champion_model.joblib"),
+    )
 )
 
 app = build_scoring_app(

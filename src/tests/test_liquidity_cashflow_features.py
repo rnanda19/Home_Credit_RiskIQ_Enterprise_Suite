@@ -8,6 +8,7 @@ against the real function's actual output -- no mocked or fabricated
 expectation, consistent with this suite's standing verification policy.
 No business data, no notebook artifacts, no trained model required.
 """
+
 import sys
 from pathlib import Path
 
@@ -34,14 +35,16 @@ def _installments() -> pl.DataFrame:
     - SK_ID_CURR 200, installment C: scheduled day -20, $500, never paid
       (null DAYS_ENTRY_PAYMENT / AMT_PAYMENT).
     """
-    return pl.DataFrame({
-        "SK_ID_CURR": [100, 100, 200],
-        "SK_ID_PREV": [1, 1, 2],
-        "DAYS_INSTALMENT": [-30, -10, -20],
-        "DAYS_ENTRY_PAYMENT": [-32, -5, None],
-        "AMT_INSTALMENT": [1000.0, 2000.0, 500.0],
-        "AMT_PAYMENT": [1000.0, 1500.0, None],
-    })
+    return pl.DataFrame(
+        {
+            "SK_ID_CURR": [100, 100, 200],
+            "SK_ID_PREV": [1, 1, 2],
+            "DAYS_INSTALMENT": [-30, -10, -20],
+            "DAYS_ENTRY_PAYMENT": [-32, -5, None],
+            "AMT_INSTALMENT": [1000.0, 2000.0, 500.0],
+            "AMT_PAYMENT": [1000.0, 1500.0, None],
+        }
+    )
 
 
 def test_engineer_applicant_cash_reliability_features_applicant_100():
@@ -60,8 +63,12 @@ def test_engineer_applicant_cash_reliability_features_applicant_100():
     expected_weighted_late = (-2 * 1000.0 + 5 * 2000.0) / 3000.0
     assert row["DOLLAR_WEIGHTED_DAYS_LATE"] == pytest.approx(expected_weighted_late)
     assert set(cols) == {
-        "N_INSTALLMENTS", "TOTAL_SCHEDULED_CASH_AMT", "TOTAL_COLLECTED_CASH_AMT",
-        "DOLLAR_COLLECTION_RATE", "OUTSTANDING_SHORTFALL_AMT", "DOLLAR_WEIGHTED_DAYS_LATE",
+        "N_INSTALLMENTS",
+        "TOTAL_SCHEDULED_CASH_AMT",
+        "TOTAL_COLLECTED_CASH_AMT",
+        "DOLLAR_COLLECTION_RATE",
+        "OUTSTANDING_SHORTFALL_AMT",
+        "DOLLAR_WEIGHTED_DAYS_LATE",
     }
 
 
@@ -97,10 +104,18 @@ def test_reconstruct_portfolio_cashflow_periods_all_three_land_in_same_period():
 def test_reconstruct_portfolio_cashflow_periods_separates_distinct_periods():
     # A 4th installment 90 real days earlier than the cluster above must land
     # in a genuinely different period bucket, not get merged in.
-    installments = _installments().vstack(pl.DataFrame({
-        "SK_ID_CURR": [300], "SK_ID_PREV": [3], "DAYS_INSTALMENT": [-120],
-        "DAYS_ENTRY_PAYMENT": [-120], "AMT_INSTALMENT": [700.0], "AMT_PAYMENT": [700.0],
-    }))
+    installments = _installments().vstack(
+        pl.DataFrame(
+            {
+                "SK_ID_CURR": [300],
+                "SK_ID_PREV": [3],
+                "DAYS_INSTALMENT": [-120],
+                "DAYS_ENTRY_PAYMENT": [-120],
+                "AMT_INSTALMENT": [700.0],
+                "AMT_PAYMENT": [700.0],
+            }
+        )
+    )
     periods = reconstruct_portfolio_cashflow_periods(installments, period_days=30)
     assert periods.height == 2
     assert periods.sort("_PERIOD_ID")["N_INSTALLMENTS_SCHEDULED"].to_list() == [1, 3]
@@ -109,11 +124,13 @@ def test_reconstruct_portfolio_cashflow_periods_separates_distinct_periods():
 def test_attach_repayment_capacity_reuses_mp1_formula_exactly():
     installments = _installments()
     feat, _ = engineer_applicant_cash_reliability_features(installments)
-    application = pl.DataFrame({
-        "SK_ID_CURR": [100, 200],
-        "AMT_INCOME_TOTAL": [180000.0, 90000.0],
-        "AMT_ANNUITY": [24000.0, None],
-    })
+    application = pl.DataFrame(
+        {
+            "SK_ID_CURR": [100, 200],
+            "AMT_INCOME_TOTAL": [180000.0, 90000.0],
+            "AMT_ANNUITY": [24000.0, None],
+        }
+    )
     joined = attach_repayment_capacity(feat, application)
     row100 = joined.filter(pl.col("SK_ID_CURR") == 100).to_dicts()[0]
     row200 = joined.filter(pl.col("SK_ID_CURR") == 200).to_dicts()[0]
@@ -129,30 +146,39 @@ def _hand_built_periods() -> pl.DataFrame:
     hand: real mean rate = (0.9+0.95+0.85+0.92+0.88)/5 = 0.90 exactly; the 3
     most recent periods' real SCHEDULED_CASH_AMT = [1000, 2000, 3000], mean
     = 2000.0 exactly."""
-    return pl.DataFrame({
-        "_PERIOD_ID": [0, 1, 2, 3, 4],
-        "PERIOD_START_DAY": [0, 30, 60, 90, 120],
-        "N_INSTALLMENTS_SCHEDULED": [5, 5, 5, 5, 5],
-        "N_APPLICANTS_SCHEDULED": [5, 5, 5, 5, 5],
-        "SCHEDULED_CASH_AMT": [1000.0, 1000.0, 1000.0, 2000.0, 3000.0],
-        "COLLECTED_CASH_AMT": [900.0, 950.0, 850.0, 1840.0, 2640.0],
-        "DOLLAR_COLLECTION_RATE": [0.9, 0.95, 0.85, 0.92, 0.88],
-    })
+    return pl.DataFrame(
+        {
+            "_PERIOD_ID": [0, 1, 2, 3, 4],
+            "PERIOD_START_DAY": [0, 30, 60, 90, 120],
+            "N_INSTALLMENTS_SCHEDULED": [5, 5, 5, 5, 5],
+            "N_APPLICANTS_SCHEDULED": [5, 5, 5, 5, 5],
+            "SCHEDULED_CASH_AMT": [1000.0, 1000.0, 1000.0, 2000.0, 3000.0],
+            "COLLECTED_CASH_AMT": [900.0, 950.0, 850.0, 1840.0, 2640.0],
+            "DOLLAR_COLLECTION_RATE": [0.9, 0.95, 0.85, 0.92, 0.88],
+        }
+    )
 
 
 def test_bootstrap_cash_flow_at_risk_raises_on_too_few_periods():
-    too_few = pl.DataFrame({
-        "_PERIOD_ID": [0, 1], "SCHEDULED_CASH_AMT": [1000.0, 1000.0],
-        "DOLLAR_COLLECTION_RATE": [0.9, 0.95],
-    })
+    too_few = pl.DataFrame(
+        {
+            "_PERIOD_ID": [0, 1],
+            "SCHEDULED_CASH_AMT": [1000.0, 1000.0],
+            "DOLLAR_COLLECTION_RATE": [0.9, 0.95],
+        }
+    )
     with pytest.raises(ValueError):
         bootstrap_cash_flow_at_risk(too_few, horizons_days=[30])
 
 
 def test_bootstrap_cash_flow_at_risk_matches_hand_computed_closed_form():
     result = bootstrap_cash_flow_at_risk(
-        _hand_built_periods(), horizons_days=[30, 60], period_days=30,
-        n_anchor_periods=3, n_draws=20_000, seed=42,
+        _hand_built_periods(),
+        horizons_days=[30, 60],
+        period_days=30,
+        n_anchor_periods=3,
+        n_draws=20_000,
+        seed=42,
     )
     assert result["real_rates_n"] == 5
     # Hand-computed: mean of the 3 most recent real SCHEDULED_CASH_AMT values

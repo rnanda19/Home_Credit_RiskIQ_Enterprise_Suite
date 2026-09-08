@@ -21,6 +21,7 @@ Endpoints:
     POST /score   -- {"credit_score": float (300-900), "probability_of_default": float,
                        "scaling_assumptions": {...}, "champion_model": str}
 """
+
 import os
 import sys
 from pathlib import Path
@@ -38,7 +39,10 @@ from serving.auth_common import require_api_key
 from serving.explainability_common import top_reason_codes
 
 BUNDLE_PATH = Path(
-    os.environ.get("NB01_BUNDLE_PATH", str(MP1_DIR / "decision_engine" / "artifacts" / "notebook_01_champion_model.joblib"))
+    os.environ.get(
+        "NB01_BUNDLE_PATH",
+        str(MP1_DIR / "decision_engine" / "artifacts" / "notebook_01_champion_model.joblib"),
+    )
 )
 
 # Real, disclosed ASSUMPTION -- identical constants to pipeline_nb03.py Section 6.
@@ -48,7 +52,9 @@ PDO = 20.0
 FACTOR = PDO / np.log(2)
 OFFSET = BASE_SCORE - FACTOR * np.log(BASE_ODDS)
 SCALING_ASSUMPTIONS = {
-    "base_score": BASE_SCORE, "base_odds": BASE_ODDS, "pdo": PDO,
+    "base_score": BASE_SCORE,
+    "base_odds": BASE_ODDS,
+    "pdo": PDO,
     "source": "standard credit-scorecard convention (FICO-style), not derived from this data",
 }
 
@@ -67,14 +73,20 @@ app = FastAPI(
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "upstream_champion_model": _champion_name,
-            "scaling_assumptions": SCALING_ASSUMPTIONS}
+    return {
+        "status": "ok",
+        "upstream_champion_model": _champion_name,
+        "scaling_assumptions": SCALING_ASSUMPTIONS,
+    }
 
 
 @app.get("/schema", dependencies=[Depends(require_api_key)])
 def schema():
-    return {"numeric_features": _numeric_features, "categorical_features": _categorical_features,
-            "upstream_champion_model": _champion_name}
+    return {
+        "numeric_features": _numeric_features,
+        "categorical_features": _categorical_features,
+        "upstream_champion_model": _champion_name,
+    }
 
 
 @app.post("/score", dependencies=[Depends(require_api_key)])

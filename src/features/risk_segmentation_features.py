@@ -51,6 +51,7 @@ frequency and share of drawings) AND applies a genuinely different MECHANISM
 real TARGET) -- the same "richer features AND a different mechanism"
 argument already established for Problem 2's bureau function above.
 """
+
 import polars as pl
 
 # Ordinal severity for real bureau_balance STATUS codes (Home Credit's own coding):
@@ -62,7 +63,9 @@ _STATUS_SEVERITY = {"C": 0, "X": 0, "0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5":
 
 
 def engineer_bureau_behavior_features(
-    app_ids: pl.DataFrame, bureau: pl.DataFrame, bureau_balance: pl.DataFrame,
+    app_ids: pl.DataFrame,
+    bureau: pl.DataFrame,
+    bureau_balance: pl.DataFrame,
 ) -> tuple[pl.DataFrame, list[str]]:
     """Real, vectorized (WARP) per-SK_ID_CURR credit-bureau BEHAVIORAL feature
     frame, joined onto `app_ids` (a DataFrame with at least an SK_ID_CURR column
@@ -83,19 +86,20 @@ def engineer_bureau_behavior_features(
     bb_severity = bureau_balance.with_columns(
         pl.col("STATUS").cast(pl.Utf8).replace_strict(_STATUS_SEVERITY, default=0).alias("_SEVERITY")
     )
-    bb_agg = (
-        bb_severity.group_by("SK_ID_BUREAU")
-        .agg([
+    bb_agg = bb_severity.group_by("SK_ID_BUREAU").agg(
+        [
             pl.len().alias("_BB_N_MONTHS"),
             pl.col("_SEVERITY").max().alias("_BB_WORST_SEVERITY"),
             (pl.col("_SEVERITY") > 0).sum().alias("_BB_N_DPD_MONTHS"),
-        ])
+        ]
     )
-    bureau_with_bb = bureau.join(bb_agg, on="SK_ID_BUREAU", how="left").with_columns([
-        pl.col("_BB_N_MONTHS").fill_null(0),
-        pl.col("_BB_WORST_SEVERITY").fill_null(0),
-        pl.col("_BB_N_DPD_MONTHS").fill_null(0),
-    ])
+    bureau_with_bb = bureau.join(bb_agg, on="SK_ID_BUREAU", how="left").with_columns(
+        [
+            pl.col("_BB_N_MONTHS").fill_null(0),
+            pl.col("_BB_WORST_SEVERITY").fill_null(0),
+            pl.col("_BB_N_DPD_MONTHS").fill_null(0),
+        ]
+    )
 
     # Real credit-type mix: share of each applicant's real bureau credits
     # belonging to the most common real CREDIT_TYPE categories in THIS run's
@@ -103,8 +107,11 @@ def engineer_bureau_behavior_features(
     # category list, so this stays correct on the fixture and on real data
     # even if category spellings/frequencies differ).
     top_types = (
-        bureau.group_by("CREDIT_TYPE").agg(pl.len().alias("_n")).sort("_n", descending=True)
-        .head(4)["CREDIT_TYPE"].to_list()
+        bureau.group_by("CREDIT_TYPE")
+        .agg(pl.len().alias("_n"))
+        .sort("_n", descending=True)
+        .head(4)["CREDIT_TYPE"]
+        .to_list()
     )
     type_share_exprs = [
         (pl.col("CREDIT_TYPE") == t).mean().alias(f"PCT_TYPE_{i}") for i, t in enumerate(top_types)
@@ -112,25 +119,30 @@ def engineer_bureau_behavior_features(
 
     bureau_agg = (
         bureau_with_bb.group_by("SK_ID_CURR")
-        .agg([
-            pl.len().alias("N_BUREAU_CREDITS"),
-            (pl.col("CREDIT_ACTIVE") == "Active").mean().alias("PCT_ACTIVE_CREDITS"),
-            (pl.col("AMT_CREDIT_SUM_OVERDUE") > 0).mean().alias("PCT_CREDITS_WITH_OVERDUE"),
-            pl.col("AMT_CREDIT_SUM_OVERDUE").sum().alias("TOTAL_AMT_OVERDUE"),
-            pl.col("CREDIT_DAY_OVERDUE").max().alias("MAX_DAYS_OVERDUE"),
-            pl.col("CNT_CREDIT_PROLONG").sum().alias("CNT_CREDIT_PROLONGED_TOTAL"),
-            pl.col("AMT_CREDIT_SUM").sum().alias("_AMT_CREDIT_SUM_TOTAL"),
-            pl.col("AMT_CREDIT_SUM_DEBT").sum().alias("_AMT_CREDIT_SUM_DEBT_TOTAL"),
-            pl.col("AMT_CREDIT_SUM_LIMIT").sum().alias("AMT_CREDIT_SUM_LIMIT_TOTAL"),
-            (pl.col("DAYS_CREDIT").abs() / 365.25).mean().alias("MEAN_YEARS_SINCE_CREDIT_OPENED"),
-            pl.col("CREDIT_TYPE").n_unique().alias("N_DISTINCT_CREDIT_TYPES"),
-            pl.col("_BB_WORST_SEVERITY").max().alias("WORST_BUREAU_BALANCE_STATUS"),
-            (pl.col("_BB_N_DPD_MONTHS").sum() / (pl.col("_BB_N_MONTHS").sum() + 1.0)).alias("PCT_DPD_MONTHS"),
-            *type_share_exprs,
-        ])
+        .agg(
+            [
+                pl.len().alias("N_BUREAU_CREDITS"),
+                (pl.col("CREDIT_ACTIVE") == "Active").mean().alias("PCT_ACTIVE_CREDITS"),
+                (pl.col("AMT_CREDIT_SUM_OVERDUE") > 0).mean().alias("PCT_CREDITS_WITH_OVERDUE"),
+                pl.col("AMT_CREDIT_SUM_OVERDUE").sum().alias("TOTAL_AMT_OVERDUE"),
+                pl.col("CREDIT_DAY_OVERDUE").max().alias("MAX_DAYS_OVERDUE"),
+                pl.col("CNT_CREDIT_PROLONG").sum().alias("CNT_CREDIT_PROLONGED_TOTAL"),
+                pl.col("AMT_CREDIT_SUM").sum().alias("_AMT_CREDIT_SUM_TOTAL"),
+                pl.col("AMT_CREDIT_SUM_DEBT").sum().alias("_AMT_CREDIT_SUM_DEBT_TOTAL"),
+                pl.col("AMT_CREDIT_SUM_LIMIT").sum().alias("AMT_CREDIT_SUM_LIMIT_TOTAL"),
+                (pl.col("DAYS_CREDIT").abs() / 365.25).mean().alias("MEAN_YEARS_SINCE_CREDIT_OPENED"),
+                pl.col("CREDIT_TYPE").n_unique().alias("N_DISTINCT_CREDIT_TYPES"),
+                pl.col("_BB_WORST_SEVERITY").max().alias("WORST_BUREAU_BALANCE_STATUS"),
+                (pl.col("_BB_N_DPD_MONTHS").sum() / (pl.col("_BB_N_MONTHS").sum() + 1.0)).alias(
+                    "PCT_DPD_MONTHS"
+                ),
+                *type_share_exprs,
+            ]
+        )
         .with_columns(
-            (pl.col("_AMT_CREDIT_SUM_DEBT_TOTAL") / (pl.col("_AMT_CREDIT_SUM_TOTAL") + 1.0))
-            .alias("DEBT_TO_CREDIT_RATIO")
+            (pl.col("_AMT_CREDIT_SUM_DEBT_TOTAL") / (pl.col("_AMT_CREDIT_SUM_TOTAL") + 1.0)).alias(
+                "DEBT_TO_CREDIT_RATIO"
+            )
         )
         .drop(["_AMT_CREDIT_SUM_TOTAL", "_AMT_CREDIT_SUM_DEBT_TOTAL"])
     )
@@ -152,14 +164,22 @@ def engineer_bureau_behavior_features(
 # instead of finding the real population's genuine behavioral groups. See
 # `engineer_repayment_behavior_features()`'s WINSORIZATION DISCLOSURE below.
 UNBOUNDED_REPAYMENT_FEATURES = [
-    "N_INSTALMENTS", "MEAN_DAYS_LATE", "MAX_DAYS_LATE", "MEAN_PAYMENT_RATIO",
-    "N_DISTINCT_PREV_LOANS", "N_POS_CASH_MONTHS", "MEAN_SK_DPD", "MAX_SK_DPD",
+    "N_INSTALMENTS",
+    "MEAN_DAYS_LATE",
+    "MAX_DAYS_LATE",
+    "MEAN_PAYMENT_RATIO",
+    "N_DISTINCT_PREV_LOANS",
+    "N_POS_CASH_MONTHS",
+    "MEAN_SK_DPD",
+    "MAX_SK_DPD",
     "MEAN_SK_DPD_DEF",
 ]
 
 
 def engineer_repayment_behavior_features(
-    app_ids: pl.DataFrame, installments: pl.DataFrame, pos_cash: pl.DataFrame,
+    app_ids: pl.DataFrame,
+    installments: pl.DataFrame,
+    pos_cash: pl.DataFrame,
     winsorize_percentile: float = 0.01,
 ) -> tuple[pl.DataFrame, list[str], dict]:
     """Real, vectorized (WARP) per-SK_ID_CURR REPAYMENT-DISCIPLINE behavioral
@@ -228,41 +248,48 @@ def engineer_repayment_behavior_features(
     # DEBT_TO_CREDIT_RATIO above.
     inst_valid = installments.filter(
         pl.col("DAYS_ENTRY_PAYMENT").is_not_null() & pl.col("AMT_PAYMENT").is_not_null()
-    ).with_columns([
-        (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias("_DAYS_LATE"),
-        (pl.col("AMT_PAYMENT") / (pl.col("AMT_INSTALMENT") + 1.0)).alias("_PAYMENT_RATIO"),
-    ])
+    ).with_columns(
+        [
+            (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias("_DAYS_LATE"),
+            (pl.col("AMT_PAYMENT") / (pl.col("AMT_INSTALMENT") + 1.0)).alias("_PAYMENT_RATIO"),
+        ]
+    )
     inst_agg = (
         installments.group_by("SK_ID_CURR")
         .agg(pl.len().alias("N_INSTALMENTS"))
         .join(
-            inst_valid.group_by("SK_ID_CURR").agg([
-                (pl.col("_DAYS_LATE") > 0).mean().alias("PCT_INSTALMENTS_LATE"),
-                pl.col("_DAYS_LATE").mean().alias("MEAN_DAYS_LATE"),
-                pl.col("_DAYS_LATE").max().alias("MAX_DAYS_LATE"),
-                pl.col("_PAYMENT_RATIO").mean().alias("MEAN_PAYMENT_RATIO"),
-                (pl.col("_PAYMENT_RATIO") < 0.99).mean().alias("PCT_INSTALMENTS_UNDERPAID"),
-            ]),
-            on="SK_ID_CURR", how="left",
+            inst_valid.group_by("SK_ID_CURR").agg(
+                [
+                    (pl.col("_DAYS_LATE") > 0).mean().alias("PCT_INSTALMENTS_LATE"),
+                    pl.col("_DAYS_LATE").mean().alias("MEAN_DAYS_LATE"),
+                    pl.col("_DAYS_LATE").max().alias("MAX_DAYS_LATE"),
+                    pl.col("_PAYMENT_RATIO").mean().alias("MEAN_PAYMENT_RATIO"),
+                    (pl.col("_PAYMENT_RATIO") < 0.99).mean().alias("PCT_INSTALMENTS_UNDERPAID"),
+                ]
+            ),
+            on="SK_ID_CURR",
+            how="left",
         )
         .join(
-            installments.group_by("SK_ID_CURR").agg(pl.col("SK_ID_PREV").n_unique().alias("N_DISTINCT_PREV_LOANS")),
-            on="SK_ID_CURR", how="left",
+            installments.group_by("SK_ID_CURR").agg(
+                pl.col("SK_ID_PREV").n_unique().alias("N_DISTINCT_PREV_LOANS")
+            ),
+            on="SK_ID_CURR",
+            how="left",
         )
     )
 
     # --- Real POS_CASH_balance.csv: real month-by-month days-past-due tracking
     # plus real contract-status mix (share of real months Active/Completed).
-    pos_agg = (
-        pos_cash.group_by("SK_ID_CURR")
-        .agg([
+    pos_agg = pos_cash.group_by("SK_ID_CURR").agg(
+        [
             pl.len().alias("N_POS_CASH_MONTHS"),
             pl.col("SK_DPD").mean().alias("MEAN_SK_DPD"),
             pl.col("SK_DPD").max().alias("MAX_SK_DPD"),
             pl.col("SK_DPD_DEF").mean().alias("MEAN_SK_DPD_DEF"),
             (pl.col("NAME_CONTRACT_STATUS") == "Active").mean().alias("PCT_MONTHS_ACTIVE"),
             (pl.col("NAME_CONTRACT_STATUS") == "Completed").mean().alias("PCT_MONTHS_COMPLETED"),
-        ])
+        ]
     )
 
     combined = inst_agg.join(pos_agg, on="SK_ID_CURR", how="left")
@@ -283,7 +310,8 @@ def engineer_repayment_behavior_features(
         lo = float(vals.quantile(winsorize_percentile, interpolation="linear"))
         hi = float(vals.quantile(1.0 - winsorize_percentile, interpolation="linear"))
         winsorize_report[col] = {
-            "lo": lo, "hi": hi,
+            "lo": lo,
+            "hi": hi,
             "n_clipped_low": int((vals < lo).sum()),
             "n_clipped_high": int((vals > hi).sum()),
             "n_with_history": int(vals.len()),
@@ -306,14 +334,22 @@ def engineer_repayment_behavior_features(
 # real values dominate Euclidean distance and caused K-Means to isolate them
 # as their own tiny outlier cluster).
 UNBOUNDED_REVOLVING_FEATURES = [
-    "N_CC_MONTHS", "N_DISTINCT_PREV_CC_LOANS", "MEAN_UTILIZATION",
-    "MAX_UTILIZATION", "MEAN_MIN_PAYMENT_RATIO", "MEAN_ATM_DRAWINGS_SHARE",
-    "MEAN_SK_DPD", "MAX_SK_DPD", "MEAN_SK_DPD_DEF",
+    "N_CC_MONTHS",
+    "N_DISTINCT_PREV_CC_LOANS",
+    "MEAN_UTILIZATION",
+    "MAX_UTILIZATION",
+    "MEAN_MIN_PAYMENT_RATIO",
+    "MEAN_ATM_DRAWINGS_SHARE",
+    "MEAN_SK_DPD",
+    "MAX_SK_DPD",
+    "MEAN_SK_DPD_DEF",
 ]
 
 
 def engineer_revolving_credit_utilization_features(
-    app_ids: pl.DataFrame, credit_card: pl.DataFrame, winsorize_percentile: float = 0.01,
+    app_ids: pl.DataFrame,
+    credit_card: pl.DataFrame,
+    winsorize_percentile: float = 0.01,
 ) -> tuple[pl.DataFrame, list[str], dict]:
     """Real, vectorized (WARP) per-SK_ID_CURR REVOLVING-CREDIT-UTILIZATION
     behavioral feature frame -- built for Mega Project 3 / Notebook 04
@@ -359,37 +395,50 @@ def engineer_revolving_credit_utilization_features(
     Returns (df, feature_names, winsorize_report) where df has columns
     ["SK_ID_CURR", "HAS_REVOLVING_HISTORY"] + feature_names.
     """
-    cc = credit_card.with_columns([
-        (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias("_UTIL"),
-        (pl.col("AMT_DRAWINGS_ATM_CURRENT") / (pl.col("AMT_DRAWINGS_CURRENT") + 1.0)).alias("_ATM_SHARE"),
-        (pl.col("AMT_DRAWINGS_ATM_CURRENT") > 0).alias("_ANY_CASH_ADVANCE"),
-    ])
-    cc_min_valid = credit_card.filter(pl.col("AMT_INST_MIN_REGULARITY").is_not_null()).with_columns([
-        (pl.col("AMT_PAYMENT_TOTAL_CURRENT") / (pl.col("AMT_INST_MIN_REGULARITY") + 1.0)).alias("_MIN_PAY_RATIO"),
-        (pl.col("AMT_PAYMENT_TOTAL_CURRENT") <= pl.col("AMT_INST_MIN_REGULARITY") * 1.05).alias("_MIN_PAY_ONLY"),
-    ])
+    cc = credit_card.with_columns(
+        [
+            (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias("_UTIL"),
+            (pl.col("AMT_DRAWINGS_ATM_CURRENT") / (pl.col("AMT_DRAWINGS_CURRENT") + 1.0)).alias("_ATM_SHARE"),
+            (pl.col("AMT_DRAWINGS_ATM_CURRENT") > 0).alias("_ANY_CASH_ADVANCE"),
+        ]
+    )
+    cc_min_valid = credit_card.filter(pl.col("AMT_INST_MIN_REGULARITY").is_not_null()).with_columns(
+        [
+            (pl.col("AMT_PAYMENT_TOTAL_CURRENT") / (pl.col("AMT_INST_MIN_REGULARITY") + 1.0)).alias(
+                "_MIN_PAY_RATIO"
+            ),
+            (pl.col("AMT_PAYMENT_TOTAL_CURRENT") <= pl.col("AMT_INST_MIN_REGULARITY") * 1.05).alias(
+                "_MIN_PAY_ONLY"
+            ),
+        ]
+    )
 
     agg = (
         cc.group_by("SK_ID_CURR")
-        .agg([
-            pl.len().alias("N_CC_MONTHS"),
-            pl.col("SK_ID_PREV").n_unique().alias("N_DISTINCT_PREV_CC_LOANS"),
-            pl.col("_UTIL").mean().alias("MEAN_UTILIZATION"),
-            pl.col("_UTIL").max().alias("MAX_UTILIZATION"),
-            (pl.col("_UTIL") > 0.9).mean().alias("PCT_MONTHS_HIGH_UTILIZATION"),
-            pl.col("_ATM_SHARE").mean().alias("MEAN_ATM_DRAWINGS_SHARE"),
-            pl.col("_ANY_CASH_ADVANCE").mean().alias("PCT_MONTHS_ANY_CASH_ADVANCE"),
-            pl.col("SK_DPD").mean().alias("MEAN_SK_DPD"),
-            pl.col("SK_DPD").max().alias("MAX_SK_DPD"),
-            pl.col("SK_DPD_DEF").mean().alias("MEAN_SK_DPD_DEF"),
-            (pl.col("NAME_CONTRACT_STATUS") == "Active").mean().alias("PCT_MONTHS_ACTIVE"),
-        ])
+        .agg(
+            [
+                pl.len().alias("N_CC_MONTHS"),
+                pl.col("SK_ID_PREV").n_unique().alias("N_DISTINCT_PREV_CC_LOANS"),
+                pl.col("_UTIL").mean().alias("MEAN_UTILIZATION"),
+                pl.col("_UTIL").max().alias("MAX_UTILIZATION"),
+                (pl.col("_UTIL") > 0.9).mean().alias("PCT_MONTHS_HIGH_UTILIZATION"),
+                pl.col("_ATM_SHARE").mean().alias("MEAN_ATM_DRAWINGS_SHARE"),
+                pl.col("_ANY_CASH_ADVANCE").mean().alias("PCT_MONTHS_ANY_CASH_ADVANCE"),
+                pl.col("SK_DPD").mean().alias("MEAN_SK_DPD"),
+                pl.col("SK_DPD").max().alias("MAX_SK_DPD"),
+                pl.col("SK_DPD_DEF").mean().alias("MEAN_SK_DPD_DEF"),
+                (pl.col("NAME_CONTRACT_STATUS") == "Active").mean().alias("PCT_MONTHS_ACTIVE"),
+            ]
+        )
         .join(
-            cc_min_valid.group_by("SK_ID_CURR").agg([
-                pl.col("_MIN_PAY_RATIO").mean().alias("MEAN_MIN_PAYMENT_RATIO"),
-                pl.col("_MIN_PAY_ONLY").mean().alias("PCT_MONTHS_MIN_PAYMENT_ONLY"),
-            ]),
-            on="SK_ID_CURR", how="left",
+            cc_min_valid.group_by("SK_ID_CURR").agg(
+                [
+                    pl.col("_MIN_PAY_RATIO").mean().alias("MEAN_MIN_PAYMENT_RATIO"),
+                    pl.col("_MIN_PAY_ONLY").mean().alias("PCT_MONTHS_MIN_PAYMENT_ONLY"),
+                ]
+            ),
+            on="SK_ID_CURR",
+            how="left",
         )
     )
 
@@ -409,7 +458,8 @@ def engineer_revolving_credit_utilization_features(
         lo = float(vals.quantile(winsorize_percentile, interpolation="linear"))
         hi = float(vals.quantile(1.0 - winsorize_percentile, interpolation="linear"))
         winsorize_report[col] = {
-            "lo": lo, "hi": hi,
+            "lo": lo,
+            "hi": hi,
             "n_clipped_low": int((vals < lo).sum()),
             "n_clipped_high": int((vals > hi).sum()),
             "n_with_history": int(vals.len()),

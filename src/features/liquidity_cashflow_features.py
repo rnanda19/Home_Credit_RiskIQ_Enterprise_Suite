@@ -37,13 +37,12 @@ mean, or ratio computed directly from real Kaggle `installments_payments.csv`
 cashflow -- that is Notebook 02 (Cash-Flow-at-Risk)'s job, built on top of
 this module's real historical reliability output, never inside it.
 """
+
 import numpy as np
 import polars as pl
 
 
-def reconstruct_portfolio_cashflow_periods(
-    installments: pl.DataFrame, period_days: int = 30
-) -> pl.DataFrame:
+def reconstruct_portfolio_cashflow_periods(installments: pl.DataFrame, period_days: int = 30) -> pl.DataFrame:
     """Real, vectorized (WARP) reconstruction of aggregate portfolio cash
     inflow by calendar period, from real `installments_payments.csv`.
 
@@ -70,38 +69,50 @@ def reconstruct_portfolio_cashflow_periods(
     period ascending (oldest first), ready for Notebook 01's reconciliation
     chart and Notebook 02's rolling-forecast input.
     """
-    base = installments.with_columns([
-        pl.col("AMT_PAYMENT").fill_null(0.0).alias("_AMT_PAYMENT_REAL"),
-        (pl.col("DAYS_INSTALMENT") / period_days).floor().cast(pl.Int64).alias("_PERIOD_ID"),
-    ])
+    base = installments.with_columns(
+        [
+            pl.col("AMT_PAYMENT").fill_null(0.0).alias("_AMT_PAYMENT_REAL"),
+            (pl.col("DAYS_INSTALMENT") / period_days).floor().cast(pl.Int64).alias("_PERIOD_ID"),
+        ]
+    )
 
     agg = (
         base.group_by("_PERIOD_ID")
-        .agg([
-            pl.len().alias("N_INSTALLMENTS_SCHEDULED"),
-            pl.col("SK_ID_CURR").n_unique().alias("N_APPLICANTS_SCHEDULED"),
-            pl.col("AMT_INSTALMENT").sum().alias("SCHEDULED_CASH_AMT"),
-            pl.col("_AMT_PAYMENT_REAL").sum().alias("COLLECTED_CASH_AMT"),
-        ])
+        .agg(
+            [
+                pl.len().alias("N_INSTALLMENTS_SCHEDULED"),
+                pl.col("SK_ID_CURR").n_unique().alias("N_APPLICANTS_SCHEDULED"),
+                pl.col("AMT_INSTALMENT").sum().alias("SCHEDULED_CASH_AMT"),
+                pl.col("_AMT_PAYMENT_REAL").sum().alias("COLLECTED_CASH_AMT"),
+            ]
+        )
         .sort("_PERIOD_ID")
-        .with_columns([
-            # Real, disclosed edge case: a period with $0 real scheduled
-            # cash (should not occur for a real populated period, but
-            # guards the same way every other ratio in this suite does)
-            # has an undefined collection rate -- null, never a fabricated
-            # 1.0 or 0.0.
-            pl.when(pl.col("SCHEDULED_CASH_AMT") > 0)
-              .then(pl.col("COLLECTED_CASH_AMT") / pl.col("SCHEDULED_CASH_AMT"))
-              .otherwise(None)
-              .alias("DOLLAR_COLLECTION_RATE"),
-            (pl.col("_PERIOD_ID") * period_days).alias("PERIOD_START_DAY"),
-        ])
+        .with_columns(
+            [
+                # Real, disclosed edge case: a period with $0 real scheduled
+                # cash (should not occur for a real populated period, but
+                # guards the same way every other ratio in this suite does)
+                # has an undefined collection rate -- null, never a fabricated
+                # 1.0 or 0.0.
+                pl.when(pl.col("SCHEDULED_CASH_AMT") > 0)
+                .then(pl.col("COLLECTED_CASH_AMT") / pl.col("SCHEDULED_CASH_AMT"))
+                .otherwise(None)
+                .alias("DOLLAR_COLLECTION_RATE"),
+                (pl.col("_PERIOD_ID") * period_days).alias("PERIOD_START_DAY"),
+            ]
+        )
     )
-    return agg.select([
-        "_PERIOD_ID", "PERIOD_START_DAY", "N_INSTALLMENTS_SCHEDULED",
-        "N_APPLICANTS_SCHEDULED", "SCHEDULED_CASH_AMT", "COLLECTED_CASH_AMT",
-        "DOLLAR_COLLECTION_RATE",
-    ])
+    return agg.select(
+        [
+            "_PERIOD_ID",
+            "PERIOD_START_DAY",
+            "N_INSTALLMENTS_SCHEDULED",
+            "N_APPLICANTS_SCHEDULED",
+            "SCHEDULED_CASH_AMT",
+            "COLLECTED_CASH_AMT",
+            "DOLLAR_COLLECTION_RATE",
+        ]
+    )
 
 
 def engineer_applicant_cash_reliability_features(
@@ -124,65 +135,79 @@ def engineer_applicant_cash_reliability_features(
     late $50 payment barely moves real portfolio cash, but a late $5,000
     payment does.
     """
-    base = installments.with_columns([
-        pl.col("AMT_PAYMENT").fill_null(0.0).alias("_AMT_PAYMENT_REAL"),
-        (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias("_DAYS_LATE"),
-    ]).with_columns([
-        # Real, disclosed convention (same root fact as
-        # delinquency_features.py): no recorded payment == 0 real days
-        # collected so far == treated as maximally late for the
-        # dollar-weighted average below, using the real scheduled day as
-        # the reference point (no fabricated "how late" figure invented
-        # for a payment that was never made).
-        pl.when(pl.col("DAYS_ENTRY_PAYMENT").is_null())
-          .then(pl.lit(None, dtype=pl.Float64))
-          .otherwise(pl.col("_DAYS_LATE"))
-          .alias("_DAYS_LATE_IF_PAID"),
-    ])
+    base = installments.with_columns(
+        [
+            pl.col("AMT_PAYMENT").fill_null(0.0).alias("_AMT_PAYMENT_REAL"),
+            (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias("_DAYS_LATE"),
+        ]
+    ).with_columns(
+        [
+            # Real, disclosed convention (same root fact as
+            # delinquency_features.py): no recorded payment == 0 real days
+            # collected so far == treated as maximally late for the
+            # dollar-weighted average below, using the real scheduled day as
+            # the reference point (no fabricated "how late" figure invented
+            # for a payment that was never made).
+            pl.when(pl.col("DAYS_ENTRY_PAYMENT").is_null())
+            .then(pl.lit(None, dtype=pl.Float64))
+            .otherwise(pl.col("_DAYS_LATE"))
+            .alias("_DAYS_LATE_IF_PAID"),
+        ]
+    )
 
     feat = (
         base.group_by("SK_ID_CURR")
-        .agg([
-            pl.len().alias("N_INSTALLMENTS"),
-            pl.col("AMT_INSTALMENT").sum().alias("TOTAL_SCHEDULED_CASH_AMT"),
-            pl.col("_AMT_PAYMENT_REAL").sum().alias("TOTAL_COLLECTED_CASH_AMT"),
-            # Real dollar-weighted days-late: sum(days_late * amount) /
-            # sum(amount), over installments that were actually paid --
-            # an unpaid-as-of-snapshot installment has no real "how late
-            # was it collected" figure to weight in yet (Notebook 01
-            # reports its dollar amount separately, via the shortfall
-            # measure below, rather than inventing a days-late value for
-            # cash that hasn't arrived).
-            (pl.col("_DAYS_LATE_IF_PAID") * pl.col("AMT_INSTALMENT")).sum().alias("_WEIGHTED_LATE_SUM"),
-            pl.col("AMT_INSTALMENT").filter(pl.col("_DAYS_LATE_IF_PAID").is_not_null()).sum().alias("_PAID_AMT_BASIS"),
-        ])
-        .with_columns([
-            pl.when(pl.col("TOTAL_SCHEDULED_CASH_AMT") > 0)
-              .then(pl.col("TOTAL_COLLECTED_CASH_AMT") / pl.col("TOTAL_SCHEDULED_CASH_AMT"))
-              .otherwise(None)
-              .alias("DOLLAR_COLLECTION_RATE"),
-            (pl.col("TOTAL_SCHEDULED_CASH_AMT") - pl.col("TOTAL_COLLECTED_CASH_AMT"))
-              .clip(lower_bound=0).alias("OUTSTANDING_SHORTFALL_AMT"),
-            pl.when(pl.col("_PAID_AMT_BASIS") > 0)
-              .then(pl.col("_WEIGHTED_LATE_SUM") / pl.col("_PAID_AMT_BASIS"))
-              .otherwise(0.0)  # real, disclosed edge case: nothing paid yet -- no
-                                # real lateness-on-paid-cash to weight, defined 0.0,
-                                # never left null (OUTSTANDING_SHORTFALL_AMT already
-                                # carries the "nothing collected" signal separately).
-              .alias("DOLLAR_WEIGHTED_DAYS_LATE"),
-        ])
+        .agg(
+            [
+                pl.len().alias("N_INSTALLMENTS"),
+                pl.col("AMT_INSTALMENT").sum().alias("TOTAL_SCHEDULED_CASH_AMT"),
+                pl.col("_AMT_PAYMENT_REAL").sum().alias("TOTAL_COLLECTED_CASH_AMT"),
+                # Real dollar-weighted days-late: sum(days_late * amount) /
+                # sum(amount), over installments that were actually paid --
+                # an unpaid-as-of-snapshot installment has no real "how late
+                # was it collected" figure to weight in yet (Notebook 01
+                # reports its dollar amount separately, via the shortfall
+                # measure below, rather than inventing a days-late value for
+                # cash that hasn't arrived).
+                (pl.col("_DAYS_LATE_IF_PAID") * pl.col("AMT_INSTALMENT")).sum().alias("_WEIGHTED_LATE_SUM"),
+                pl.col("AMT_INSTALMENT")
+                .filter(pl.col("_DAYS_LATE_IF_PAID").is_not_null())
+                .sum()
+                .alias("_PAID_AMT_BASIS"),
+            ]
+        )
+        .with_columns(
+            [
+                pl.when(pl.col("TOTAL_SCHEDULED_CASH_AMT") > 0)
+                .then(pl.col("TOTAL_COLLECTED_CASH_AMT") / pl.col("TOTAL_SCHEDULED_CASH_AMT"))
+                .otherwise(None)
+                .alias("DOLLAR_COLLECTION_RATE"),
+                (pl.col("TOTAL_SCHEDULED_CASH_AMT") - pl.col("TOTAL_COLLECTED_CASH_AMT"))
+                .clip(lower_bound=0)
+                .alias("OUTSTANDING_SHORTFALL_AMT"),
+                pl.when(pl.col("_PAID_AMT_BASIS") > 0)
+                .then(pl.col("_WEIGHTED_LATE_SUM") / pl.col("_PAID_AMT_BASIS"))
+                .otherwise(0.0)  # real, disclosed edge case: nothing paid yet -- no
+                # real lateness-on-paid-cash to weight, defined 0.0,
+                # never left null (OUTSTANDING_SHORTFALL_AMT already
+                # carries the "nothing collected" signal separately).
+                .alias("DOLLAR_WEIGHTED_DAYS_LATE"),
+            ]
+        )
     )
 
     feature_cols = [
-        "N_INSTALLMENTS", "TOTAL_SCHEDULED_CASH_AMT", "TOTAL_COLLECTED_CASH_AMT",
-        "DOLLAR_COLLECTION_RATE", "OUTSTANDING_SHORTFALL_AMT", "DOLLAR_WEIGHTED_DAYS_LATE",
+        "N_INSTALLMENTS",
+        "TOTAL_SCHEDULED_CASH_AMT",
+        "TOTAL_COLLECTED_CASH_AMT",
+        "DOLLAR_COLLECTION_RATE",
+        "OUTSTANDING_SHORTFALL_AMT",
+        "DOLLAR_WEIGHTED_DAYS_LATE",
     ]
     return feat.select(["SK_ID_CURR"] + feature_cols), feature_cols
 
 
-def attach_repayment_capacity(
-    cash_reliability: pl.DataFrame, application: pl.DataFrame
-) -> pl.DataFrame:
+def attach_repayment_capacity(cash_reliability: pl.DataFrame, application: pl.DataFrame) -> pl.DataFrame:
     """HYPER reuse (per this Mega Project's own scope README): joins in Mega
     Project 1 Notebook 04's real REPAYMENT_CAPACITY_RATIO formula --
     `AMT_INCOME_TOTAL / (AMT_ANNUITY + 1.0)`, the identical formula served
@@ -193,14 +218,24 @@ def attach_repayment_capacity(
     yields a null ratio here too, consistent with that service's own real,
     disclosed handling -- never a fabricated fallback value.
     """
-    with_ratio = application.select([
-        "SK_ID_CURR", "AMT_INCOME_TOTAL", "AMT_ANNUITY",
-    ]).with_columns([
-        pl.when(pl.col("AMT_ANNUITY").is_not_null())
-          .then(pl.col("AMT_INCOME_TOTAL") / (pl.col("AMT_ANNUITY") + 1.0))
-          .otherwise(None)
-          .alias("REPAYMENT_CAPACITY_RATIO"),
-    ]).select(["SK_ID_CURR", "REPAYMENT_CAPACITY_RATIO"])
+    with_ratio = (
+        application.select(
+            [
+                "SK_ID_CURR",
+                "AMT_INCOME_TOTAL",
+                "AMT_ANNUITY",
+            ]
+        )
+        .with_columns(
+            [
+                pl.when(pl.col("AMT_ANNUITY").is_not_null())
+                .then(pl.col("AMT_INCOME_TOTAL") / (pl.col("AMT_ANNUITY") + 1.0))
+                .otherwise(None)
+                .alias("REPAYMENT_CAPACITY_RATIO"),
+            ]
+        )
+        .select(["SK_ID_CURR", "REPAYMENT_CAPACITY_RATIO"])
+    )
 
     return cash_reliability.join(with_ratio, on="SK_ID_CURR", how="left")
 

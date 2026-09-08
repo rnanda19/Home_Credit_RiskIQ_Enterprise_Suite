@@ -24,6 +24,7 @@ Endpoints:
                        EL, correlation R, capital K, RWA, and Pillar-1
                        capital requirement (identical formula to Notebook 01)
 """
+
 import sys
 from pathlib import Path
 from typing import Optional
@@ -37,7 +38,10 @@ SUITE_ROOT = MP2_DIR.parent
 
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 from features.regulatory_capital_features import (
-    SEGMENT_DEFINITIONS, SEGMENT_ORDER, other_retail_correlation, basel_retail_capital_k,
+    SEGMENT_DEFINITIONS,
+    SEGMENT_ORDER,
+    other_retail_correlation,
+    basel_retail_capital_k,
 )
 from serving.auth_common import require_api_key
 
@@ -55,11 +59,21 @@ def _assign_segment(name_contract_type: str, flag_own_realty: str, flag_own_car:
 
 
 class CapitalRequest(BaseModel):
-    PD: float = Field(..., ge=0.0, le=1.0, description="Real probability of default (0-1) -- from "
-                                                         "Mega Project 1's real champion model.")
-    AMT_CREDIT: float = Field(..., gt=0.0, description="Real disbursed/approved credit amount -- used "
-                                                         "as this suite's disclosed EAD proxy (EAD_PROXY).")
-    NAME_CONTRACT_TYPE: str = Field(..., description="Real Home Credit field: 'Cash loans' or 'Revolving loans'.")
+    PD: float = Field(
+        ...,
+        ge=0.0,
+        le=1.0,
+        description="Real probability of default (0-1) -- from " "Mega Project 1's real champion model.",
+    )
+    AMT_CREDIT: float = Field(
+        ...,
+        gt=0.0,
+        description="Real disbursed/approved credit amount -- used "
+        "as this suite's disclosed EAD proxy (EAD_PROXY).",
+    )
+    NAME_CONTRACT_TYPE: str = Field(
+        ..., description="Real Home Credit field: 'Cash loans' or 'Revolving loans'."
+    )
     FLAG_OWN_REALTY: Optional[str] = Field(default="N", description="Real Home Credit field: 'Y' or 'N'.")
     FLAG_OWN_CAR: Optional[str] = Field(default="N", description="Real Home Credit field: 'Y' or 'N'.")
 
@@ -73,24 +87,36 @@ app = FastAPI(
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "note": "Deterministic real Basel formula, no trained model -- see module docstring."}
+    return {
+        "status": "ok",
+        "note": "Deterministic real Basel formula, no trained model -- see module docstring.",
+    }
 
 
 @app.get("/schema", dependencies=[Depends(require_api_key)])
 def schema():
-    return {"segment_order": SEGMENT_ORDER,
-            "segment_definitions": {k: {kk: vv for kk, vv in v.items() if kk not in ("condition",)}
-                                     for k, v in SEGMENT_DEFINITIONS.items()}}
+    return {
+        "segment_order": SEGMENT_ORDER,
+        "segment_definitions": {
+            k: {kk: vv for kk, vv in v.items() if kk not in ("condition",)}
+            for k, v in SEGMENT_DEFINITIONS.items()
+        },
+    }
 
 
 @app.post("/score", dependencies=[Depends(require_api_key)])
 def score(request: CapitalRequest):
     try:
-        segment = _assign_segment(request.NAME_CONTRACT_TYPE, request.FLAG_OWN_REALTY or "N",
-                                   request.FLAG_OWN_CAR or "N")
+        segment = _assign_segment(
+            request.NAME_CONTRACT_TYPE, request.FLAG_OWN_REALTY or "N", request.FLAG_OWN_CAR or "N"
+        )
         seg_def = SEGMENT_DEFINITIONS[segment]
         lgd = seg_def["lgd"]
-        r = seg_def["r_fixed"] if seg_def["correlation_mode"] == "fixed" else other_retail_correlation(request.PD)
+        r = (
+            seg_def["r_fixed"]
+            if seg_def["correlation_mode"] == "fixed"
+            else other_retail_correlation(request.PD)
+        )
         k = basel_retail_capital_k(request.PD, lgd, r)
         ead = request.AMT_CREDIT
         el = request.PD * lgd * ead
@@ -99,7 +125,13 @@ def score(request: CapitalRequest):
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
     return {
-        "capital_segment": segment, "lgd_assumed": lgd, "correlation_r": r, "capital_k": k,
-        "ead_proxy": ead, "expected_loss": el, "rwa": rwa, "capital_requirement": capital_requirement,
+        "capital_segment": segment,
+        "lgd_assumed": lgd,
+        "correlation_r": r,
+        "capital_k": k,
+        "ead_proxy": ead,
+        "expected_loss": el,
+        "rwa": rwa,
+        "capital_requirement": capital_requirement,
         "capital_rate_of_ead": capital_requirement / ead if ead else None,
     }
