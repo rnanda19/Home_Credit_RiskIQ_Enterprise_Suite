@@ -11,7 +11,7 @@ threadpoolctl>=3.5        # runtime BLAS thread-pool control (the C-level "secon
                            # by threadpool_guard() in src/utils/performance_setup.py)
 
 # --- JIT compilation for any loop that genuinely cannot be vectorized -------------------
-numba>=0.60                # @njit(parallel=True) — WARP standard for the rare loop that
+numba>=0.67.0                # @njit(parallel=True) — WARP standard for the rare loop that
                             # Polars vectorization alone cannot express
 
 # --- Fast numerical expression evaluation & NaN-aware array ops ------------------------
