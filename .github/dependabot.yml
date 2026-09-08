@@ -1,0 +1,27 @@
+# Dependabot configuration -- automated dependency vulnerability alerts and
+# update pull requests. Free, native GitHub feature; no external service.
+version: 2
+updates:
+  # Python dependencies (pyproject.toml + requirements*.txt at repo root)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "deps"
+
+  # GitHub Actions workflow dependencies (action versions pinned in .github/workflows)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "ci"
