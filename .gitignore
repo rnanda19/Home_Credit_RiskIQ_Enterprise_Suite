@@ -53,3 +53,8 @@ dist/
 # run history, not source.
 **/monitoring/*_baseline.json
 **/monitoring/*_job_log.csv
+
+# Local scratch/junk -- never tracked
+_to_delete/
+all ipynb and py files/
+
