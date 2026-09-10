@@ -14,7 +14,7 @@ detailed record.
 | 2 | Regulatory Capital & Stress Testing | 6/6 | 5/5 | 2 | ✅ | ✅ | restored 2026-09-10 (real docx/xlsx — see README) | **Built & hardened** |
 | 3 | Risk Segmentation | 6/6 | 4/5 (Problem 3: NOT YET STATISTICALLY ROBUST) | 4 | ✅ | ✅ | restored 2026-09-10 (real docx/xlsx — see README) | **Built & hardened** |
 | 4 | Delinquency Prevention | 6/6 | 5/5 | 4 | ✅ | ✅ | restored 2026-09-10 (real docx/xlsx — see README) | **Built & hardened** |
-| 5 | Liquidity & Cashflow | 6/6 | 5/5 | 1 verified (Problem 4, verified against a real bundle 2026-09-08) | ✅ | partial | restored 2026-09-10 (real docx/xlsx — see README) | **Built & verified**, hardening in progress |
+| 5 | Liquidity & Cashflow | 6/6 | 5/5 | 1 verified (Problem 4, real bundle produced 2026-09-08, reconfirmed 2026-09-10 after a path-resolution hardening fix) | ✅ | partial | restored 2026-09-10 (real docx/xlsx — see README) | **Built & verified**, hardening in progress |
 
 **Suite total: 24 of 25 real problems statistically robust and
 recommended for production**, per your own real, current
@@ -77,10 +77,28 @@ documentation hardening is now complete — architecture diagram
 service (`services/prepayment_segment_assignment_service.py`), Docker
 packaging (`docker/`), a real integration test (`tests/`), and CI/Makefile
 wiring are all in place, matching Mega Projects 1-4's pattern exactly.
-The one remaining piece is the `.joblib` bundle itself — Notebook 04 has
-not yet been re-run since the persistence code was added, so the service
-builds and starts but fails fast at startup until that bundle exists. See
-its own `README.md`/`CHANGELOG.md` for current status.
+**Update, 2026-09-08:** Notebook 04 was re-run and produced the real
+`.joblib` bundle, verified against the deployable service — see
+`README.md`/`CHANGELOG.md` for that detail. **Update, 2026-09-10:** a real
+bug was found and fixed in Notebook 04's path-resolution code — the
+`.ipynb` still had the old auto-detecting `_find_suite_root()` logic
+(a fallback candidate list starting with a Downloads-folder guess),
+which could silently resolve to the wrong working copy depending on
+where Jupyter's kernel launched from, even though its `.py` mirror file
+had already been hardened against this on 2026-09-08. Fixed by hardcoding
+`SUITE_ROOT` to the real OneDrive working copy, matching every other
+fixed notebook in the suite. Re-run end-to-end after the fix: same real
+result, bit-identical to the 2026-09-08 run (k=3, silhouette 0.3828,
+291,635/307,511 real applicants with payment history, 7/7 integrity
+checks pass) — confirms the fix changes nothing about the real output,
+only removes the ambiguity in how the notebook finds itself. **Disclosed
+remaining gap:** the other 28 notebooks in the suite (all of Mega
+Projects 1-4 and this Mega Project's Notebooks 01/02/03/05) still carry
+the older auto-detecting path logic with the same Downloads-folder
+fallback candidate. It has not caused an incident in any of them, but it
+is the same class of risk that caused this one — extending the same
+hardcoded-`SUITE_ROOT` fix suite-wide is an open, disclosed item (see
+Immediate next steps below).
 
 ## What's not yet done
 
@@ -161,19 +179,23 @@ its own `README.md`/`CHANGELOG.md` for current status.
   -- that remains the separate, permanently-open fair-lending/bias-audit
   gap.
 
-- **Real end-to-end integration testing**: done -- see `E2E_TESTING.md`.
-  `src/testing/e2e_process_harness.py` launches a real service as a real
-  `uvicorn` subprocess and talks to it over real HTTP (`requests`, a real
-  socket), closing the gap that every prior service test used in-process
-  `TestClient` only. Two real end-to-end test files (MP1's classifier
-  service, MP3's clustering service, and MP5's clustering service --
-  three real app shapes total) wired into the existing CI matrix job for
-  free. 8 new tests, full suite re-verified passing on-device. 3 of 15
-  services covered this way; the other 12 remain `TestClient`-only.
+- **Real end-to-end integration testing**: done, for all 15 services --
+  see `E2E_TESTING.md`. `src/testing/e2e_process_harness.py` launches a
+  real service as a real `uvicorn` subprocess and talks to it over real
+  HTTP (`requests`, a real socket), closing the gap that every prior
+  service test used in-process `TestClient` only. Started 2026-09-08 with
+  3 services (MP1 Problem 1, MP3 Problem 2, MP5 Problem 4); extended
+  2026-09-10 to the remaining 12 -- all 4 MP1 services, both MP2 services
+  (real, independently hand-recomputed Basel Vasicek/ASRF values, no model
+  bundle needed), all 4 MP3 services, and all 4 MP4 services (this Mega
+  Project's first E2E coverage of any kind). 56 real end-to-end tests
+  total, wired into the existing CI matrix job for free -- no workflow
+  change needed, `pytest tests/ -v` picks up every new file automatically.
 
 ## Immediate next steps (in order)
 
-1. Re-run Mega Project 5 Notebook 4 to produce the real `.joblib` bundle,
-   then verify its deployable service against that real bundle.
-2. Revisit the deferred items above (Docker build verification, `black`
-   reformat, Kaggle packaging) once the above is complete.
+1. Extend Mega Project 5 Notebook 4's hardcoded-`SUITE_ROOT` path-resolution
+   fix (2026-09-10) to the remaining 28 notebooks in the suite, closing the
+   same disclosed Downloads-fallback risk everywhere, not just here.
+2. Revisit the deferred items above (Kaggle packaging) once the above is
+   complete.
