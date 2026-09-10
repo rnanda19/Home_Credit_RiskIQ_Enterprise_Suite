@@ -1,0 +1,27 @@
+# Demo-only runtime dependencies (Streamlit UI + the same real scoring
+# stack the suite's FastAPI services use -- see streamlit_app.py's
+# docstring). Version ranges copied from the suite root's own
+# requirements.txt / services/requirements-services.txt so a real bundle
+# trained with those unpickles correctly here too. catboost is included
+# defensively (not required by MP1 Problem 1's own champion, which has
+# been LightGBM on real reruns so far) in case a future rerun picks a
+# different champion model class.
+streamlit>=1.32
+scikit-learn>=1.4
+xgboost>=2.0
+lightgbm>=4.3
+catboost>=1.2
+pandas>=2.0
+numpy>=1.26
+joblib>=1.3
+
+# Transitive: scoring_service_common.py (imported for its real score_one())
+# is written as a FastAPI-app factory module, so importing it -- even just
+# for score_one() -- pulls in these at module load time. Reusing the real
+# module as-is (HYPER: no forked/duplicated scoring logic in this demo)
+# means declaring its real dependencies here too.
+fastapi>=0.110
+pydantic>=2.6
+python-jose[cryptography]>=3.3
+python-multipart>=0.0.9
+slowapi>=0.1.9

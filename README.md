@@ -41,6 +41,7 @@ per an explicit 2026-09-01 policy change (see its own README for the
 full disclosure).
 
 **Quick links:** [Live Dashboards](#live-dashboards) ·
+[CI/CD & Live Demo](#cicd--live-demo) ·
 [System Architecture](#system-architecture) ·
 [Architecture Diagrams](#architecture-diagrams) ·
 [Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md) ·
@@ -52,6 +53,7 @@ full disclosure).
 - [Skills Demonstrated](#skills-demonstrated)
 - [Real Output — Explainability & Model Selection](#real-output--explainability--model-selection)
 - [Live Dashboards](#live-dashboards)
+- [CI/CD & Live Demo](#cicd--live-demo)
 - [Model Risk & Governance](#model-risk--governance)
 - [Platform at a Glance](#platform-at-a-glance)
 - [Repository Structure](#repository-structure)
@@ -163,6 +165,31 @@ under `docs/dashboards/` or `sample_reports/`) — GitHub shows raw source
 for those, not a rendered page. Use the links above instead, once Pages
 has finished deploying (usually a minute or two after the first push with
 `-Public`).
+
+## CI/CD & Live Demo
+
+**CI/CD:** every push to `main` (and every PR) runs 4 real, independent
+GitHub Actions workflows — no manual step required:
+
+| Workflow | What it verifies |
+|---|---|
+| [`CI`](.github/workflows/ci.yml) | Every notebook is well-formed (`nbformat`); HYPER shared-component tests (`src/tests/`); a 5-project matrix of real `pytest` runs against every Mega Project's `tests/` — including the real end-to-end tests that launch a live `uvicorn` service and hit it over real HTTP (see [E2E_TESTING.md](E2E_TESTING.md)) |
+| [`Code Quality`](.github/workflows/code-quality.yml) | `pyflakes` + `black --check` (blocking), `bandit` security scan (blocking) |
+| [`Docker Build & Run Verification`](.github/workflows/docker-build-verify.yml) | A real `docker build` + `docker run` + `/health` check per Mega Project, plus a 5-project TLS-termination matrix (real nginx + real self-signed cert + real HTTPS, all 15 services — see [TLS.md](TLS.md)) |
+| `CodeQL` | Static security analysis on every push |
+
+Status badges are at the top of this README and link to the live run
+history for each.
+
+**Live Demo:** an interactive Streamlit app that scores a real applicant
+against Mega Project 1 Problem 1's real trained champion model — the same
+model and the same real scoring/explainability code the deployed
+`credit_default_scoring_service.py` API runs (no separate demo-only
+logic) — lives at [`demo/`](demo/). It isn't hosted yet: deploying it
+needs a free Hugging Face Spaces account (a real sign-in/upload step only
+the repo owner can do), so [`demo/README.md`](demo/README.md) has the
+exact deployment steps rather than a placeholder link. Once deployed,
+its live URL replaces this paragraph.
 
 ## Model Risk & Governance
 
