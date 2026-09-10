@@ -1,0 +1,54 @@
+Fix digit-truncation bug in the B/M shorthand pass; complete shorthand on
+figures the buggy regex had silently skipped
+
+Bug found by spot-checking the live GitHub Pages site after the previous
+push: MP5 Problem 5's dashboard showed
+"$14,860,661,28 ($1.49B)6 (Baseline)" -- a genuine data-display defect,
+not fabricated data (the underlying number was always correct; only its
+on-page rendering was corrupted).
+
+Root cause: the original shorthand-insertion regex --
+    (?<!\()(-?\$[\d][\d,]*(?:\.\d+)?)(?!\s*\()
+-- used a trailing negative lookahead meant to skip amounts that already
+had a shorthand appended. Whenever a dollar figure was immediately
+followed by ANY parenthetical for unrelated reasons (e.g.
+"$14,860,661,286 (Baseline)", "$14,324,059,698 real 90-day CFaR (5th
+pct)"), Python's greedy-then-backtrack matching gave back trailing
+characters of the number itself -- one digit, or a whole ",NNN" comma
+group -- until the lookahead was satisfied, corrupting the number and
+misplacing the shorthand mid-string.
+
+Fix: replaced the lookahead-based regex with a plain, unconstrained match
+(nothing left for the engine to backtrack against) and moved the
+"already has our own shorthand, don't double-insert" decision into the
+substitution callback, checked as a literal string comparison against
+what follows the match -- never feeding back into how the number itself
+is matched. Verified against 5 test cases including the exact failure
+above, decimal numbers, numbers followed by unrelated punctuation, and
+re-run idempotency (fixing already-fixed text is a no-op).
+
+Scanned every HTML dashboard and XLSX workbook from the last two commits
+for this exact corruption signature and for previously-skipped figures
+(dollar amounts immediately followed by a parenthetical that legitimately
+should have received shorthand too, per the original request "every
+figure shown in USD"). Found and fixed:
+- HTML: 00_suite_executive_dashboard.html (both copies) -- no corruption,
+  but 5 previously-skipped figures now correctly get their shorthand;
+  02_mega_project_2_regulatory_capital's notebook 01/03/04 dashboards
+  (both decision_engine/reports and docs/dashboards copies) -- corruption
+  repaired; 05_mega_project_5_liquidity_cashflow's notebook 05 dashboard
+  (both copies) -- corruption repaired. All other 26 HTML dashboards were
+  scanned and found clean (no occurrences of this pattern).
+- XLSX: the same 3 MP2 workbooks and MP5 workbook 05 -- corruption
+  repaired directly in their real numeric-safe text cells (formula cells
+  were never touched, verified unaffected). All other 27 XLSX workbooks
+  were scanned and found clean.
+- DOCX was not affected: its shorthand insertion never used this
+  lookahead pattern.
+
+The suite dashboard's embedded TABLE_DATA JSON was re-verified to parse
+correctly (25 rows) after this fix. No dollar value's underlying meaning
+changed -- only the corrupted or missing display shorthand.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_017XMmvGSjWts4W6BSAD4eUa
