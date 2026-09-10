@@ -15,5 +15,5 @@ python-docx>=1.1
 openpyxl>=3.1
 
 # 2026-09-08 hardening: real OAuth2/JWT support (see src/serving/auth_common.py)
-python-jose[cryptography]>=3.3
+python-jose[cryptography]>=3.5.0
 python-multipart>=0.0.32  # required by OAuth2PasswordRequestForm (POST /token)
