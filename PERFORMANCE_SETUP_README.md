@@ -11,7 +11,7 @@ thread at once, rather than any single step actually being slow.
 | File | Purpose |
 |---|---|
 | `src/utils/performance_setup.py` | The module itself — hardware detection, one shared thread ceiling applied to every library, RAM headroom checks, streaming CSV loads for the suite's largest files, memory cleanup, progress bars, timing. |
-| `verify_performance_setup.py` | A real, 10-step, end-to-end self-test (not a syntax check) — run once to confirm the module works correctly on your machine before relying on it. |
+| `scripts/verify_performance_setup.py` | A real, 10-step, end-to-end self-test (not a syntax check) — run once to confirm the module works correctly on your machine before relying on it. |
 | `requirements-performance.txt` | The specific libraries this module uses: `threadpoolctl`, `numba`, `numexpr`, `bottleneck`, `tqdm`, plus the ones already in `requirements.txt` (`psutil`, `joblib`, `polars`). |
 
 ## Adoption policy — from Problem 2 onward
@@ -62,21 +62,21 @@ so the file is processed lazily rather than fully materialized in RAM the instan
 ```bash
 cd home-credit-enterprise-suite
 pip install -r requirements-performance.txt
-python verify_performance_setup.py
+python scripts/verify_performance_setup.py
 ```
 
 This prints your **real** detected hardware (logical/physical cores, total RAM) and the real
 thread/RAM ceilings computed for your machine — nothing here is a canned or invented number.
 All 10 steps must print `PASS`.
 
-You can also run it inside Jupyter (paste the cell, or `%run verify_performance_setup.py`).
+You can also run it inside Jupyter (paste the cell, or `%run scripts/verify_performance_setup.py`).
 It resolves the project root in this order, so it works no matter where Jupyter's working
 directory actually is:
 
 1. An `HC_SUITE_ROOT` environment variable, if you set one — the most reliable option if
    your setup is unusual. On Windows, before launching Jupyter:
    ```powershell
-   $env:HC_SUITE_ROOT="C:\Users\rnand\Downloads\home-credit-enterprise-suite"
+   $env:HC_SUITE_ROOT="C:\Users\rnand\OneDrive\Portfolio projects\home-credit-enterprise-suite"
    jupyter lab
    ```
 2. Walking **upward** from the working directory — covers running from inside the project

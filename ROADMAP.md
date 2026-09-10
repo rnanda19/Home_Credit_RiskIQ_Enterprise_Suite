@@ -14,7 +14,7 @@ detailed record.
 | 2 | Regulatory Capital & Stress Testing | 6/6 | 5/5 | 2 | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
 | 3 | Risk Segmentation | 6/6 | 4/5 (Problem 3: NOT YET STATISTICALLY ROBUST) | 4 | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
 | 4 | Delinquency Prevention | 6/6 | 5/5 | 4 | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
-| 5 | Liquidity & Cashflow | 6/6 | 5/5 | 0 verified (Problem 4 code exists, not yet run against a real bundle) | — | partial | — | **Built & verified**, hardening in progress |
+| 5 | Liquidity & Cashflow | 6/6 | 5/5 | 1 (verified against a real trained bundle) | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
 
 **Suite total: 24 of 25 real problems statistically robust and
 recommended for production**, per your own real, current
@@ -30,7 +30,7 @@ suite-wide summary.
 
 ## Hardening track — status
 
-Mega Projects 1-4 are at full parity on:
+All 5 Mega Projects are now at full parity on:
 
 - Real notebooks, verified end-to-end (execute → 0 errors → clear
   outputs → `nbformat` validate → Playwright network-blocked dashboard
@@ -46,17 +46,17 @@ Mega Projects 1-4 are at full parity on:
   deliberately have none — see each Mega Project's own README for the
   disclosed scope boundary), with Docker Compose orchestration and a
   pytest suite verifying each service bit-identical against an
-  independent reference computation. 14 services total across Mega
-  Projects 1-4.
+  independent reference computation. 15 services total across the suite
+  (14 across Mega Projects 1-4, plus Mega Project 5's Problem 4 service).
 - CI (`ci.yml` notebook-syntax + unit-tests, `code-quality.yml`
-  pyflakes/black/bandit) running across Mega Projects 1-4.
+  pyflakes/black/bandit) running across all 5 Mega Projects.
 - GitHub Pages live dashboards for all 3 of Mega Projects 1-3's problems,
   plus Mega Project 4's Problems 1-2 (the only ones with a fixture-
   generated dashboard to publish).
 - An architecture flow diagram (Mermaid + PNG) embedded directly in each
   Mega Project's own `README.md`.
 - **Real `X-API-Key` authentication on every `/schema` and `/score`
-  endpoint of all 14 deployable services** (`/health` stays open, for
+  endpoint of all 15 deployable services** (`/health` stays open, for
   liveness probes), plus real per-request explainability
   (`"top_reasons"` on every classifier-backed service,
   `"distance_to_each_segment"` on every clustering-backed one). Retrofit
@@ -66,21 +66,30 @@ Mega Projects 1-4 are at full parity on:
   Credit Risk Platform's own hardening history documents having found and
   fixed in itself. See `CHANGELOG.md` [1.9.7]/[1.9.8] for the full detail.
 
-Mega Project 5 is built (6/6 notebooks) and verified end-to-end, with all
-5 problems recommended for production. **Update, 2026-09-02:** its
-documentation hardening is now complete — architecture diagram
-(`docs/mp5_architecture_flow.mmd`/`.png`), Problem 4's real deployable
-service (`services/prepayment_segment_assignment_service.py`), Docker
-packaging (`docker/`), a real integration test (`tests/`), and CI/Makefile
-wiring are all in place, matching Mega Projects 1-4's pattern exactly.
-The one remaining piece is the `.joblib` bundle itself — Notebook 04 has
-not yet been re-run since the persistence code was added, so the service
-builds and starts but fails fast at startup until that bundle exists. See
+Mega Project 5 is built (6/6 notebooks), verified end-to-end, and fully
+hardened — all 5 problems recommended for production. Its Problem 4
+service (`services/prepayment_segment_assignment_service.py`) is now
+verified against a real, fitted `.joblib` bundle three independent ways:
+the existing unit test comparing the service's output to Notebook 04's
+own real segment assignment, a real live-subprocess + real-HTTP check,
+and a permanent CI-safe end-to-end test
+(`tests/test_e2e_live_service.py`). The executive rollup notebook
+(Notebook 06) now also carries a real, filesystem-checked "Service
+Status" column so this stays truthful automatically on every future
+rerun, rather than being a claim someone has to remember to update. See
 its own `README.md`/`CHANGELOG.md` for current status.
 
 ## What's not yet done
 
-- **Kaggle notebook/dataset packaging** hasn't been done yet.
+- **Kaggle packaging is live but not yet reflected in this repo.** All 5
+  Mega Projects have real, execution-verified showcase notebooks pushed
+  to Kaggle (private, under account `rnanda1976`), mirroring the AMEX
+  repo's Kaggle presence. The submission notebooks and
+  `kernel-metadata.json` files for that push currently live outside this
+  repo (`Downloads\kaggle-submissions\`) and the kernels themselves
+  aren't linked from this repo's README yet — bringing those into this
+  repo (or at minimum linking the 5 kernel URLs from the root README) is
+  the one remaining packaging step.
 
 ## Fixed since the above was written (2026-09-08)
 
@@ -143,7 +152,6 @@ its own `README.md`/`CHANGELOG.md` for current status.
   latency for the accepted requests (median 5ms, p99 110ms). Honest scope
   in `LOAD_TESTING.md`: one service, synthetic local load from one
   machine, not genuine unpredictable production traffic.
-
 - **Real ECOA/Reg B adverse-action notices**: done -- see
   `ADVERSE_ACTION.md`. `src/serving/adverse_action_common.py` turns this
   suite's existing real explainability output into plain-English,
@@ -156,20 +164,37 @@ its own `README.md`/`CHANGELOG.md` for current status.
   65/65 passing. Does not audit the underlying model for disparate impact
   -- that remains the separate, permanently-open fair-lending/bias-audit
   gap.
-
 - **Real end-to-end integration testing**: done -- see `E2E_TESTING.md`.
   `src/testing/e2e_process_harness.py` launches a real service as a real
   `uvicorn` subprocess and talks to it over real HTTP (`requests`, a real
   socket), closing the gap that every prior service test used in-process
-  `TestClient` only. Two real end-to-end test files (MP1's classifier
-  service, MP3's clustering service -- deliberately different app shapes)
-  wired into the existing CI matrix job for free. 8 new tests, full suite
-  re-verified passing on-device. 2 of 20 services covered this way; the
-  other 18 remain `TestClient`-only.
+  `TestClient` only. Three real end-to-end test files now exist (MP1's
+  classifier service, MP3's clustering service, and MP5's Problem 4
+  service -- deliberately different app shapes), wired into the existing
+  CI matrix job for free. 3 of 15 services covered this way; the other 12
+  remain `TestClient`-only.
+- **Mega Project 5, Problem 4 — real trained bundle produced and its
+  service verified end-to-end**: done. Notebook 04 was re-run on the
+  real, full-scale Home Credit dataset and now produces a real fitted
+  clustering bundle (real k=3 KMeans, real fitted StandardScaler over 8
+  real features). The deployable service is verified against that real
+  bundle, and the executive rollup (Notebook 06) now reports a real,
+  filesystem-checked Service Status per problem instead of a static
+  claim. This closed the suite's last remaining disclosed "service
+  unverified against real data" gap.
 
 ## Immediate next steps (in order)
 
-1. Re-run Mega Project 5 Notebook 4 to produce the real `.joblib` bundle,
-   then verify its deployable service against that real bundle.
-2. Revisit the deferred items above (Docker build verification, `black`
-   reformat, Kaggle packaging) once the above is complete.
+1. Bring the Kaggle packaging into this repo: either commit the 5
+   submission notebooks + `kernel-metadata.json` files here, or at
+   minimum link the 5 live kernel URLs from the root README, so the
+   Kaggle presence is discoverable from GitHub rather than only known
+   separately.
+2. Repo hygiene: relocate the remaining root-level utility scripts into
+   `scripts/`, and clear the outstanding Dependabot version-bump PRs.
+3. If further hardening is wanted beyond what's disclosed as
+   intentionally partial scope: extend drift monitoring past Mega
+   Project 1 Problem 1, and extend real end-to-end integration testing
+   past the 3 services that currently have it. Neither is required for
+   any problem's own production-readiness verdict — both are scope
+   extensions, not open defects.

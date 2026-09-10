@@ -39,13 +39,13 @@
   Open PowerShell (Run as Administrator is fine but not required -- this
   script doesn't install anything or touch system settings) and run:
 
-      cd "C:\Users\rnand\Downloads\home-credit-enterprise-suite"
-      powershell -ExecutionPolicy Bypass -File .\push-to-github.ps1
+      cd "C:\Users\rnand\OneDrive\Portfolio projects\home-credit-enterprise-suite"
+      powershell -ExecutionPolicy Bypass -File .\scripts\push-to-github.ps1
 
   To make the GitHub repo public (needed for recruiters to see it, and for
   the live dashboard links to work) and turn on GitHub Pages:
 
-      powershell -ExecutionPolicy Bypass -File .\push-to-github.ps1 -Public
+      powershell -ExecutionPolicy Bypass -File .\scripts\push-to-github.ps1 -Public
 
 .REQUIREMENTS
   - Git for Windows installed (https://git-scm.com/download/win, or
@@ -58,7 +58,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$ProjectPath = "C:\Users\rnand\Downloads\home-credit-enterprise-suite",
+    [string]$ProjectPath = "C:\Users\rnand\OneDrive\Portfolio projects\home-credit-enterprise-suite",
     [string]$RepoName    = "Home_Credit_RiskIQ_Enterprise_Suite",
     [switch]$Public
 )
@@ -187,7 +187,7 @@ if ([string]::IsNullOrWhiteSpace($staged)) {
 
     Write-Step "Committing"
     $commitDate = Get-Date -Format "yyyy-MM-dd"
-    $commitMsg = "Sync suite state as of $commitDate. Mega Projects 1-3 built and hardened (real notebooks, deployable FastAPI services, Docker, tests, sample reports); Mega Projects 4-5 scoped, not yet built. See CHANGELOG.md for the full, itemized history of every fix and scope change, or ROADMAP.md for current status and next steps."
+    $commitMsg = "Sync suite state as of $commitDate. All 5 Mega Projects built and hardened (30 real notebooks, 15 deployable FastAPI services, Docker, tests, real statistical validation). See CHANGELOG.md for the full, itemized history of every fix and scope change, or ROADMAP.md for current status and next steps."
     git commit -m "$commitMsg" | Out-Null
     if ($LASTEXITCODE -ne 0) {
         Write-Err2 "git commit failed (exit code $LASTEXITCODE)."
@@ -280,7 +280,7 @@ Write-Step "Setting repo description, topics, and homepage (recruiter-facing met
 # results -- a blank description/no topics is the #1 reason a strong repo
 # gets scrolled past. Safe to re-run every time; this just overwrites with
 # the current, accurate values.
-$repoDescription = "Enterprise-grade credit risk platform on the real Home Credit Default Risk (Kaggle) dataset -- 3 hardened Mega Projects, 18 real verified notebooks, 10 deployable FastAPI services, real statistical validation and explainability throughout. Zero fabrication: every number is computed live, never asserted."
+$repoDescription = "Enterprise-grade credit risk platform on the real Home Credit Default Risk (Kaggle) dataset -- 5 hardened Mega Projects, 30 real verified notebooks, 15 deployable FastAPI services, real statistical validation and explainability throughout. Zero fabrication: every number is computed live, never asserted."
 $repoTopics = @(
     "credit-risk", "credit-scoring", "risk-management", "regulatory-capital",
     "basel-iii", "model-risk-management", "machine-learning", "data-science",
