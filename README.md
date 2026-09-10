@@ -41,6 +41,7 @@ per an explicit 2026-09-01 policy change (see its own README for the
 full disclosure).
 
 **Quick links:** [Live Dashboards](#live-dashboards) ·
+[System Architecture](#system-architecture) ·
 [Architecture Diagrams](#architecture-diagrams) ·
 [Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md) ·
 [Contributing / Engineering Standards](CONTRIBUTING.md) ·
@@ -54,6 +55,7 @@ full disclosure).
 - [Model Risk & Governance](#model-risk--governance)
 - [Platform at a Glance](#platform-at-a-glance)
 - [Repository Structure](#repository-structure)
+- [System Architecture](#system-architecture)
 - [Architecture Diagrams](#architecture-diagrams)
 - [How to Run](#how-to-run)
 - [Standing Engineering Principles](#standing-engineering-principles-apply-across-every-mega-project)
@@ -298,11 +300,25 @@ part of any Mega Project's identity: code, notebooks, and reports inside
 each folder still refer to "Mega Project 1," "Mega Project 2," etc.,
 unprefixed.
 
+## System Architecture
+
+The suite-wide view: real Kaggle data in, the shared `src/` HYPER library
+used by all 5 Mega Projects, each Mega Project's real recommended/total
+problem count, all 15 deployable services behind real nginx TLS
+termination, the CI that verifies all of it on every push, and the real
+suite-wide executive rollup (`00_suite_executive_summary.json` — 24/25
+recommended, $951,500,234 illustrative annual benefit) that consolidates
+every Mega Project's results.
+
+![System Architecture Diagram](docs/system_architecture_flow.png)
+
+Mermaid source: [`docs/system_architecture_flow.mmd`](docs/system_architecture_flow.mmd).
+
 ## Architecture Diagrams
 
-Each built Mega Project has a full data→library→notebooks→services flow
-diagram (Mermaid source + rendered PNG), embedded in its own README and
-linked here directly:
+Each built Mega Project also has its own, more detailed
+data→library→notebooks→services flow diagram (Mermaid source + rendered
+PNG), embedded in its own README and linked here directly:
 
 | Mega Project | Diagram |
 |---|---|
@@ -310,6 +326,7 @@ linked here directly:
 | 2 — Regulatory Capital & Stress Testing | [PNG](docs/mp2_architecture_flow.png) · [Mermaid source](docs/mp2_architecture_flow.mmd) |
 | 3 — Risk Segmentation | [PNG](docs/mp3_architecture_flow.png) · [Mermaid source](docs/mp3_architecture_flow.mmd) |
 | 4 — Delinquency Prevention | [PNG](docs/mp4_architecture_flow.png) · [Mermaid source](docs/mp4_architecture_flow.mmd) |
+| 5 — Liquidity & Cashflow | [PNG](docs/mp5_architecture_flow.png) · [Mermaid source](docs/mp5_architecture_flow.mmd) |
 
 ## How to Run
 

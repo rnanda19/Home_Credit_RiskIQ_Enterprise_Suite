@@ -1,0 +1,84 @@
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px','fontFamily':'"Trebuchet MS", Verdana, Arial, sans-serif','primaryTextColor':'#1a1a2e','lineColor':'#343a40','edgeLabelBackground':'#ffffff'}}}%%
+flowchart TB
+    classDef dataStyle fill:#FFD43B,stroke:#E8590C,stroke-width:3px,color:#1a1a2e,font-weight:bold;
+    classDef hyperStyle fill:#4DABF7,stroke:#1864AB,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef execStyle fill:#845EF7,stroke:#5F3DC4,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef ciStyle fill:#748FFC,stroke:#3B5BDB,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef mp1Style fill:#FF922B,stroke:#D9480F,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef mp2Style fill:#F06595,stroke:#A61E4D,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef mp3Style fill:#22B8CF,stroke:#0B7285,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef mp4Style fill:#FA5252,stroke:#C92A2A,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef mp5Style fill:#12B886,stroke:#087F5B,stroke-width:3px,color:#ffffff,font-weight:bold;
+
+    subgraph DATA["📂 DATA — real, from Kaggle (never redistributed)"]
+        RAW["🗂️ Home Credit Default Risk\napplication_train/test.csv\nbureau · previous_application\ninstallments_payments · POS_CASH..."]
+    end
+
+    subgraph HYPER["🧩 src/ HYPER SHARED LIBRARY — written once, imported by all 5 Mega Projects"]
+        FEAT["⚙️ features/\nfeature engineering"]
+        REPORT["📄 reporting/report_builder\nHTML + Word + Excel"]
+        UTIL["🖥️ utils/performance_setup\nWARP resource ceilings"]
+        SERVE["🔌 serving/scoring_service_common\n+ rate_limit_common"]
+    end
+
+    RAW ==> MP1
+    RAW ==> MP2
+    RAW ==> MP3
+    RAW ==> MP4
+    RAW ==> MP5
+    HYPER -.imported by every notebook & service.-> MP1
+    HYPER -.imported by every notebook & service.-> MP2
+    HYPER -.imported by every notebook & service.-> MP3
+    HYPER -.imported by every notebook & service.-> MP4
+    HYPER -.imported by every notebook & service.-> MP5
+
+    MP1["🏦 MEGA PROJECT 1\nUnderwriting & Approval Intelligence\n5 problems · 6 notebooks\n✅ 5/5 recommended for production"]:::mp1Style
+    MP2["🏛️ MEGA PROJECT 2\nRegulatory Capital & Stress Testing\n5 problems · 6 notebooks\n✅ 5/5 recommended for production"]:::mp2Style
+    MP3["🧩 MEGA PROJECT 3\nRisk Segmentation\n5 problems · 6 notebooks\n⚠️ 4/5 — Problem 3 disclosed\nnot yet statistically robust"]:::mp3Style
+    MP4["🚨 MEGA PROJECT 4\nDelinquency Prevention\n5 problems · 6 notebooks\n✅ 5/5 recommended for production"]:::mp4Style
+    MP5["💧 MEGA PROJECT 5\nLiquidity & Cashflow\n5 problems · 6 notebooks\n✅ 5/5 recommended for production"]:::mp5Style
+
+    MP1 ==>|report| EXEC
+    MP2 ==>|report| EXEC
+    MP3 ==>|report| EXEC
+    MP4 ==>|report| EXEC
+    MP5 ==>|report| EXEC
+
+    EXEC["🎯 00 — SUITE EXECUTIVE ROLLUP\nconsolidates all 25 problems' real summaries\n24/25 recommended · $951,500,234\nillustrative annual benefit\nHTML + Word + Excel + live dashboard"]
+
+    MP1 ==> SVC1
+    MP2 ==> SVC2
+    MP3 ==> SVC3
+    MP4 ==> SVC4
+    MP5 ==> SVC5
+
+    subgraph TLS["🔒 nginx TLS TERMINATION — real self-signed cert, verified in CI"]
+        SVC1["💠 MP1 services (4)\ncredit-default-prediction : 9001\nloan-application-approval : 9002\ncredit-score-estimation : 9003\nrepayment-capacity-analysis : 9004"]:::mp1Style
+        SVC2["💠 MP2 services (2)\ncapital-requirement : 9005\nmacro-stress-testing : 9006"]:::mp2Style
+        SVC3["💠 MP3 services (4)\nrisk-tier-assignment : 9007\nbureau-segment-assignment : 9008\nrepayment-segment-assignment : 9009\nutilization-segment-assignment : 9010"]:::mp3Style
+        SVC4["💠 MP4 services (4)\nearly-delinquency-scoring : 9011\npayment-pattern-assignment : 9012\nrevolving-distress-scoring : 9013\npos-cash-trajectory-scoring : 9014"]:::mp4Style
+        SVC5["💠 MP5 service (1)\nprepayment-segment-assignment : 9015"]:::mp5Style
+    end
+
+    subgraph CI["⚙️ GITHUB ACTIONS — every push to main"]
+        CIBUILD["🔨 docker-build-verify\n5-entry matrix · real docker build + run\nreal /health check per Mega Project"]
+        CITLS["🛡️ tls-termination-verify\n5-entry matrix · all 15 services\nreal nginx + real HTTPS request"]
+        CIE2E["🧪 E2E test suite\nall 15 services · pytest"]
+        CIQUAL["✔️ Code Quality\nblack · ruff · mypy"]
+    end
+
+    CIBUILD -.builds & starts.-> TLS
+    CITLS ==terminates TLS in front of & verifies==> TLS
+    CIE2E -.exercises.-> TLS
+
+    class RAW dataStyle;
+    class FEAT,REPORT,UTIL,SERVE hyperStyle;
+    class EXEC execStyle;
+    class CIBUILD,CITLS,CIE2E,CIQUAL ciStyle;
+
+    style DATA fill:#FFF9DB,stroke:#F08C00,stroke-width:3px
+    style HYPER fill:#E7F5FF,stroke:#1971C2,stroke-width:3px
+    style TLS fill:#E6FCF5,stroke:#0B7285,stroke-width:3px
+    style CI fill:#EDF2FF,stroke:#3B5BDB,stroke-width:3px
+
+    linkStyle default stroke:#343a40,stroke-width:2.5px;
