@@ -1,0 +1,26 @@
+Fix Mega Project 1 problem numbering on the GitHub Pages catalog page
+
+docs/index.html labeled MP1's 5 problem cards "Problem 1", "Problem 3",
+"Problem 4", "Problem 11", "Problem 12" (skipping 2, then jumping to
+completely unrelated numbers), while MP2-MP5's cards on the same page were
+already correctly numbered 1-5 sequentially.
+
+Verified this was isolated to this one catalog page before changing
+anything: the actual generating reports for MP1 (mp1_executive_report.docx,
+mp1_executive_dashboard.html, and every notebook_0X_workbook.xlsx) already
+correctly label these as Problem 1 through Problem 5 -- confirmed by
+direct inspection, not assumption. Only the display labels in
+docs/index.html were wrong; each card's underlying href link already
+pointed to the correct notebook (e.g. the "Problem 11" card correctly
+linked to notebook_04_dashboard.html, MP1's real Problem 4).
+
+Fix: relabeled the 4 affected cards --
+  notebook_02 card: "Problem 3" -> "Problem 2 -- Loan Application Approval"
+  notebook_03 card: "Problem 4" -> "Problem 3 -- Credit Score Estimation"
+  notebook_04 card: "Problem 11" -> "Problem 4 -- Repayment Capacity Analysis"
+  notebook_05 card: "Problem 12" -> "Problem 5 -- Previous Application Outcomes"
+No links, descriptions, or report content were changed -- only the 4
+mislabeled problem numbers.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_017XMmvGSjWts4W6BSAD4eUa
