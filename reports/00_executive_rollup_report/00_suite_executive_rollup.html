@@ -7858,6 +7858,38 @@ problems.</li>
 <li><strong>Liquidity &amp; Cashflow</strong> — 5 real treasury/liquidity engineering and
 macro-stress problems.</li>
 </ol>
+<h3 id="Strategic-integration-across-the-5-Mega-Projects">Strategic integration across the 5 Mega Projects<a class="anchor-link" href="#Strategic-integration-across-the-5-Mega-Projects">¶</a></h3><p>The 5 Mega Projects are not five independent notebook chains that happen
+to share a repo -- one real model artifact ties three of them together.
+Per <code>MODEL_REGISTRY.md</code>'s "Known cross-Mega-Project consumers" section,
+MP1 Problem 1's credit-default champion (<code>MP1-01</code>) is directly reused by
+MP2 Problem 1 (Expected Loss &amp; Capital Requirement Estimation) and is a
+hard dependency of MP3 Problem 1 (Data-Driven Risk Tier Construction),
+which in turn seeds MP3's own internal chain (Problems 2-5). That makes
+<code>MP1-01</code> the suite's single largest point of model-risk concentration:
+retraining or promoting a new <code>MP1-01</code> champion has a wider blast radius
+than any other artifact in the suite, and <code>MP2-01</code>/<code>MP3-01</code> should be
+re-validated against the new champion before either is redeployed --
+neither owns the artifact itself, so neither is forced to notice a change
+automatically. MP4 (Delinquency Prevention) and MP5 (Liquidity &amp;
+Cashflow) are architecturally independent of <code>MP1-01</code> -- each trains
+directly from its own bureau/installment/POS-cash or cashflow-specific
+tables, so a retrain of the underwriting champion does not cascade there.</p>
+<h3 id="Model-monitoring-&amp;-governance-cadence-(real,-disclosed-scope)">Model monitoring &amp; governance cadence (real, disclosed scope)<a class="anchor-link" href="#Model-monitoring-&amp;-governance-cadence-(real,-disclosed-scope)">¶</a></h3><p>Ongoing production monitoring exists and is real, not aspirational: see
+<code>MONITORING.md</code> and <code>src/monitoring/monitoring_job.py</code>. It checks two
+things against a model's own training baseline -- Population Stability
+Index drift on the model's top-N features (<code>psi_watch = 0.10</code>,
+<code>psi_alert = 0.25</code>, the standard published PSI interpretation bands) and
+how far a scored batch's realized default rate has swung once outcomes
+are known (<code>default_rate_swing_pp = 3.0</code>, this repo's own disclosed
+operating threshold) -- and exits 1 on any <code>ALERT</code>, so a scheduler can
+fail the job or page someone. <strong>Honest scope</strong>: this is wired today for
+exactly 1 of the suite's 25 problems -- <code>MP1-01</code>, the same flagship model
+identified above as the suite's largest concentration risk -- and no live
+cron/Task Scheduler job is running anywhere in this repo (a portfolio
+repo's CI cannot demonstrate a continuously-running scheduler; the
+command <code>MONITORING.md</code> documents is what such a scheduler would run).
+Extending coverage to another model needs no new code: generate that
+model's baseline, commit its config, schedule the job.</p>
 <h3 id="IMPORTANT-SCALE-CAVEAT">IMPORTANT SCALE CAVEAT<a class="anchor-link" href="#IMPORTANT-SCALE-CAVEAT">¶</a></h3><p>This suite verifies every notebook against a small <strong>synthetic fixture</strong>.
 Every dollar figure in this rollup reflects whatever real data each Mega
 Project's own notebooks were <strong>most recently run against</strong>. Re-run all 5
@@ -7873,6 +7905,18 @@ execution — 0 errors, all 3 real suite-wide consistency checks pass, HTML
 dashboard confirmed under a network-blocked Playwright check, Excel
 workbook confirmed via LibreOffice headless recalculation. <strong>Not yet run
 against your real data.</strong></p>
+<p><strong>2026-09-10 addendum</strong>: the "Strategic integration" and "Model
+monitoring &amp; governance cadence" sections above, and the corresponding
+4th SMART insight added to this notebook's own <code>INSIGHTS</code> list, were a
+source-only edit -- unverified by an actual re-run, per this suite's own
+standing rule that notebooks are never executed on this reviewer's
+behalf. Both sections cite only already-committed, independently
+verifiable facts (<code>MODEL_REGISTRY.md</code>, <code>MONITORING.md</code>); the new
+insight's computed fields (<code>TOTAL_PROBLEMS_RECOMMENDED</code>,
+<code>TOTAL_PROBLEMS_AVAILABLE</code>) reuse variables this notebook already
+validates via its own suite-wide consistency checks above, not new
+computation. Re-run this notebook once to confirm the new insight
+renders correctly in the real Word/Excel/HTML outputs.</p>
 </div>
 </div>
 </div>
@@ -8232,6 +8276,26 @@ against your real data.</strong></p>
                     <span class="s2">"business case across the whole suite, not a forecast or a guarantee."</span><span class="p">,</span>
         <span class="s2">"timebound"</span><span class="p">:</span> <span class="s2">"Re-run any upstream notebook on refreshed real data, then re-run this rollup -- "</span>
                      <span class="s2">"every figure here recomputes automatically from the new real summaries."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"headline"</span><span class="p">:</span> <span class="s2">"Two decisions before promoting recommended models to production: model-risk concentration and monitoring coverage"</span><span class="p">,</span>
+        <span class="s2">"specific"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">TOTAL_PROBLEMS_RECOMMENDED</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">TOTAL_PROBLEMS_AVAILABLE</span><span class="si">}</span><span class="s2"> real problems across the suite are recommended for "</span>
+                    <span class="sa">f</span><span class="s2">"production this run, but MP1-01 (the Problem 1 credit-default champion) is a reused or hard dependency "</span>
+                    <span class="sa">f</span><span class="s2">"for MP2-01 (capital requirement) and MP3-01 (risk tiering) -- see MODEL_REGISTRY.md's 'Known "</span>
+                    <span class="sa">f</span><span class="s2">"cross-Mega-Project consumers' -- so retraining or promoting a new MP1-01 champion should trigger a "</span>
+                    <span class="sa">f</span><span class="s2">"re-run of both before either is redeployed."</span><span class="p">,</span>
+        <span class="s2">"measurable"</span><span class="p">:</span> <span class="s2">"Production drift monitoring (src/monitoring/monitoring_job.py -- PSI + default-rate-swing checks at "</span>
+                      <span class="s2">"psi_watch=0.10/psi_alert=0.25/default_rate_swing_pp=3.0) is wired today for 1 of the suite's 25 "</span>
+                      <span class="s2">"problems -- MP1-01 -- with no live scheduler running; see MONITORING.md for the exact command to "</span>
+                      <span class="s2">"extend coverage to another model (no new code required)."</span><span class="p">,</span>
+        <span class="s2">"achievable"</span><span class="p">:</span> <span class="s2">"Both facts are read directly from this suite's own already-committed governance files "</span>
+                      <span class="s2">"(MODEL_REGISTRY.md, MONITORING.md), not recomputed or estimated here."</span><span class="p">,</span>
+        <span class="s2">"relevant"</span><span class="p">:</span> <span class="s2">"A model promoted to production without monitoring coverage, or without re-validating its known "</span>
+                    <span class="s2">"downstream consumers, is exactly the kind of gap a model-risk governance review looks for before "</span>
+                    <span class="s2">"sign-off."</span><span class="p">,</span>
+        <span class="s2">"timebound"</span><span class="p">:</span> <span class="s2">"Resolve before promoting any MP1-01 retrain to production: re-run MP2-01 and MP3-01 against the new "</span>
+                     <span class="s2">"champion, and decide whether to extend monitoring coverage to the newly-promoted problems before or "</span>
+                     <span class="s2">"alongside deployment."</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">"headline"</span><span class="p">:</span> <span class="s2">"Reading BENEFIT vs. COST_CONTEXT across all 5 Mega Projects"</span><span class="p">,</span>
