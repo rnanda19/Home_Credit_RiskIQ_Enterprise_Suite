@@ -68,8 +68,8 @@
 <main>
   <div class="kpi-row">
     <div class="kpi" style="--kc:#2a78d6"><div class="label">Real Applicants</div><div class="value">307,511</div></div>
-<div class="kpi" style="--kc:#eb6834"><div class="label">Total EAD</div><div class="value">$184,207,084,196</div></div>
-<div class="kpi" style="--kc:#1baf7a"><div class="label">Total RWA</div><div class="value">$121,961,353,912</div></div>
+<div class="kpi" style="--kc:#eb6834"><div class="label">Total EAD</div><div class="value">$184,207,084,196 ($184.21B)</div></div>
+<div class="kpi" style="--kc:#1baf7a"><div class="label">Total RWA</div><div class="value">$121,961,353,912 ($121.96B)</div></div>
 <div class="kpi" style="--kc:#eda100"><div class="label">Portfolio RWA Density</div><div class="value">66.21%</div></div>
   </div>
 
@@ -80,12 +80,12 @@
 <div class="facet"><span class="chip">T</span><span class="txt"><b>Time-bound:</b> Re-run after any Notebook 01 (MP2) re-run or LGD/correlation assumption update.</span></div></div></div>
 
   <h2 class="section-title">Charts</h2>
-  <div class="chart-card"><div class="chart-head"><h3>RWA Density by PD Risk Band</h3></div><canvas id="densityByBand"></canvas><div class="story" style="--sc:#2a78d6"><b>Insight —</b> Real RWA density rises from 48.31% in 'Lowest Risk' to 107.23% in 'Highest Risk' -- higher-PD bands carry a higher capital charge by construction of the Basel K() formula (Notebook 01). Portfolio-wide real RWA density: 66.21% ($121,961,353,912 RWA / $184,207,084,196 EAD). Statistical robustness verdict: STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION.</div></div>
+  <div class="chart-card"><div class="chart-head"><h3>RWA Density by PD Risk Band</h3></div><canvas id="densityByBand"></canvas><div class="story" style="--sc:#2a78d6"><b>Insight —</b> Real RWA density rises from 48.31% in 'Lowest Risk' to 107.23% in 'Highest Risk' -- higher-PD bands carry a higher capital charge by construction of the Basel K() formula (Notebook 01). Portfolio-wide real RWA density: 66.21% ($121,961,353,912 RWA / $184,207,084,196 ($184.21B) EAD). Statistical robustness verdict: STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION.</div></div>
 <div class="chart-card"><div class="chart-head"><h3>Total RWA by Income Type</h3></div><canvas id="rwaByIncome"></canvas><div class="story" style="--sc:#eb6834"><b>Insight —</b> 'Cash loans' (NAME_CONTRACT_TYPE) carries the largest real total RWA ($115,735,687,895) across 278,232 real applicants. 'Unemployed' (NAME_INCOME_TYPE) shows the highest real RWA density (90.22%) -- a capital-efficiency signal, not necessarily the largest dollar exposure.</div></div>
 
   <h2 class="section-title">Segment RWA Analytics (all dimensions)</h2><div class="filter-bar"><input id="table-search" type="text" placeholder="Search sampled rows..."><select id="table-colfilter"></select></div><div class="table-wrap"><table class="data-table"><thead><tr><th>dimension</th><th>segment_value</th><th>n_applicants</th><th>total_ead</th><th>total_el</th><th>total_rwa</th><th>total_capital_requirement</th><th>real_default_rate</th><th>rwa_density</th><th>el_rate</th><th>capital_rate</th></tr></thead><tbody id="table-body"></tbody></table></div><div class="note" id="table-count"></div>
 </main>
-<footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side.</footer>
+<footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side. This report includes assumption-based estimates alongside real, notebook-computed figures; all results are unaudited and have not been independently verified. Provided for illustrative purposes only -- it does not constitute audited financial statements, investment advice, or a production deployment certification.</footer>
 <script>
 const CHART_DATA = [{"id": "densityByBand", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["Lowest Risk", "Low Risk", "Moderate Risk", "High Risk", "Highest Risk"], "datasets": [{"label": "RWA Density", "data": [0.4831, 0.7405, 0.9555, 1.1235, 1.0723]}]}], "showLegend": true, "options": null}, {"id": "rwaByIncome", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["Working", "Commercial associate", "Pensioner", "State servant", "Unemployed", "Student", "Businessman", "Maternity leave"], "datasets": [{"label": "Total RWA ($)", "data": [64446300841.0, 30526225212.0, 18262894490.0, 8698900534.0, 15172267.0, 6438067.0, 3259323.0, 2163177.0]}]}], "showLegend": true, "options": null}];
 const charts = {};

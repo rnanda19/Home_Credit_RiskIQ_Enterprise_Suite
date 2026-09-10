@@ -68,7 +68,7 @@
 <main>
   <div class="kpi-row">
     <div class="kpi" style="--kc:#2a78d6"><div class="label">Real Applicants</div><div class="value">307,511</div></div>
-<div class="kpi" style="--kc:#eb6834"><div class="label">Real Total Capital</div><div class="value">$9,756,908,313</div></div>
+<div class="kpi" style="--kc:#eb6834"><div class="label">Real Total Capital</div><div class="value">$9,756,908,313 ($9.76B)</div></div>
 <div class="kpi" style="--kc:#1baf7a"><div class="label">Most Concentrated Dimension</div><div class="value">NAME_CONTRACT_TYPE</div></div>
 <div class="kpi" style="--kc:#eda100"><div class="label">Highest HHI</div><div class="value">9031 (Highly Concentrated)</div></div>
   </div>
@@ -84,7 +84,7 @@
 
   <h2 class="section-title">Segment Capital Shares (all dimensions)</h2><div class="filter-bar"><input id="table-search" type="text" placeholder="Search sampled rows..."><select id="table-colfilter"></select></div><div class="table-wrap"><table class="data-table"><thead><tr><th>segment_value</th><th>n_applicants</th><th>total_capital</th><th>dimension</th><th>capital_share</th></tr></thead><tbody id="table-body"></tbody></table></div><div class="note" id="table-count"></div>
 </main>
-<footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side.</footer>
+<footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side. This report includes assumption-based estimates alongside real, notebook-computed figures; all results are unaudited and have not been independently verified. Provided for illustrative purposes only -- it does not constitute audited financial statements, investment advice, or a production deployment certification.</footer>
 <script>
 const CHART_DATA = [{"id": "hhiByDimension", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["CAPITAL_SEGMENT", "NAME_INCOME_TYPE", "NAME_EDUCATION_TYPE", "NAME_CONTRACT_TYPE", "REGION_RATING_CLIENT"], "datasets": [{"label": "HHI (points)", "data": [4759.0, 3694.0, 5693.0, 9031.0, 5592.0]}]}], "showLegend": true, "options": null}];
 const charts = {};

@@ -67,13 +67,13 @@
 </header>
 <main>
   <div class="kpi-row">
-    <div class="kpi" style="--kc:#2a78d6"><div class="label">Baseline 90d Collections</div><div class="value">$14,860,661,286</div></div>
-<div class="kpi" style="--kc:#eb6834"><div class="label">Adverse 90d Collections</div><div class="value">$13,773,398,189</div></div>
-<div class="kpi" style="--kc:#1baf7a"><div class="label">Severely Adverse 90d Collections</div><div class="value">$12,817,989,832</div></div>
+    <div class="kpi" style="--kc:#2a78d6"><div class="label">Baseline 90d Collections</div><div class="value">$14,860,661,286 ($14.86B)</div></div>
+<div class="kpi" style="--kc:#eb6834"><div class="label">Adverse 90d Collections</div><div class="value">$13,773,398,189 ($13.77B)</div></div>
+<div class="kpi" style="--kc:#1baf7a"><div class="label">Severely Adverse 90d Collections</div><div class="value">$12,817,989,832 ($12.82B)</div></div>
 <div class="kpi" style="--kc:#eda100"><div class="label">Severely Adverse Coverage Ratio</div><div class="value">0.98 (REVIEW)</div></div>
   </div>
 
-  <h2 class="section-title">Key Insights &amp; SMART Recommendations</h2><div class="insight-grid"><div class="insight-card" style="--ic:#2a78d6"><h4>A real, deterministic macro-scenario stress test of real cashflow collections, using this suite's own cross-project severity convention</h4><div class="facet"><span class="chip">S</span><span class="txt"><b>Specific:</b> 90-day stressed collections range from $14,860,661,286 (Baseline) to $12,817,989,832 (Severely Adverse).</span></div>
+  <h2 class="section-title">Key Insights &amp; SMART Recommendations</h2><div class="insight-grid"><div class="insight-card" style="--ic:#2a78d6"><h4>A real, deterministic macro-scenario stress test of real cashflow collections, using this suite's own cross-project severity convention</h4><div class="facet"><span class="chip">S</span><span class="txt"><b>Specific:</b> 90-day stressed collections range from $14,860,661,28 ($1.49B)6 (Baseline) to $12,817,989,83 ($1.28B)2 (Severely Adverse).</span></div>
 <div class="facet"><span class="chip">M</span><span class="txt"><b>Measurable:</b> Severely Adverse 90-day coverage ratio vs. Notebook 03's 85% requirement = 0.98 (REVIEW).</span></div>
 <div class="facet"><span class="chip">A</span><span class="txt"><b>Achievable:</b> Every scenario is a deterministic, real re-evaluation of the real historical rate distribution's own mean/std -- no simulation randomness, fully reproducible.</span></div>
 <div class="facet"><span class="chip">R</span><span class="txt"><b>Relevant:</b> Gives treasury a named, Basel-severity-consistent macro scenario view, distinct from and cross-checked against Notebook 02's own empirical worst-case-5% estimate.</span></div>
@@ -85,7 +85,7 @@
 
   
 </main>
-<footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side.</footer>
+<footer>Every figure and every sampled row on this page was computed by this problem's own notebook run against real data. Labeled ASSUMPTION figures are marked as such. Chart filters switch between real precomputed views only -- nothing is invented client-side. This report includes assumption-based estimates alongside real, notebook-computed figures; all results are unaudited and have not been independently verified. Provided for illustrative purposes only -- it does not constitute audited financial statements, investment advice, or a production deployment certification.</footer>
 <script>
 const CHART_DATA = [{"id": "scenarioChart", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["Baseline", "Adverse", "Severely Adverse"], "datasets": [{"label": "90-Day Stressed Collections ($)", "data": [14860661286.41, 13773398188.51, 12817989832.02], "backgroundColor": ["#2a78d6", "#eb6834", "#1baf7a"]}]}], "showLegend": true, "options": null}, {"id": "rateChart", "type": "bar", "views": [{"key": "default", "label": "Default", "labels": ["Baseline", "Adverse", "Severely Adverse"], "datasets": [{"label": "Stressed Rate", "data": [0.9703, 0.8993, 0.837], "backgroundColor": ["#2a78d6", "#eb6834", "#1baf7a"]}]}], "showLegend": true, "options": null}];
 const charts = {};

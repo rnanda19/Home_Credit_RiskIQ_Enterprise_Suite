@@ -1,0 +1,48 @@
+Fix .gitignore so real report deliverables reach the public repo; sync all
+31 remaining HTML dashboards into docs/dashboards/ (the live GitHub Pages
+mirror), which the previous commit (5f868cd) never touched
+
+Root cause of the previous push landing only 14 unrelated files: this
+repo's .gitignore has a longstanding, deliberate rule --
+"**/decision_engine/reports/" -- excluding that entire folder tree from
+git, documented as a data-governance decision ("never ship real output
+derived from your actual data in a public repo"). Every DOCX/XLSX/HTML
+file edited in this session's earlier B/M-shorthand-and-disclaimer pass
+lived under exactly that path, so git silently discarded all of it on
+every previous "git add -A" -- including files an earlier commit message
+in this repo's history (commit_msg8.txt, predating this session) claimed
+were included but, on inspection with git log/git ls-files, never
+actually were.
+
+Verified with the user before changing anything: DOCX/XLSX report files
+should be published to the public repo despite that governance rule, so
+this commit:
+
+1. Adds a narrow, explicit exception to .gitignore --
+   !**/decision_engine/reports/*.docx
+   !**/decision_engine/reports/*.xlsx
+   -- so the 31 XLSX workbooks and 31 DOCX reports from this session's
+   B/M-shorthand-and-disclaimer pass (already sitting on disk, unchanged
+   by this commit) become trackable. Everything else in that folder stays
+   ignored on purpose: raw HTML dashboards, and large generated exports
+   like notebook_05_previous_application_outcomes.csv (174MB) and
+   notebook_01_capital_scores.csv (50MB), which would fail a normal GitHub
+   push if ever unignored.
+
+2. Syncs the 31 already-edited HTML dashboards (suite done in the prior
+   commit; this commit covers the remaining 30: mp1-mp5 executive
+   dashboards + every individual problem-notebook dashboard) from their
+   decision_engine/reports working copies into their docs/dashboards/
+   mirror -- the folder GitHub Pages actually serves from, and the only
+   git-tracked copy of these dashboards. One of the 30, mp5_notebook_05
+   (MP5 Problem 5 -- Macro Cashflow Stress Test), had never existed under
+   docs/dashboards/ at all before this commit; it is added here for the
+   first time, closing a pre-existing gap unrelated to this session's
+   editing.
+
+No dollar figure, disclaimer text, or report content is changed by this
+commit -- it only fixes which already-edited files git and GitHub Pages
+can actually see.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_017XMmvGSjWts4W6BSAD4eUa

@@ -29,7 +29,17 @@ _catboost_info/
 # notebook_05_previous_application_outcomes.csv) that had been left over in this
 # staging copy from earlier synthetic-fixture verification runs.
 **/decision_engine/artifacts/
-**/decision_engine/reports/
+**/decision_engine/reports/*
+
+# EXCEPTION (2026-09-10, explicit user decision): the finished DOCX and XLSX
+# executive/problem reports ARE published to the public repo as portfolio
+# deliverables, despite the "never ship real output" rule above. Everything
+# else in decision_engine/reports/ (html, csv, json, png -- including large
+# raw exports like *_holdout_predictions.csv, *_previous_application_outcomes.csv)
+# stays ignored; the public-safe HTML dashboard mirror lives under docs/dashboards/
+# instead, not here.
+!**/decision_engine/reports/*.docx
+!**/decision_engine/reports/*.xlsx
 
 # local virtualenvs / build artifacts
 .venv/
