@@ -1,0 +1,83 @@
+Close genuine N/A gaps on suite dashboard: MP1 headline metrics, MP4
+checks persistence, MP5 checks+headline metrics, suite detail table
+
+Root cause (confirmed by reading the actual generating source, not
+guessing): the live "Full Per-Problem Detail" table on
+docs/dashboards/00_suite_executive_dashboard.html corresponded to no
+code anywhere in 00_suite_executive_rollup.ipynb's history -- the
+notebook only ever built a simpler 6-column financial-only table. Three
+further, independent gaps meant real data that already existed (or was
+one write away from existing) was never surfaced:
+
+- MP1's Notebook 06 predates this repo's "_headline_metric()" helper
+  convention used by MP2/MP3/MP4/MP5, so it never computed one.
+- MP4's Problems 1-5 each compute a real integrity_checks list, but
+  never persist it into their own summary JSON, so MP4's Notebook 06
+  had nothing to read and Section reported "checks" as literally
+  unavailable.
+- MP5's Notebook 06 already computes per-problem method/verdict/checks/
+  headline metric for its OWN report, but never persisted that list
+  into notebook_06_summary.json for the suite rollup to consume.
+
+Fix (all values are real, already-computed-or-newly-computable; no
+pass/fail status is fabricated -- every field still degrades to "N/A"
+via .get()-based fallbacks when the underlying data is genuinely
+absent):
+
+- 00_suite_executive_rollup.ipynb: added get_per_problem_detail_rows()
+  which normalizes each Mega Project's differently-shaped
+  per_problem_rollup entries (method/champion_or_method,
+  deployment_verdict/analysis_verdict, integrity_checks/checks,
+  headline_metric) using the repo's existing .get()-fallback adapter
+  pattern, and replaced the dashboard's 6-column financial-only table
+  with the real 8-column "Full Per-Problem Detail" table (Mega
+  Project, Notebook, Problem, Method, Verdict, Checks, Real Headline
+  Metric, Financial Summary).
+- 01_mega_project_1_underwriting_approval/notebooks/06_mp1_executive_report.ipynb:
+  added _headline_metric(nb_id), reading only each problem's own
+  already-saved real summary JSON (holdout ROC-AUC, Cramer's V,
+  offer-utilization rate, etc., with real 95% CIs where the summary
+  has them) -- returns "N/A" for any problem missing the underlying
+  field, never a placeholder.
+- 04_mega_project_4_delinquency_prevention/notebooks/0{1-5}_*.ipynb:
+  each now persists its already-computed integrity_checks list back
+  into its own summary JSON via a read-modify-write (not a reorder,
+  since one check -- summary_json_saved -- genuinely depends on that
+  file already existing).
+- 04_mega_project_4_delinquency_prevention/notebooks/06_mp4_executive_report.ipynb:
+  replaced the honest-but-empty checks placeholder with real logic
+  that reads the now-persisted integrity_checks field and reports
+  "N/N PASS" (or "N/A" only if a problem genuinely has zero checks).
+- 05_mega_project_5_liquidity_cashflow/notebooks/06_mp5_executive_rollup.ipynb:
+  added a per_problem_rollup list (mirroring MP1-3's convention) built
+  from the SAME real per-problem values the notebook already computes
+  for its own report, persisted into notebook_06_summary.json.
+
+Verification performed: all 9 notebooks pass nbformat.validate() and
+syntax-only compile() of every changed cell. The new normalization
+logic (get_per_problem_detail_rows and its dependencies) was unit-
+tested in isolation against synthetic mock summary dicts shaped like
+MP1's, MP4's, MP5's, and a MP5-not-run schema, confirming it correctly
+normalizes each MP's real field names and degrades honestly to "N/A"
+for a genuinely-absent case -- never fabricating a pass status.
+
+IMPORTANT -- this commit only changes generating source. It does not
+by itself update the live dashboard. The notebooks must be re-run in
+this order for the real values to materialize:
+  1. MP4 Notebooks 01-05 (each re-persists its own integrity_checks)
+  2. MP4 Notebook 06 (reads the newly-persisted integrity_checks)
+  3. MP1 Notebook 06 and MP5 Notebook 06 (independent of MP4; can run
+     any time after their own upstream problem notebooks)
+  4. Suite Notebook 00 (00_suite_executive_rollup.ipynb) last, since it
+     reads every Mega Project's Notebook 06 summary JSON
+  5. Copy the regenerated
+     00_executive_rollup_report/decision_engine/reports/00_suite_executive_dashboard.html
+     to docs/dashboards/00_suite_executive_dashboard.html so GitHub
+     Pages reflects it
+Re-running will show genuine results, not a guaranteed pass for every
+check -- no outcome was fabricated in this commit, only real
+computation paths that already existed (or were one honest write away
+from existing) were wired through and persisted.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_017XMmvGSjWts4W6BSAD4eUa

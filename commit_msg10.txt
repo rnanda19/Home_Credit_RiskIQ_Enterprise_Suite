@@ -1,0 +1,65 @@
+Add B/M shorthand + unaudited/illustrative declaration across all three
+report formats (HTML, DOCX, XLSX), all 5 Mega Projects and the suite rollup
+
+Two combined, additive-only passes across every generated report in this
+repo -- no dollar value was changed, recalculated, or removed anywhere;
+this only changes how figures are displayed/annotated.
+
+1) B/M shorthand: every dollar figure >= $1,000,000 that appears as
+   human-readable text now carries a "($X.XM)" or "($X.XXB)" shorthand
+   immediately after the exact figure (e.g. "$952,138,853.40 ($952.1M)").
+   Figures under $1M are left exactly as they were, consistent with the
+   existing convention. Applied to:
+   - HTML dashboards (32 files: the suite dashboard + both root/docs
+     copies, all 5 mega-project rollup dashboards, and every individual
+     problem-notebook dashboard) -- top KPI tiles get the shorthand
+     promoted to the large headline value with the exact figure kept as
+     a small subtitle underneath; all other occurrences (insight-card
+     prose, table cells, embedded JSON strings) get the shorthand
+     appended in place. The embedded TABLE_DATA JSON on the suite page
+     was verified to still parse correctly after the edit.
+   - DOCX reports (31 files: the suite executive report + all 5
+     mega-project executive reports + every individual problem-notebook
+     report) -- edited at the XML level, touching only <w:t> text node
+     contents, never document structure. Every file was validated with
+     the docx skill's XSD validator ("All validations PASSED!") and two
+     were spot-rendered to PDF for a visual check before scaling.
+   - XLSX workbooks (31 files: the suite executive workbook + all 5
+     mega-project executive workbooks + every individual problem-notebook
+     workbook) -- ONLY string cells whose displayed text already
+     contains a "$" amount were touched (e.g. the "Financial Impact
+     (Big)" and "SMART Insights" sheets' narrative cells). Formula cells
+     and pure numeric cells that feed other sheets' formulas (Assumptions,
+     Problem Rollup, ROI Timeline) were left completely untouched, so no
+     workbook formula is affected -- verified by reloading every file and
+     confirming all formula strings and their data_type=='f' status are
+     unchanged. Two files were also spot-rendered to PDF via LibreOffice
+     to confirm no corruption.
+
+2) Standard declaration: every one of the same 94 report files (32 HTML +
+   31 DOCX + 31 XLSX) now carries this notice --
+   "Important notice: figures in this report combine real, notebook-
+   computed results with clearly labeled assumption-based estimates. All
+   results are unaudited and have not been independently verified. This
+   report is provided for illustrative purposes only and does not
+   constitute audited financial statements, investment advice, or a
+   production deployment certification."
+   - HTML: appended to the existing shared <footer> text.
+   - DOCX: appended as a new italic, grey, smaller-font paragraph
+     immediately before the final section break.
+   - XLSX: added as a new final "Disclosures & Notes" worksheet with the
+     full notice text, wrapped, in every workbook.
+
+Also included in this commit: 00_executive_rollup_report/decision_engine/
+reports/00_suite_executive_report.docx and
+00_suite_executive_workbook.xlsx -- these two suite-level files were
+inadvertently left out of the prior Downloads-recovery commit and had
+never received the earlier N/A-fix content either; they are included here
+already carrying both the B/M shorthand and the declaration.
+
+No notebook was executed and no notebook source was changed to produce
+this commit -- every file listed above was edited directly, working from
+each report's own already-committed real content.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_017XMmvGSjWts4W6BSAD4eUa

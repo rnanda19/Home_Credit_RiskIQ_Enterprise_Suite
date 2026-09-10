@@ -1,0 +1,22 @@
+Add B/M shorthand next to every dollar figure >= $1M on the suite
+dashboard
+
+All large USD values on 00_suite_executive_dashboard.html now carry a
+"($X.XM)" or "($X.XXB)" shorthand immediately after the exact figure,
+rather than only the raw comma-formatted number. Covers:
+- The 5 top KPI tiles (Annual Illustrative Benefit Run-Rate, 6-Month/
+  1-Year/3-Year/5-Year Cumulative) -- shorthand promoted to the large
+  headline value, exact figure kept as a small subtitle underneath.
+- Insight-card prose sentences (e.g. "Real total annual illustrative
+  benefit run-rate ... $952,138,853.40 ($952.1M)").
+- Every "Financial Summary" and "Real Headline Metric" cell across all
+  25 rows of the Full Per-Problem Detail table.
+
+No dollar value was changed, recalculated, or removed -- this is
+purely an additive formatting pass (append-only regex insertion,
+verified the embedded TABLE_DATA JSON still parses and still has all
+25 rows after the edit). Figures under $1M were left in their existing
+form, consistent with the existing convention.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_017XMmvGSjWts4W6BSAD4eUa
