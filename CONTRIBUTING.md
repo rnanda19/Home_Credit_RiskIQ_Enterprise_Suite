@@ -55,10 +55,12 @@ down.
   skipped, not failed, when the upstream `.joblib` bundle isn't present
   locally, since that's expected until you've run the corresponding
   notebook yourself).
-- `NN_mega_project_N_.../sample_reports/` — fixture-generated HTML/Word/
-  Excel deliverables, clearly `SAMPLE_`-prefixed (see each folder's own
-  `README.md` for the full fixture-vs-real disclosure — this suite never
-  ships output derived from anyone's real data in a public repo).
+- `NN_mega_project_N_.../sample_reports/` — real Word/Excel report and
+  workbook deliverables generated from your own full-scale notebook
+  reruns (restored 2026-09-10, after an earlier fixture-era set was
+  removed — see each folder's own `README.md` for direct links).
+  Aggregate/summary reporting only — this suite never redistributes
+  raw, per-applicant records in a public repo.
 
 ## Before committing
 
@@ -88,6 +90,6 @@ blocking). See the [`Makefile`](Makefile) for individual targets.
   disclosed scope boundary.
 - Don't commit anything under `decision_engine/artifacts/` or
   `decision_engine/reports/` — both are gitignored everywhere in this
-  repo (real trained models and real generated reports are never
-  redistributed; only `sample_reports/`'s clearly `SAMPLE_`-prefixed,
-  fixture-generated files are committed).
+  repo (trained model bundles and the full generated-report working
+  folder are never redistributed; only the curated, aggregate
+  `sample_reports/` snapshot is committed).

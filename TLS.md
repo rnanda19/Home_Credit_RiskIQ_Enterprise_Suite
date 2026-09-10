@@ -38,7 +38,7 @@ were run and verified locally before this job was written.
 
 ## Honest scope: what this covers today, and what it doesn't yet
 
-**One representative service, not all 20.** Same honest shape as this
+**One representative service, not all 15.** Same honest shape as this
 suite's other partial-but-real rollouts (see `MONITORING.md`'s identical
 disclosure for drift monitoring). Extending this to another service is
 mechanical: point `nginx.conf.example`'s `proxy_pass` at that service's

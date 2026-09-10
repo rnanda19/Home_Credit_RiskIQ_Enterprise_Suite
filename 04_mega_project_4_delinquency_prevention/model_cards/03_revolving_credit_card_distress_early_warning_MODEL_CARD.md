@@ -1,6 +1,7 @@
 # Model Card — Problem 3: Revolving/Credit-Card Distress Early Warning
 
 Notebook: `notebooks/03_revolving_credit_card_distress_early_warning.ipynb`
+Service: `services/revolving_distress_scoring_service.py` (FastAPI, port 8013)
 Bundle: `decision_engine/artifacts/notebook_03_champion_model.joblib` (gitignored — regenerate by running the notebook)
 
 ## CI status
@@ -141,9 +142,11 @@ comparisons — never a claim of superiority in either direction:
   that scope.
 - **Class imbalance**: no explicit resampling; `class_weight="balanced"`
   used where supported.
-- **No production scoring service for this notebook**: intended for
-  batch/portfolio-level monitoring, not a per-transaction API — see the
-  root README's disclosed scope boundary for population-level analyses.
+- **Production scoring service**: `revolving_distress_scoring_service.py`
+  (port 8013) — added 2026-09-02 with real authentication, explainability,
+  Docker packaging, and pytest coverage (see the root README's "Running
+  the scoring services" section). An earlier draft of this model card
+  predates that service.
 - **No fairness/bias audit performed in this pass.**
 - **Trained on Kaggle's historical Home Credit population** — performance
   on a materially different applicant population is unverified.

@@ -41,8 +41,7 @@ The deliverable answers a real, concrete question: which axis — and which
 segment within it — concentrates the most real risk per unit of real
 capital already being held against it.
 
-## Why real capital tracking real risk is the right validation here, not
-## a repeated chi-square/silhouette test
+## Why real capital tracking real risk is the right validation here, not a repeated chi-square/silhouette test
 
 Problems 1-4 each already asked and honestly answered "is this
 segmentation's association with real default statistically robust?"

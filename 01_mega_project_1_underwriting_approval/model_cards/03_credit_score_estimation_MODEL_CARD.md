@@ -17,7 +17,7 @@ and does not reflect the current state of the suite.
 
 ## This is not a separately trained model
 
-Unlike Problems 1 and 3, this notebook does **not** train a new model. It
+Unlike Problems 1 and 2, this notebook does **not** train a new model. It
 loads Notebook 01's real champion model and applies a deterministic
 scorecard transform to its predicted probability of default (PD). This
 card documents that transform, not a training methodology, because there

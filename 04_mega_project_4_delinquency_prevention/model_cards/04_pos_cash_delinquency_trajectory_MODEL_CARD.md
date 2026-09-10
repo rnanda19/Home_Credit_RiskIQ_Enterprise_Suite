@@ -1,6 +1,7 @@
 # Model Card — Problem 4: POS/Cash Loan Delinquency Trajectory
 
 Notebook: `notebooks/04_pos_cash_delinquency_trajectory.ipynb`
+Service: `services/pos_cash_trajectory_scoring_service.py` (FastAPI, port 8014)
 Bundle: `decision_engine/artifacts/notebook_04_champion_model.joblib` (gitignored — regenerate by running the notebook)
 
 ## CI status
@@ -123,8 +124,11 @@ overlap has at least 20 applicants and both real `TARGET` classes.
 - **Scope limited to applicants with real prior POS/cash loans.**
 - **Class imbalance**: no explicit resampling; `class_weight="balanced"`
   used where supported.
-- **No production scoring service for this notebook**: batch/portfolio-
-  level monitoring only.
+- **Production scoring service**: `pos_cash_trajectory_scoring_service.py`
+  (port 8014) — added 2026-09-02 with real authentication, explainability,
+  Docker packaging, and pytest coverage (see the root README's "Running
+  the scoring services" section). An earlier draft of this model card
+  predates that service.
 - **No fairness/bias audit performed in this pass.**
 - **Trained on Kaggle's historical Home Credit population.**
 

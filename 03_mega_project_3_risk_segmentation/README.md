@@ -8,7 +8,7 @@ differentiate treatment, not a single blended risk score. Every problem
 below, including the Notebook 06 executive rollup, has been rerun
 end-to-end on your own real, full-scale Kaggle data (307,511 real
 applicants) and confirmed clean; see each section for the real, current
-verdict — 4 of 5 statistically-gated problems are **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**, and Problem 3 is real and confirmed NOT YET STATISTICALLY ROBUST (see its section and model card).
+verdict — 4 of 5 statistically-gated problems are **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**, and Problem 3's real, confirmed verdict is NOT YET STATISTICALLY ROBUST (see its section and model card).
 
 **History:** see this Mega Project's own [`CHANGELOG.md`](CHANGELOG.md)
 for a curated version history, or the

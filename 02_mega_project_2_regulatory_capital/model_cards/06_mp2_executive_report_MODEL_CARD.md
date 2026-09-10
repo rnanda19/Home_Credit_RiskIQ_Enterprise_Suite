@@ -1,4 +1,4 @@
-# Model Card — Notebook 06: Consolidated Executive Rollup
+# Model Card — Problem 6: Consolidated Executive Rollup
 
 Notebook: `notebooks/06_mp2_executive_report.ipynb`
 Hard dependency (not owned by this notebook): all 5 problem notebooks' governance
@@ -51,7 +51,7 @@ honest about partial availability if not all 5 problems have been run.
    every dimension is checked to fall within its valid [0, 10,000] point
    range. None of these are asserted — all three are computed and printed.
 
-## World-class reporting package — what's actually in each format
+## Reporting package — what's actually in each format
 
 - **Word report** (`mp2_executive_report.docx`): executive summary, 7 SMART
   insights (one per available problem, plus 2 bonus insights explaining the

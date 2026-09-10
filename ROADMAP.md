@@ -10,11 +10,11 @@ detailed record.
 
 | # | Mega Project | Notebooks | Recommended | Services | Docker | Tests | Sample reports | Status |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Underwriting & Approval Intelligence | 6/6 | 5/5 | 4 | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
-| 2 | Regulatory Capital & Stress Testing | 6/6 | 5/5 | 2 | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
-| 3 | Risk Segmentation | 6/6 | 4/5 (Problem 3: NOT YET STATISTICALLY ROBUST) | 4 | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
-| 4 | Delinquency Prevention | 6/6 | 5/5 | 4 | ✅ | ✅ | removed 2026-09-02 (see live dashboards) | **Built & hardened** |
-| 5 | Liquidity & Cashflow | 6/6 | 5/5 | 0 verified (Problem 4 code exists, not yet run against a real bundle) | — | partial | — | **Built & verified**, hardening in progress |
+| 1 | Underwriting & Approval Intelligence | 6/6 | 5/5 | 4 | ✅ | ✅ | restored 2026-09-10 (real docx/xlsx — see README) | **Built & hardened** |
+| 2 | Regulatory Capital & Stress Testing | 6/6 | 5/5 | 2 | ✅ | ✅ | restored 2026-09-10 (real docx/xlsx — see README) | **Built & hardened** |
+| 3 | Risk Segmentation | 6/6 | 4/5 (Problem 3: NOT YET STATISTICALLY ROBUST) | 4 | ✅ | ✅ | restored 2026-09-10 (real docx/xlsx — see README) | **Built & hardened** |
+| 4 | Delinquency Prevention | 6/6 | 5/5 | 4 | ✅ | ✅ | restored 2026-09-10 (real docx/xlsx — see README) | **Built & hardened** |
+| 5 | Liquidity & Cashflow | 6/6 | 5/5 | 1 verified (Problem 4, verified against a real bundle 2026-09-08) | ✅ | partial | restored 2026-09-10 (real docx/xlsx — see README) | **Built & verified**, hardening in progress |
 
 **Suite total: 24 of 25 real problems statistically robust and
 recommended for production**, per your own real, current
@@ -40,14 +40,16 @@ Mega Projects 1-4 are at full parity on:
   syntax/AST check and `nbformat.validate()`, with no fixture execution;
   see that Mega Project's own README for the full disclosure. All
   `sample_reports/` fixture-era folders (Mega Projects 1-4) were removed
-  2026-09-02 — superseded by the real GitHub Pages live dashboards.
+  2026-09-02 — superseded by the real GitHub Pages live dashboards —
+  then restored 2026-09-10 with real Word/Excel files from each Mega
+  Project's own full-scale rerun (see each Mega Project's own README).
 - Deployable FastAPI services for every problem where a per-record
   service is a meaningful thing to build (population-level analyses
   deliberately have none — see each Mega Project's own README for the
   disclosed scope boundary), with Docker Compose orchestration and a
   pytest suite verifying each service bit-identical against an
-  independent reference computation. 14 services total across Mega
-  Projects 1-4.
+  independent reference computation. 15 services total across all 5
+  Mega Projects (4 + 2 + 4 + 4 + 1).
 - CI (`ci.yml` notebook-syntax + unit-tests, `code-quality.yml`
   pyflakes/black/bandit) running across Mega Projects 1-4.
 - GitHub Pages live dashboards for all 3 of Mega Projects 1-3's problems,
@@ -63,8 +65,10 @@ Mega Projects 1-4 are at full parity on:
   onto the 10 pre-existing Mega Project 1-3 services in [1.9.7]; built in
   from day one for Mega Project 4's 4 new services in [1.9.8] — closing
   this suite's own version of the exact gap the AMEX RiskIQ Enterprise
-  Credit Risk Platform's own hardening history documents having found and
-  fixed in itself. See `CHANGELOG.md` [1.9.7]/[1.9.8] for the full detail.
+  Credit Risk Platform (a separate personal portfolio project of mine,
+  unaffiliated with American Express) documents having found and fixed
+  in its own hardening history. See `CHANGELOG.md` [1.9.7]/[1.9.8] for
+  the full detail.
 
 Mega Project 5 is built (6/6 notebooks) and verified end-to-end, with all
 5 problems recommended for production. **Update, 2026-09-02:** its
@@ -124,8 +128,8 @@ its own `README.md`/`CHANGELOG.md` for current status.
 - **Real API hardening -- rate limiting + TLS termination**: done.
   `src/serving/rate_limit_common.py` adds real, tested, per-process
   slowapi rate limiting to every `/token`, `/schema`, `/score` (and MP2's
-  `/score/{scenario}`) route across all 20 services (both shared
-  factories + all 5 standalone services) -- 6 new tests, including a real
+  `/score/{scenario}`) route across all 15 services (both shared
+  factories + all standalone services) -- 6 new tests, including a real
   end-to-end proof against the real scoring-service factory (60 real
   calls succeed, the 61st gets a real 429). TLS termination is verified
   end-to-end in CI (`tls-termination-verify` job) for one flagship
@@ -162,10 +166,10 @@ its own `README.md`/`CHANGELOG.md` for current status.
   `uvicorn` subprocess and talks to it over real HTTP (`requests`, a real
   socket), closing the gap that every prior service test used in-process
   `TestClient` only. Two real end-to-end test files (MP1's classifier
-  service, MP3's clustering service -- deliberately different app shapes)
-  wired into the existing CI matrix job for free. 8 new tests, full suite
-  re-verified passing on-device. 2 of 20 services covered this way; the
-  other 18 remain `TestClient`-only.
+  service, MP3's clustering service, and MP5's clustering service --
+  three real app shapes total) wired into the existing CI matrix job for
+  free. 8 new tests, full suite re-verified passing on-device. 3 of 15
+  services covered this way; the other 12 remain `TestClient`-only.
 
 ## Immediate next steps (in order)
 

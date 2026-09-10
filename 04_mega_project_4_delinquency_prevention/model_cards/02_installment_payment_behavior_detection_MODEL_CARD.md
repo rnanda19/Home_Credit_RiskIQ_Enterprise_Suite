@@ -1,6 +1,7 @@
 # Model Card — Problem 2: Installment Payment Behavior / Missed-Payment Pattern Detection
 
 Notebook: `notebooks/02_installment_payment_behavior_detection.ipynb`
+Service: `services/payment_pattern_assignment_service.py` (FastAPI, port 8012)
 Bundle: `decision_engine/artifacts/notebook_02_kmeans_model.joblib` (gitignored — regenerate by running the notebook)
 
 ## CI status
@@ -130,8 +131,11 @@ validating the other.
   small synthetic fixture they did not clear the significance bar; on the
   real, full-scale 2026-09-02 run they did (see Statistical validation
   above).
-- **No production scoring service**: like Notebook 01, this is intended
-  for batch/portfolio-level monitoring, not a per-transaction API.
+- **Production scoring service**: `payment_pattern_assignment_service.py`
+  (port 8012) — like Notebook 01's service, added 2026-09-02 with real
+  authentication, explainability, Docker packaging, and pytest coverage
+  (see the root README's "Running the scoring services" section). An
+  earlier draft of this model card predates that service.
 - **Cluster labels are stable only for this fitted `KMeans` bundle** — a
   re-run on updated data may produce a different real `k` and different
   cluster boundaries; the saved bundle is what makes labels reproducible

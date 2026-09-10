@@ -123,7 +123,7 @@ check families — not the same result shown twice:
 - **Deployment/Statistical Robustness Verdict** — a separate, stricter
   gate on whether *this run's data* shows statistically robust evidence
   (a bootstrap 95% CI on holdout AUC bounded away from 0.5, an acceptable
-  calibration gap, a stable split-half PSI). A verdict of NOT RECOMMENDED FOR PRODUCTION YET names the specific check(s) that did not pass — it
+  calibration gap, a stable split-half PSI). A verdict of NOT YET RECOMMENDED FOR PRODUCTION names the specific check(s) that did not pass — it
   is an honest statistical result on this run's data, not a code defect,
   and it can occur even when every integrity check passes. This was found
   to read as a false contradiction in an earlier revision of this report

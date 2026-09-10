@@ -1,6 +1,7 @@
 # Model Card — Problem 1: Early Delinquency Risk Scoring
 
 Notebook: `notebooks/01_early_delinquency_risk_scoring.ipynb`
+Service: `services/early_delinquency_scoring_service.py` (FastAPI, port 8011)
 Bundle: `decision_engine/artifacts/notebook_01_champion_model.joblib` (gitignored — regenerate by running the notebook)
 
 ## CI status
@@ -165,10 +166,14 @@ different points in the loan lifecycle), not to declare a winner.
   competing.
 - **Class imbalance**: no explicit resampling is applied; `class_weight="balanced"`
   is used where the candidate model supports it.
-- **No production scoring service for this notebook**: unlike Mega
-  Projects 1-3's per-record services, an early-warning behavioral score is
-  intended for batch/portfolio-level monitoring, not a per-transaction API
-  — see the root README's disclosed scope boundary for population-level
+- **Production scoring service**: `early_delinquency_scoring_service.py`
+  (port 8011) — real X-API-Key/OAuth2 authentication, per-request
+  explainability, Docker packaging, and pytest coverage, matching Mega
+  Projects 1-3's per-record services (added 2026-09-02; see the root
+  README's "Running the scoring services" section). An earlier draft of
+  this model card predates that service and described this score as
+  batch/portfolio-only — see the root README's disclosed scope boundary
+  for population-level
   analyses.
 - **No fairness/bias audit performed in this pass.**
 - **Trained on Kaggle's historical Home Credit population** — performance

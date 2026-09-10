@@ -91,7 +91,7 @@ finished in minutes at real production scale rather than hours.
   service: a real Locust load test against MP1 Problem 1's live service
   produced real measured latency (median 5ms, p90 10ms, p99 110ms) and
   surfaced a real rate-limiter interaction under concurrent load — see
-  `LOAD_TESTING.md`. The other 19 services remain unmeasured under load.
+  `LOAD_TESTING.md`. The other 14 services remain unmeasured under load.
 - **Real wall-clock for every other notebook in the suite** — only the
   figures in the table above have been reported back by the user so far;
   every other notebook's real-data runtime is still unmeasured. Add real

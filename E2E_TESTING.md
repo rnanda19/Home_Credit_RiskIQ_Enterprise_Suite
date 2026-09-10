@@ -66,9 +66,9 @@ needed was adding `requests` to that job's install line.
 
 ## Real, disclosed scope limits
 
-- Three services out of 20 are covered this way (one classifier, two
+- Three services out of 15 are covered this way (one classifier, two
   clustering — the two real app shapes this suite's shared serving
-  factories produce). The other 17 remain covered by `TestClient`-based
+  factories produce). The other 12 remain covered by `TestClient`-based
   tests only. Extending to another service means copying any existing test
   file's shape and pointing it at that service's module name, port, and
   bundle-path env var — the harness itself needs no changes.

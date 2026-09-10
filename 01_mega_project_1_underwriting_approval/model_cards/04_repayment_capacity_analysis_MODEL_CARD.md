@@ -76,7 +76,9 @@ show a statistically clean relationship to default rate in your
 population, which is informative in itself, not a bug to chase.
 
 **`tier_monotonicity_holds` methodology (CHANGELOG [1.0.2])**: on the real,
-full 307,499-applicant Home Credit population, this check was found to
+full 307,499-applicant Home Credit population (307,511 total applicants
+minus the small subset excluded by the Section 6B data-quality guard
+above for missing/non-finite required inputs), this check was found to
 fail from a single adjacent-tier reversal ("Weakest" 8.5122% vs. "Weak"
 8.6992% default rate, n=61,500 each) that a real two-proportion z-test
 shows is not statistically significant (z=1.17, p=0.24) — while the other

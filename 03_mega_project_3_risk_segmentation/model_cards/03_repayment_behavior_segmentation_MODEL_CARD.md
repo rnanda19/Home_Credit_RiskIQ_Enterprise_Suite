@@ -74,19 +74,18 @@ Risk Tier and (when available) Problem 2's Bureau Segment as honest,
 computed evidence of how independent this axis actually turned out to
 be — not an asserted claim.
 
-## Real-data incident #3: even k=2 stayed under the 3% floor -- floor
-## lowered to 1%, empirically grounded (v1.6.6)
+## Real-data incident #3: even k=2 stayed under the 3% floor — floor lowered to 1%, empirically grounded (v1.6.6)
 
 The v1.6.5 widened range (below) let the pipeline also test k=2 on the
-real 307,511-applicant data. Even the broadest possible split -- the most
-permissive segmentation short of none at all -- produced a smallest real
+real 307,511-applicant data. Even the broadest possible split — the most
+permissive segmentation short of none at all — produced a smallest real
 cluster of 3,977, still under the 8,749-applicant (3%) floor. Across
 every real k from 2 to 8, the smallest real cluster consistently landed
 in the 2,700-4,000 range: roughly 1.0%-1.4% of the with-history
 population, never higher, regardless of how many total groups K-Means
-was asked to find. That consistency -- a tight, repeating band rather than
+was asked to find. That consistency — a tight, repeating band rather than
 noise scattered across k, and not the earlier "collapses to a handful of
-points" outlier signature -- is real evidence of a recurring minority
+points" outlier signature — is real evidence of a recurring minority
 behavioral group in the real population, not an artifact.
 
 `repayment_segment_min_cluster_fraction`'s default changed from 0.03 to
@@ -100,7 +99,7 @@ which candidates are eligible to be considered.
 
 After the v1.6.4 winsorization fix (below) removed the outlier-domination
 failure, the same real 307,511-applicant run still rejected every
-candidate k from 3 to 8 -- but for a genuinely different, more benign
+candidate k from 3 to 8 — but for a genuinely different, more benign
 reason: the smallest real cluster at each k ranged 2,700-3,900
 applicants, a real, substantial group, just still short of the
 8,749-applicant (3%) floor in effect at the time. That pattern
@@ -109,7 +108,7 @@ handful of points) was real evidence of actual cluster structure, not
 another outlier artifact. Rather than lowering the stability floor at
 that point, `repayment_segment_k_min` was changed to default to **2**,
 so the pipeline would also test whether the real data supports just two
-broad, stable repayment-behavior groups -- a real data-driven test of a
+broad, stable repayment-behavior groups — a real data-driven test of a
 candidate that simply hadn't been tried yet, not a relaxed bar. On the
 fixture this doesn't change the outcome (k=2's silhouette, 0.150, is
 still below k=7's 0.161).
@@ -238,7 +237,7 @@ that is real and expected, not a code defect.
   applied first so no single raw-scale feature (e.g. `MAX_DAYS_LATE` vs.
   a 0-1 ratio) dominates the distance metric by construction.
 - The minimum-cluster-fraction floor (default 1% of the clustered
-  population as of v1.6.6, lowered from an initial 3% -- see "Real-data
+  population as of v1.6.6, lowered from an initial 3% — see "Real-data
   incident #3" above) is a disclosed, empirically-grounded choice, not a
   fitted optimum.
 - On this suite's small synthetic fixture, the statistical robustness

@@ -41,11 +41,12 @@ Three real, tested components, added 2026-09-08:
    `monitoring_job.py` checks new data against.
 
 This design was ported and generalized from the AMEX RiskIQ Enterprise
-Credit Risk Platform's own real `monitoring_job.py` (built for its
-Problem 1) rather than re-invented, per this suite's reuse-first build
-discipline — and extended here with a real full PSI number (AMEX's
-version reports bin-share only; see `monitoring_common.py`'s docstring
-for why that extension was possible).
+Credit Risk Platform's own real `monitoring_job.py` (a separate personal
+portfolio project of mine, unaffiliated with American Express, built for
+its Problem 1) rather than re-invented, per this suite's reuse-first
+build discipline — and extended here with a real full PSI number (that
+project's version reports bin-share only; see `monitoring_common.py`'s
+docstring for why that extension was possible).
 
 ## Honest scope: what this covers today, and what it doesn't yet
 
@@ -74,10 +75,10 @@ python scripts/generate_monitoring_baseline.py \
     --out-baseline 01_mega_project_1_underwriting_approval/monitoring/mp1_01_baseline.json
 ```
 
-**Not yet extended to the other 24 problems.** Same honest shape as the
-AMEX platform's own monitoring gap ("built for Problem 1 only ... the
-other 13 deployable services ship with no ongoing production check") —
-here it's 1 of 25. The job and generator are both fully generic (model
+**Not yet extended to the other 24 problems.** Same honest shape as that
+other project's own monitoring gap ("built for Problem 1 only ... the
+other 13 deployable services ship with no ongoing production check" —
+that project's own count, not this suite's) — here it's 1 of 25. The job and generator are both fully generic (model
 name, target column, and feature list all come from the bundle/baseline
 file, nothing is hardcoded to Problem 1), so extending coverage to
 another model is: run the generator against that model's bundle, commit

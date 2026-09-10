@@ -31,10 +31,14 @@ separate, stricter check from the structural pipeline-integrity checks
 (which it passes). Mega Projects 1-4 each ship real deployable FastAPI
 scoring services (real `X-API-Key` **and** OAuth2/JWT Bearer-token authentication + per-request
 explainability on every one), Docker Compose orchestration, and a pytest
-suite. Mega Projects 1-3 additionally carry a complete fixture-generated
-`sample_reports/` set; Mega Project 4's Problems 3-6 were verified with
-hand-built test cases instead of a fixture run, per an explicit
-2026-09-01 policy change (see its own README for the full disclosure).
+suite. Mega Projects 1-5 each also carry a complete `sample_reports/` set
+of real Word/Excel report and workbook files generated from your own
+full-scale reruns (restored 2026-09-10, after an earlier fixture-era
+set was removed — see [Live Dashboards](#live-dashboards) below and each
+Mega Project's own README for direct links). Mega Project 4's Problems
+3-6 were verified with hand-built test cases instead of a fixture run,
+per an explicit 2026-09-01 policy change (see its own README for the
+full disclosure).
 
 **Quick links:** [Live Dashboards](#live-dashboards) ·
 [Architecture Diagrams](#architecture-diagrams) ·
@@ -68,7 +72,7 @@ hand-built test cases instead of a fixture run, per an explicit
 | Statistical rigor | Chi-square association testing, multinomial-resampled bootstrap significance (not naive resampling — see `BENCHMARKS.md`), confidence-interval-based robustness gates distinct from structural checks |
 | Explainable AI | SHAP (global importance + beeswarm) and LIME (per-instance) explanations shipped with every trained model, not added after the fact |
 | Model risk & governance | Per-problem `MODEL_CARD.md`, two independent check families per run, honest "not recommended for production" verdicts when a robustness gate fails — see [below](#model-risk--governance) |
-| MLOps / deployment | 14 deployable FastAPI scoring services across 4 Mega Projects (4 + 2 + 4 + 4), every one requiring real authentication (an `X-API-Key` header **or** an OAuth2/JWT Bearer token from the service's own `POST /token`) with real per-request explainability and ECOA/Reg B-style adverse-action notices (see `ADVERSE_ACTION.md`), real end-to-end integration tests against live subprocess-launched services (see `E2E_TESTING.md`), Docker Compose orchestration per Mega Project (non-root containers + real health checks), pytest coverage (bit-identical service verification), 2-workflow CI (GitHub Actions) |
+| MLOps / deployment | 15 deployable FastAPI scoring services across all 5 Mega Projects (4 + 2 + 4 + 4 + 1), every one requiring real authentication (an `X-API-Key` header **or** an OAuth2/JWT Bearer token from the service's own `POST /token`) with real per-request explainability and ECOA/Reg B-style adverse-action notices (see `ADVERSE_ACTION.md`), real end-to-end integration tests against live subprocess-launched services (see `E2E_TESTING.md`), Docker Compose orchestration per Mega Project (non-root containers + real health checks), pytest coverage (bit-identical service verification), 2-workflow CI (GitHub Actions) |
 | Software engineering | Shared library (`src/`) instead of copy-pasted logic across problems, enforced resource ceilings before any heavy import, fixed-seed reproducibility, a real verification protocol (below) — not "it ran on my machine" |
 | Communication | Executive rollup in HTML + Word + Excel per Mega Project, SMART-format insights, one model card per problem written for a non-modeler to read |
 
@@ -174,10 +178,13 @@ check families run on every notebook, every time:
 
 A model can pass every integrity check and still be honestly reported
 NOT RECOMMENDED FOR PRODUCTION YET if it fails a robustness gate —
-this suite surfaces that outcome instead of hiding it (see the dashboard
-below: 2 of Mega Project 1's 5 problems currently read that way; Mega
-Projects 2 and 3 report the same two-tier verdict separately for each of
-their own problems in their own `MODEL_CARD.md` files). Every problem's
+this suite surfaces that outcome instead of hiding it rather than
+reporting a clean sweep by default. On the current real, full-scale
+rerun this happens once, in Mega Project 3's Problem 3 (see the Status
+section above); every Mega Project reports this same two-tier verdict
+separately for each of its own problems in its own `MODEL_CARD.md`
+files, so the same honest disclosure would surface again if a future
+rerun produced one. Every problem's
 `MODEL_CARD.md` documents its gate-by-gate results and, where a service
 depends on a persisted model, the `.joblib` bundle contract that service
 depends on.
@@ -234,7 +241,7 @@ versions) — this repo never reports a number it hasn't measured.
 │   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
-│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
+│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup
 │   ├── services/                                 # 4 deployable FastAPI scoring services
 │   ├── docker/                                     # Dockerfile + docker-compose.yml
 │   └── tests/                                       # pytest suite for the services
@@ -243,7 +250,7 @@ versions) — this repo never reports a number it hasn't measured.
 │   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
-│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
+│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup
 │   ├── services/                                 # 2 deployable FastAPI scoring services (capital, stress testing)
 │   ├── docker/                                     # Dockerfile + docker-compose.yml
 │   └── tests/                                       # pytest suite for the services
@@ -252,7 +259,7 @@ versions) — this repo never reports a number it hasn't measured.
 │   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
-│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup (fixture-labeled)
+│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup
 │   ├── services/                                 # 4 deployable FastAPI segment-assignment services
 │   ├── docker/                                     # Dockerfile + docker-compose.yml
 │   └── tests/                                       # pytest suite for the services
@@ -261,7 +268,7 @@ versions) — this repo never reports a number it hasn't measured.
 │   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
-│   ├── sample_reports/                           # real HTML/Word/Excel reports, Problems 1-2 only (see README)
+│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 5 problems + rollup
 │   ├── services/                                 # 4 deployable FastAPI scoring services
 │   ├── docker/                                     # Dockerfile + docker-compose.yml
 │   └── tests/                                       # pytest suite for the services
@@ -270,7 +277,8 @@ versions) — this repo never reports a number it hasn't measured.
 │   ├── CHANGELOG.md                              # this Mega Project's own curated version history
 │   ├── notebooks/                              # 01-05 problems + 06 executive rollup
 │   ├── model_cards/                             # one MODEL_CARD.md per problem
-│   ├── services/                                 # Problem 4 service code (not yet verified against a real bundle)
+│   ├── sample_reports/                           # real HTML/Word/Excel reports, all 6 problems + rollup
+│   ├── services/                                 # Problem 4 service, verified against a real bundle (2026-09-08)
 │   ├── docker/                                     # Dockerfile + docker-compose.yml
 │   └── tests/                                       # pytest suite for the service
 ├── data/{raw,processed}/                     # empty (.gitkeep only) — download the real dataset yourself

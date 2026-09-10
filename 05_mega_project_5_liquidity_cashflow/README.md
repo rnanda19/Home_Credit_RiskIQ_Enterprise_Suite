@@ -18,20 +18,20 @@ Problem 5 carries one disclosed, honest finding — a REVIEW verdict at the
 Severely Adverse 90-day macro stress scenario specifically (not a
 pipeline failure) — see its own model card for the full detail.
 
-**No deployable FastAPI services verified yet — but the real service code,
-Docker packaging, and integration test now all exist.** Problems 1, 2, 3,
-and 5 are portfolio/macro-level treasury analyses with no per-applicant
-record to serve — no service by design. Problem 4 fits a real K-Means
-model; `.joblib` persistence code was added to the notebook, and a real
-FastAPI service (`services/prepayment_segment_assignment_service.py`,
-port 8015, reusing `src/serving/segment_assignment_common.py` unchanged
-from Mega Projects 3/4), Docker packaging (`docker/`), and a real
-integration test (`tests/test_scoring_services.py`, skips cleanly until
-the bundle exists) were added 2026-09-02 — matching Mega Projects 1/3/4's
-pattern exactly. **The notebook has not yet been re-run since the
-persistence code was added, so `notebook_04_segment_model.joblib` does
-not exist yet and the service will fail fast at startup until it does.**
-See each problem's own `model_cards/*_MODEL_CARD.md` for the full detail.
+**One deployable FastAPI service, verified against a real trained
+bundle.** Problems 1, 2, 3, and 5 are portfolio/macro-level treasury
+analyses with no per-applicant record to serve — no service by design.
+Problem 4 fits a real K-Means model; a real FastAPI service
+(`services/prepayment_segment_assignment_service.py`, port 8015, reusing
+`src/serving/segment_assignment_common.py` unchanged from Mega Projects
+3/4) and Docker packaging (`docker/`) were added 2026-09-02, and as of
+2026-09-08 the notebook has been re-run end-to-end on the real,
+full-scale dataset, `notebook_04_segment_model.joblib` exists, and the
+service has been verified against that real bundle three separate ways
+— including a real live subprocess/HTTP check and a new permanent
+end-to-end test (`tests/test_e2e_live_service.py`) — matching Mega
+Projects 1/3/4's pattern exactly. See each problem's own
+`model_cards/*_MODEL_CARD.md` for the full detail.
 
 **History:** see this Mega Project's own [`CHANGELOG.md`](CHANGELOG.md)
 for a curated version history, or the
