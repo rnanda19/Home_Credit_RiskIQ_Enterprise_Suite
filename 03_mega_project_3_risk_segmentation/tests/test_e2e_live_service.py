@@ -111,9 +111,7 @@ def live_service_tier(tmp_path):
     scripts/generate_ci_fixture_bundles.py writes for Docker CI
     verification."""
     summary_path = tmp_path / "notebook_01_summary.json"
-    summary_path.write_text(
-        json.dumps({"tiering_config": {"tier_bin_edges": [None, 0.3, 0.6, None]}})
-    )
+    summary_path.write_text(json.dumps({"tiering_config": {"tier_bin_edges": [None, 0.3, 0.6, None]}}))
     env = {
         "NB01_SUMMARY_PATH": str(summary_path),
         "API_KEY": TEST_API_KEY,

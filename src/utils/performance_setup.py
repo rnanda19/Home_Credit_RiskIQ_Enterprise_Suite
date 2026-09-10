@@ -88,9 +88,7 @@ def configure_performance(
     """
     if _CONFIGURED["done"]:
         if verbose:
-            print(
-                "[PERF] configure_performance() already applied this session (idempotent no-op)."
-            )
+            print("[PERF] configure_performance() already applied this session (idempotent no-op).")
         return _CONFIGURED["config"]
 
     hw = _detect_hardware()
@@ -325,9 +323,7 @@ def load_csv_cached(path, cache_dir, verbose: bool = True, **read_csv_kwargs):
             )
     except OSError as e:
         if verbose:
-            print(
-                f"[PERF] {path.name}: read real CSV; Parquet cache write skipped ({e})."
-            )
+            print(f"[PERF] {path.name}: read real CSV; Parquet cache write skipped ({e}).")
     return df
 
 

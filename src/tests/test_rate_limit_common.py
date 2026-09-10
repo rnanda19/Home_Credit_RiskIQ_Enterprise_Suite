@@ -92,9 +92,7 @@ def test_token_route_is_rate_limited_when_a_limiter_is_passed(monkeypatch):
 
     codes = []
     for _ in range(int(TOKEN_RATE_LIMIT.split("/")[0]) + 2):
-        resp = client.post(
-            "/token", data={"username": "anything", "password": "a-real-configured-key"}
-        )
+        resp = client.post("/token", data={"username": "anything", "password": "a-real-configured-key"})
         codes.append(resp.status_code)
     assert codes.count(429) == 2, codes
     assert codes[:-2] == [200] * (len(codes) - 2)
@@ -113,33 +111,24 @@ def test_token_route_is_unlimited_when_no_limiter_is_passed_backward_compat(
 
     limit_count = int(TOKEN_RATE_LIMIT.split("/")[0])
     for _ in range(limit_count + 5):
-        resp = client.post(
-            "/token", data={"username": "anything", "password": "a-real-configured-key"}
-        )
+        resp = client.post("/token", data={"username": "anything", "password": "a-real-configured-key"})
         assert resp.status_code == 200
 
 
-def test_real_scoring_service_score_endpoint_rate_limits_for_real(
-    tmp_path, monkeypatch
-):
+def test_real_scoring_service_score_endpoint_rate_limits_for_real(tmp_path, monkeypatch):
     """End-to-end proof against the real shared factory (not a synthetic
     stand-in): build_scoring_app() wires install_rate_limiting() +
     DEFAULT_RATE_LIMIT onto /score exactly as every real deployable
     service in this suite does."""
     monkeypatch.setenv("API_KEY", "testkey")
     bundle_path = _fit_tiny_classifier_bundle(tmp_path)
-    app = build_scoring_app(
-        bundle_path, title="RLTest", description="test", score_label="probability"
-    )
+    app = build_scoring_app(bundle_path, title="RLTest", description="test", score_label="probability")
     client = TestClient(app)
     headers = {"X-API-Key": "testkey"}
     payload = {"f1": 1.0, "f2": 2.0}
 
     limit_count = int(DEFAULT_RATE_LIMIT.split("/")[0])
-    codes = [
-        client.post("/score", json=payload, headers=headers).status_code
-        for _ in range(limit_count + 3)
-    ]
+    codes = [client.post("/score", json=payload, headers=headers).status_code for _ in range(limit_count + 3)]
     assert codes[:limit_count] == [200] * limit_count, codes
     assert codes[limit_count:] == [429] * 3, codes
 
@@ -147,16 +136,12 @@ def test_real_scoring_service_score_endpoint_rate_limits_for_real(
     assert client.get("/health").status_code == 200
 
 
-def test_require_auth_dependency_still_runs_before_rate_limiting_denies_bad_creds(
-    tmp_path, monkeypatch
-):
+def test_require_auth_dependency_still_runs_before_rate_limiting_denies_bad_creds(tmp_path, monkeypatch):
     """A caller with no/bad credentials still gets a real 401, not a 429 --
     auth and rate limiting are independent, correctly-ordered checks."""
     monkeypatch.setenv("API_KEY", "testkey")
     bundle_path = _fit_tiny_classifier_bundle(tmp_path)
-    app = build_scoring_app(
-        bundle_path, title="RLTest2", description="test", score_label="probability"
-    )
+    app = build_scoring_app(bundle_path, title="RLTest2", description="test", score_label="probability")
     client = TestClient(app)
 
     resp = client.post("/score", json={"f1": 1.0, "f2": 2.0})

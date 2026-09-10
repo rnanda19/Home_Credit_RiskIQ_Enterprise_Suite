@@ -44,18 +44,10 @@ NB02_BUNDLE_PATH = ARTIFACTS_DIR / "notebook_02_kmeans_model.joblib"
 NB03_BUNDLE_PATH = ARTIFACTS_DIR / "notebook_03_champion_model.joblib"
 NB04_BUNDLE_PATH = ARTIFACTS_DIR / "notebook_04_champion_model.joblib"
 
-skip_no_nb01 = pytest.mark.skipif(
-    not NB01_BUNDLE_PATH.exists(), reason="Notebook 01 has not been run yet"
-)
-skip_no_nb02 = pytest.mark.skipif(
-    not NB02_BUNDLE_PATH.exists(), reason="Notebook 02 has not been run yet"
-)
-skip_no_nb03 = pytest.mark.skipif(
-    not NB03_BUNDLE_PATH.exists(), reason="Notebook 03 has not been run yet"
-)
-skip_no_nb04 = pytest.mark.skipif(
-    not NB04_BUNDLE_PATH.exists(), reason="Notebook 04 has not been run yet"
-)
+skip_no_nb01 = pytest.mark.skipif(not NB01_BUNDLE_PATH.exists(), reason="Notebook 01 has not been run yet")
+skip_no_nb02 = pytest.mark.skipif(not NB02_BUNDLE_PATH.exists(), reason="Notebook 02 has not been run yet")
+skip_no_nb03 = pytest.mark.skipif(not NB03_BUNDLE_PATH.exists(), reason="Notebook 03 has not been run yet")
+skip_no_nb04 = pytest.mark.skipif(not NB04_BUNDLE_PATH.exists(), reason="Notebook 04 has not been run yet")
 
 
 def _direct_score_no_categoricals(bundle, row: dict) -> float:
@@ -77,9 +69,7 @@ def _sample_row(bundle) -> dict:
     return {f: 0.1 for f in bundle["feature_cols"]}
 
 
-def _classifier_service_case(
-    monkeypatch, env_var, bundle_path, module_name, response_key
-):
+def _classifier_service_case(monkeypatch, env_var, bundle_path, module_name, response_key):
     monkeypatch.setenv(env_var, str(bundle_path))
     monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop(module_name, None)

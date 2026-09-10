@@ -94,17 +94,13 @@ def load_bundle(bundle_path: Path) -> dict:
     return bundle
 
 
-def build_request_model(
-    model_name: str, numeric_features: list[str], categorical_features: list[str]
-):
+def build_request_model(model_name: str, numeric_features: list[str], categorical_features: list[str]):
     """Dynamic Pydantic model, one Optional field per real feature the trained model
     actually consumes (mirrors the AMEX platform's severity_scoring_service.py pattern
     for a large, model-specific feature set) -- so validation errors name the exact
     real field that's wrong, rather than accepting an untyped blob."""
     fields = {f: (Optional[float], Field(default=None)) for f in numeric_features}
-    fields.update(
-        {f: (Optional[str], Field(default=None)) for f in categorical_features}
-    )
+    fields.update({f: (Optional[str], Field(default=None)) for f in categorical_features})
     return create_model(f"{model_name}ScoringRequest", **fields)
 
 
@@ -130,9 +126,7 @@ def score_one(bundle: dict, payload: dict) -> float:
 
     X = pdf[feature_cols].copy()
     if categorical_features:
-        X[categorical_features] = ord_enc.transform(
-            pdf[categorical_features].astype(str)
-        )
+        X[categorical_features] = ord_enc.transform(pdf[categorical_features].astype(str))
     X[numeric_features] = imputer.transform(pdf[numeric_features])
 
     proba = model.predict_proba(X)[:, 1][0]
@@ -152,9 +146,7 @@ def build_scoring_app(
     categorical_features = bundle["categorical_features"]
     champion_name = bundle.get("champion_name", "unknown")
 
-    RequestModel = build_request_model(
-        title.replace(" ", ""), numeric_features, categorical_features
-    )
+    RequestModel = build_request_model(title.replace(" ", ""), numeric_features, categorical_features)
     # Same real feature fields as RequestModel, plus a caller-supplied
     # decision threshold -- this factory makes no accept/reject decision of
     # its own (see loan_approval_scoring_service.py's docstring), so the
@@ -182,9 +174,7 @@ def build_scoring_app(
 
     app = FastAPI(title=title, description=description, version="1.0.0")
     limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
-    add_token_route(
-        app, limiter=limiter
-    )  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+    add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
     @app.get("/health")
     def health():
@@ -211,9 +201,7 @@ def build_scoring_app(
         try:
             proba = score_one(bundle, payload)
         except Exception as e:
-            raise HTTPException(
-                status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}"
-            )
+            raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
         baseline_payload = {f: None for f in numeric_features + categorical_features}
         top_reasons = top_reason_codes(
             predict_fn=lambda p: score_one(bundle, p),
@@ -233,9 +221,7 @@ def build_scoring_app(
         try:
             proba = score_one(bundle, payload)
         except Exception as e:
-            raise HTTPException(
-                status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}"
-            )
+            raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
         baseline_payload = {f: None for f in numeric_features + categorical_features}
         # A wider candidate pool than /score's default (n=3) -- some of the
         # highest-magnitude real factors may be structurally suppressed

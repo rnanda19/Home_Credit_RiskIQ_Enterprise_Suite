@@ -355,6 +355,4 @@ def test_p4_real_score_call_computes_the_real_deterministic_ratios(live_service_
     # Real, independently-recomputed values for the exact formulas documented
     # in the service's own module docstring -- not a fabricated expectation.
     assert body["repayment_capacity_ratio"] == pytest.approx(100000.0 / 10001.0)
-    assert body["total_debt_burden_ratio"] == pytest.approx(
-        (20000.0 + 50000.0) / 100001.0
-    )
+    assert body["total_debt_burden_ratio"] == pytest.approx((20000.0 + 50000.0) / 100001.0)

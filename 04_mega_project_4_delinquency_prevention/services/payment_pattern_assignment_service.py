@@ -41,12 +41,7 @@ from serving.segment_assignment_common import build_segment_app
 BUNDLE_PATH = Path(
     os.environ.get(
         "NB02_KMEANS_MODEL_PATH",
-        str(
-            MP4_DIR
-            / "decision_engine"
-            / "artifacts"
-            / "notebook_02_kmeans_model.joblib"
-        ),
+        str(MP4_DIR / "decision_engine" / "artifacts" / "notebook_02_kmeans_model.joblib"),
     )
 )
 

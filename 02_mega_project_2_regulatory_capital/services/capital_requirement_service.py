@@ -47,20 +47,14 @@ from serving.auth_common import add_token_route, require_auth
 from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 
-def _assign_segment(
-    name_contract_type: str, flag_own_realty: str, flag_own_car: str
-) -> str:
+def _assign_segment(name_contract_type: str, flag_own_realty: str, flag_own_car: str) -> str:
     """Identical branching to `assign_capital_segment()`'s real Polars `when/then`
     chain in regulatory_capital_features.py, applied to a single real record."""
     if name_contract_type == "Revolving loans":
         return "Revolving (QRRE)"
     if name_contract_type == "Cash loans" and flag_own_realty == "Y":
         return "Secured — Real Estate"
-    if (
-        name_contract_type == "Cash loans"
-        and flag_own_realty == "N"
-        and flag_own_car == "Y"
-    ):
+    if name_contract_type == "Cash loans" and flag_own_realty == "N" and flag_own_car == "Y":
         return "Secured — Other (Vehicle/Goods)"
     return "Unsecured — Other Retail"
 
@@ -70,8 +64,7 @@ class CapitalRequest(BaseModel):
         ...,
         ge=0.0,
         le=1.0,
-        description="Real probability of default (0-1) -- from "
-        "Mega Project 1's real champion model.",
+        description="Real probability of default (0-1) -- from " "Mega Project 1's real champion model.",
     )
     AMT_CREDIT: float = Field(
         ...,
@@ -82,12 +75,8 @@ class CapitalRequest(BaseModel):
     NAME_CONTRACT_TYPE: str = Field(
         ..., description="Real Home Credit field: 'Cash loans' or 'Revolving loans'."
     )
-    FLAG_OWN_REALTY: Optional[str] = Field(
-        default="N", description="Real Home Credit field: 'Y' or 'N'."
-    )
-    FLAG_OWN_CAR: Optional[str] = Field(
-        default="N", description="Real Home Credit field: 'Y' or 'N'."
-    )
+    FLAG_OWN_REALTY: Optional[str] = Field(default="N", description="Real Home Credit field: 'Y' or 'N'.")
+    FLAG_OWN_CAR: Optional[str] = Field(default="N", description="Real Home Credit field: 'Y' or 'N'.")
 
 
 app = FastAPI(
@@ -96,9 +85,7 @@ app = FastAPI(
     version="1.0.0",
 )
 limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
-add_token_route(
-    app, limiter=limiter
-)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -143,9 +130,7 @@ def score(request: Request, body: CapitalRequest):
         rwa = k * 12.5 * ead
         capital_requirement = rwa * 0.08
     except Exception as e:
-        raise HTTPException(
-            status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}"
-        )
+        raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
     return {
         "capital_segment": segment,
         "lgd_assumed": lgd,

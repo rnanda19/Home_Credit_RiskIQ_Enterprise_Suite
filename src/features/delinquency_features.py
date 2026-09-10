@@ -56,27 +56,19 @@ def engineer_installment_behavior_features(
     base = installments.with_columns(
         [
             pl.col("DAYS_ENTRY_PAYMENT").is_null().alias("_NO_PAYMENT_RECORDED"),
-            (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias(
-                "DAYS_LATE"
-            ),
+            (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias("DAYS_LATE"),
             pl.when(pl.col("AMT_INSTALMENT") > 0)
             .then(pl.col("AMT_PAYMENT") / pl.col("AMT_INSTALMENT"))
             .otherwise(None)
             .alias("PAYMENT_RATIO"),
-            (pl.col("AMT_INSTALMENT") - pl.col("AMT_PAYMENT"))
-            .clip(lower_bound=0)
-            .alias("SHORTFALL_AMT"),
+            (pl.col("AMT_INSTALMENT") - pl.col("AMT_PAYMENT")).clip(lower_bound=0).alias("SHORTFALL_AMT"),
         ]
     ).with_columns(
         [
             # No recorded payment == unpaid as of this snapshot -- real, disclosed
             # convention (see module docstring), not a fabricated value.
-            (pl.col("_NO_PAYMENT_RECORDED") | (pl.col("DAYS_LATE") > 0)).alias(
-                "IS_LATE"
-            ),
-            (pl.col("_NO_PAYMENT_RECORDED") | (pl.col("PAYMENT_RATIO") < 0.99)).alias(
-                "IS_UNDERPAID"
-            ),
+            (pl.col("_NO_PAYMENT_RECORDED") | (pl.col("DAYS_LATE") > 0)).alias("IS_LATE"),
+            (pl.col("_NO_PAYMENT_RECORDED") | (pl.col("PAYMENT_RATIO") < 0.99)).alias("IS_UNDERPAID"),
             pl.when(pl.col("_NO_PAYMENT_RECORDED"))
             .then(0.0)
             .otherwise(pl.col("PAYMENT_RATIO"))
@@ -111,10 +103,7 @@ def engineer_installment_behavior_features(
             pl.col("DAYS_LATE").mean().alias("MEAN_DAYS_LATE"),
             pl.col("DAYS_LATE").max().alias("MAX_DAYS_LATE"),
             pl.col("DAYS_LATE").std().alias("STD_DAYS_LATE"),
-            pl.col("DAYS_LATE")
-            .filter(pl.col("IS_LATE"))
-            .mean()
-            .alias("MEAN_DAYS_LATE_WHEN_LATE"),
+            pl.col("DAYS_LATE").filter(pl.col("IS_LATE")).mean().alias("MEAN_DAYS_LATE_WHEN_LATE"),
             pl.col("IS_UNDERPAID").mean().alias("PCT_INSTALLMENTS_UNDERPAID"),
             pl.col("PAYMENT_RATIO").mean().alias("MEAN_PAYMENT_RATIO"),
             pl.col("PAYMENT_RATIO").min().alias("MIN_PAYMENT_RATIO"),
@@ -145,11 +134,7 @@ def engineer_installment_behavior_features(
                 pl.col("_LATE_RATE_EARLY").fill_null(0.0),
             ]
         )
-        .with_columns(
-            (pl.col("_LATE_RATE_RECENT") - pl.col("_LATE_RATE_EARLY")).alias(
-                "LATE_RATE_TREND"
-            )
-        )
+        .with_columns((pl.col("_LATE_RATE_RECENT") - pl.col("_LATE_RATE_EARLY")).alias("LATE_RATE_TREND"))
         .select(["SK_ID_CURR", "LATE_RATE_TREND"])
     )
 
@@ -229,11 +214,7 @@ def engineer_payment_streak_features(
     )
     base = base.with_columns(
         [
-            pl.col("_NEW_STREAK")
-            .cast(pl.Int32)
-            .cum_sum()
-            .over("SK_ID_CURR")
-            .alias("_STREAK_ID"),
+            pl.col("_NEW_STREAK").cast(pl.Int32).cum_sum().over("SK_ID_CURR").alias("_STREAK_ID"),
         ]
     )
     n_installments = base.group_by("SK_ID_CURR").agg(pl.len().alias("N_INSTALLMENTS"))
@@ -248,18 +229,9 @@ def engineer_payment_streak_features(
 
     longest = streaks.group_by("SK_ID_CURR").agg(
         [
-            pl.col("STREAK_LEN")
-            .filter(pl.col("STREAK_IS_LATE"))
-            .max()
-            .alias("LONGEST_LATE_STREAK"),
-            pl.col("STREAK_LEN")
-            .filter(~pl.col("STREAK_IS_LATE"))
-            .max()
-            .alias("LONGEST_ONTIME_STREAK"),
-            pl.col("STREAK_IS_LATE")
-            .filter(pl.col("STREAK_IS_LATE"))
-            .len()
-            .alias("N_LATE_STREAKS"),
+            pl.col("STREAK_LEN").filter(pl.col("STREAK_IS_LATE")).max().alias("LONGEST_LATE_STREAK"),
+            pl.col("STREAK_LEN").filter(~pl.col("STREAK_IS_LATE")).max().alias("LONGEST_ONTIME_STREAK"),
+            pl.col("STREAK_IS_LATE").filter(pl.col("STREAK_IS_LATE")).len().alias("N_LATE_STREAKS"),
             pl.len().alias("N_TOTAL_STREAKS"),
         ]
     )
@@ -297,9 +269,7 @@ def engineer_payment_streak_features(
                 .then((pl.col("N_TOTAL_STREAKS") - 1) / (pl.col("N_INSTALLMENTS") - 1))
                 .otherwise(0.0)
                 .alias("ALTERNATION_RATE"),
-                pl.col("CURRENT_STREAK_IS_LATE")
-                .cast(pl.Int32)
-                .alias("CURRENT_STREAK_IS_LATE_INT"),
+                pl.col("CURRENT_STREAK_IS_LATE").cast(pl.Int32).alias("CURRENT_STREAK_IS_LATE_INT"),
             ]
         )
     )

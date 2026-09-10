@@ -25,9 +25,7 @@ def engineer_credit_default_features(app: pl.DataFrame, bureau: pl.DataFrame):
             pl.len().alias("BUREAU_CNT_CREDITS"),
             (pl.col("CREDIT_ACTIVE") == "Active").sum().alias("BUREAU_CNT_ACTIVE"),
             pl.col("AMT_CREDIT_SUM").sum().alias("BUREAU_AMT_CREDIT_SUM_TOTAL"),
-            pl.col("AMT_CREDIT_SUM_DEBT")
-            .sum()
-            .alias("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL"),
+            pl.col("AMT_CREDIT_SUM_DEBT").sum().alias("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL"),
             pl.col("AMT_CREDIT_SUM_OVERDUE").sum().alias("BUREAU_AMT_OVERDUE_TOTAL"),
             pl.col("CREDIT_DAY_OVERDUE").max().alias("BUREAU_MAX_DAYS_OVERDUE"),
             pl.col("DAYS_CREDIT").min().alias("BUREAU_DAYS_CREDIT_MIN"),
@@ -35,10 +33,9 @@ def engineer_credit_default_features(app: pl.DataFrame, bureau: pl.DataFrame):
         ]
     )
     bureau_agg = bureau_agg.with_columns(
-        (
-            pl.col("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL")
-            / (pl.col("BUREAU_AMT_CREDIT_SUM_TOTAL") + 1.0)
-        ).alias("BUREAU_DEBT_TO_CREDIT_RATIO")
+        (pl.col("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL") / (pl.col("BUREAU_AMT_CREDIT_SUM_TOTAL") + 1.0)).alias(
+            "BUREAU_DEBT_TO_CREDIT_RATIO"
+        )
     )
 
     df = app.join(bureau_agg, on="SK_ID_CURR", how="left")
@@ -52,15 +49,9 @@ def engineer_credit_default_features(app: pl.DataFrame, bureau: pl.DataFrame):
             .then(None)
             .otherwise(-pl.col("DAYS_EMPLOYED") / 365.25)
             .alias("YEARS_EMPLOYED"),
-            (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias(
-                "CREDIT_TO_INCOME_RATIO"
-            ),
-            (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias(
-                "ANNUITY_TO_INCOME_RATIO"
-            ),
-            (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias(
-                "ANNUITY_TO_CREDIT_RATIO"
-            ),
+            (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("CREDIT_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("ANNUITY_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias("ANNUITY_TO_CREDIT_RATIO"),
         ]
     )
 
@@ -177,12 +168,8 @@ def engineer_credit_default_features_v2(
         engineer_previous_application_features,
     )
 
-    bureau_agg, bureau_feature_cols = engineer_bureau_history_features(
-        bureau, bureau_balance
-    )
-    prevapp_agg, prevapp_feature_cols = engineer_previous_application_features(
-        previous_application
-    )
+    bureau_agg, bureau_feature_cols = engineer_bureau_history_features(bureau, bureau_balance)
+    prevapp_agg, prevapp_feature_cols = engineer_previous_application_features(previous_application)
     servicing_totals_df, _servicing_own_df, _servicing_feature_names = (
         engineer_prev_loan_servicing_features_loo(pos_cash, installments, credit_card)
     )
@@ -191,9 +178,7 @@ def engineer_credit_default_features_v2(
     df = df.join(prevapp_agg, on="SK_ID_CURR", how="left")
     df = df.join(servicing_totals_df, on="SK_ID_CURR", how="left")
 
-    df = df.with_columns(
-        [pl.col(c).fill_null(0) for c in bureau_feature_cols + prevapp_feature_cols]
-    )
+    df = df.with_columns([pl.col(c).fill_null(0) for c in bureau_feature_cols + prevapp_feature_cols])
     _servicing_tot_cols = [c for c in servicing_totals_df.columns if c != "SK_ID_CURR"]
     df = df.with_columns([pl.col(c).fill_null(0) for c in _servicing_tot_cols])
 
@@ -205,26 +190,18 @@ def engineer_credit_default_features_v2(
         [
             pl.col("POS_N_TOT").alias("POS_CNT_RECORDS"),
             pl.col("POS_N_COMPLETED_TOT").alias("POS_CNT_COMPLETED"),
-            (pl.col("POS_SUM_SK_DPD_DEF_TOT") / (pl.col("POS_N_TOT") + 1.0)).alias(
-                "POS_MEAN_SK_DPD_DEF"
-            ),
+            (pl.col("POS_SUM_SK_DPD_DEF_TOT") / (pl.col("POS_N_TOT") + 1.0)).alias("POS_MEAN_SK_DPD_DEF"),
             pl.col("INSTAL_N_TOT").alias("INSTAL_CNT_PAYMENTS"),
             (pl.col("INSTAL_SUM_PAY_RATIO_TOT") / (pl.col("INSTAL_N_TOT") + 1.0)).alias(
                 "INSTAL_MEAN_PAYMENT_RATIO"
             ),
-            (pl.col("INSTAL_N_LATE_TOT") / (pl.col("INSTAL_N_TOT") + 1.0)).alias(
-                "INSTAL_PCT_LATE"
+            (pl.col("INSTAL_N_LATE_TOT") / (pl.col("INSTAL_N_TOT") + 1.0)).alias("INSTAL_PCT_LATE"),
+            (pl.col("INSTAL_SUM_DAYS_LATE_TOT") / (pl.col("INSTAL_N_LATE_TOT") + 1.0)).alias(
+                "INSTAL_MEAN_DAYS_LATE_WHEN_LATE"
             ),
-            (
-                pl.col("INSTAL_SUM_DAYS_LATE_TOT") / (pl.col("INSTAL_N_LATE_TOT") + 1.0)
-            ).alias("INSTAL_MEAN_DAYS_LATE_WHEN_LATE"),
             pl.col("CC_N_TOT").alias("CC_CNT_RECORDS"),
-            (pl.col("CC_SUM_UTILIZATION_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias(
-                "CC_MEAN_UTILIZATION"
-            ),
-            (pl.col("CC_SUM_BALANCE_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias(
-                "CC_MEAN_BALANCE"
-            ),
+            (pl.col("CC_SUM_UTILIZATION_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias("CC_MEAN_UTILIZATION"),
+            (pl.col("CC_SUM_BALANCE_TOT") / (pl.col("CC_N_TOT") + 1.0)).alias("CC_MEAN_BALANCE"),
             pl.col("CC_SUM_SK_DPD_TOT").alias("CC_SUM_SK_DPD"),
         ]
     )
@@ -250,15 +227,9 @@ def engineer_credit_default_features_v2(
             .then(None)
             .otherwise(-pl.col("DAYS_EMPLOYED") / 365.25)
             .alias("YEARS_EMPLOYED"),
-            (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias(
-                "CREDIT_TO_INCOME_RATIO"
-            ),
-            (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias(
-                "ANNUITY_TO_INCOME_RATIO"
-            ),
-            (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias(
-                "ANNUITY_TO_CREDIT_RATIO"
-            ),
+            (pl.col("AMT_CREDIT") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("CREDIT_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_INCOME_TOTAL") + 1.0)).alias("ANNUITY_TO_INCOME_RATIO"),
+            (pl.col("AMT_ANNUITY") / (pl.col("AMT_CREDIT") + 1.0)).alias("ANNUITY_TO_CREDIT_RATIO"),
         ]
     )
 

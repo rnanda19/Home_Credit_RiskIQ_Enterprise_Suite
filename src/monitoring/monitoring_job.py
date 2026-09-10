@@ -84,9 +84,7 @@ def main():
     if target_col and train_default_rate is not None and target_col in new_df.columns:
         window_default_rate = float(new_df[target_col].mean())
         delta_pp = (window_default_rate - train_default_rate) * 100.0
-        status = (
-            "ALERT" if abs(delta_pp) >= thresholds["default_rate_swing_pp"] else "OK"
-        )
+        status = "ALERT" if abs(delta_pp) >= thresholds["default_rate_swing_pp"] else "OK"
         alert = alert or (status == "ALERT")
         result["checks"].append(
             {
@@ -142,9 +140,7 @@ def main():
     with open(args.out_log, "a", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
         if write_header:
-            writer.writerow(
-                ["run_at_utc", "new_data_csv", "model_name", "n_rows", "any_alert"]
-            )
+            writer.writerow(["run_at_utc", "new_data_csv", "model_name", "n_rows", "any_alert"])
         writer.writerow(
             [
                 result["run_at_utc"],

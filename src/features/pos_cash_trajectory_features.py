@@ -136,11 +136,7 @@ def engineer_pos_cash_trajectory_features(
     )
     base = base.with_columns(
         [
-            pl.col("_NEW_STREAK")
-            .cast(pl.Int32)
-            .cum_sum()
-            .over("SK_ID_CURR")
-            .alias("_STREAK_ID"),
+            pl.col("_NEW_STREAK").cast(pl.Int32).cum_sum().over("SK_ID_CURR").alias("_STREAK_ID"),
         ]
     )
     streaks = base.group_by(["SK_ID_CURR", "_STREAK_ID"]).agg(
@@ -168,9 +164,7 @@ def engineer_pos_cash_trajectory_features(
                 pl.col("STREAK_LEN").last().alias("CURRENT_DPD_STREAK_LEN"),
             ]
         )
-        .with_columns(
-            pl.col("_CURRENT_IS_DPD").cast(pl.Int32).alias("CURRENT_IS_DPD_INT")
-        )
+        .with_columns(pl.col("_CURRENT_IS_DPD").cast(pl.Int32).alias("CURRENT_IS_DPD_INT"))
         .select(["SK_ID_CURR", "CURRENT_IS_DPD_INT", "CURRENT_DPD_STREAK_LEN"])
     )
 
@@ -213,10 +207,7 @@ def engineer_pos_cash_trajectory_features(
                 # Real, disclosed edge case: no valid CNT_INSTALMENT_FUTURE value
                 # in one or both real halves -- treated as neutral 0.0 velocity
                 # (no evidence of stalling or progress), never left null.
-                (
-                    (pl.col("_REMAIN_RECENT") - pl.col("_REMAIN_EARLY"))
-                    / (pl.col("_REMAIN_EARLY").abs() + 1.0)
-                )
+                ((pl.col("_REMAIN_RECENT") - pl.col("_REMAIN_EARLY")) / (pl.col("_REMAIN_EARLY").abs() + 1.0))
                 .fill_null(0.0)
                 .alias("INSTALMENT_PROGRESS_VELOCITY"),
             ]
@@ -258,6 +249,4 @@ def compute_naive_current_dpd(pos_cash: pl.DataFrame) -> pl.DataFrame:
             pl.col("SK_DPD").fill_null(0).alias("_SK_DPD"),
         ]
     )
-    return base.group_by("SK_ID_CURR").agg(
-        pl.col("_SK_DPD").last().alias("NAIVE_CURRENT_DPD")
-    )
+    return base.group_by("SK_ID_CURR").agg(pl.col("_SK_DPD").last().alias("NAIVE_CURRENT_DPD"))

@@ -61,9 +61,7 @@ def test_capital_requirement_service_matches_direct_computation(monkeypatch):
     assert body["capital_k"] == pytest.approx(expected["CAPITAL_K"], abs=1e-9)
     assert body["expected_loss"] == pytest.approx(expected["EXPECTED_LOSS"], abs=1e-6)
     assert body["rwa"] == pytest.approx(expected["RWA"], abs=1e-6)
-    assert body["capital_requirement"] == pytest.approx(
-        expected["CAPITAL_REQUIREMENT"], abs=1e-6
-    )
+    assert body["capital_requirement"] == pytest.approx(expected["CAPITAL_REQUIREMENT"], abs=1e-6)
 
 
 def test_capital_requirement_service_revolving_segment_uses_pd_dependent_correlation(
@@ -85,9 +83,7 @@ def test_capital_requirement_service_revolving_segment_uses_pd_dependent_correla
     assert resp.status_code == 200
     body = resp.json()
     assert body["capital_segment"] == "Unsecured — Other Retail"
-    assert body["correlation_r"] == pytest.approx(
-        other_retail_correlation(0.15), abs=1e-9
-    )
+    assert body["correlation_r"] == pytest.approx(other_retail_correlation(0.15), abs=1e-9)
 
 
 def test_stress_testing_service_baseline_matches_capital_requirement_service(
@@ -103,12 +99,8 @@ def test_stress_testing_service_baseline_matches_capital_requirement_service(
     stress_client = TestClient(stress_svc.app)
 
     cap_resp = cap_client.post("/score", json=REAL_ROW, headers=AUTH).json()
-    base_resp = stress_client.post(
-        "/score/Baseline", json=REAL_ROW, headers=AUTH
-    ).json()
-    assert base_resp["capital_requirement"] == pytest.approx(
-        cap_resp["capital_requirement"], abs=1e-6
-    )
+    base_resp = stress_client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()
+    assert base_resp["capital_requirement"] == pytest.approx(cap_resp["capital_requirement"], abs=1e-6)
 
 
 def test_stress_testing_service_severity_strictly_increases(monkeypatch):
@@ -117,15 +109,9 @@ def test_stress_testing_service_severity_strictly_increases(monkeypatch):
     import stress_testing_service as svc
 
     client = TestClient(svc.app)
-    baseline = client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()[
-        "capital_requirement"
-    ]
-    adverse = client.post("/score/Adverse", json=REAL_ROW, headers=AUTH).json()[
-        "capital_requirement"
-    ]
-    severe = client.post("/score/Severely Adverse", json=REAL_ROW, headers=AUTH).json()[
-        "capital_requirement"
-    ]
+    baseline = client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
+    adverse = client.post("/score/Adverse", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
+    severe = client.post("/score/Severely Adverse", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
     assert baseline < adverse < severe
 
 

@@ -133,10 +133,7 @@ def assign_capital_segment(df: pl.DataFrame) -> pl.DataFrame:
         [
             pl.when(pl.col("NAME_CONTRACT_TYPE") == "Revolving loans")
             .then(pl.lit("Revolving (QRRE)"))
-            .when(
-                (pl.col("NAME_CONTRACT_TYPE") == "Cash loans")
-                & (pl.col("FLAG_OWN_REALTY") == "Y")
-            )
+            .when((pl.col("NAME_CONTRACT_TYPE") == "Cash loans") & (pl.col("FLAG_OWN_REALTY") == "Y"))
             .then(pl.lit("Secured — Real Estate"))
             .when(
                 (pl.col("NAME_CONTRACT_TYPE") == "Cash loans")
@@ -150,11 +147,7 @@ def assign_capital_segment(df: pl.DataFrame) -> pl.DataFrame:
         ]
     )
     lgd_map = {name: seg["lgd"] for name, seg in SEGMENT_DEFINITIONS.items()}
-    df = df.with_columns(
-        pl.col("CAPITAL_SEGMENT")
-        .replace_strict(lgd_map, default=0.45)
-        .alias("LGD_ASSUMED")
-    )
+    df = df.with_columns(pl.col("CAPITAL_SEGMENT").replace_strict(lgd_map, default=0.45).alias("LGD_ASSUMED"))
     return df
 
 
@@ -181,9 +174,7 @@ def basel_retail_capital_k(pd_value: float, lgd: float, correlation: float) -> f
     """
     pd_value = min(max(pd_value, 1e-6), 0.999999)
     r = correlation
-    inner = (1 - r) ** -0.5 * norm.ppf(pd_value) + (r / (1 - r)) ** 0.5 * norm.ppf(
-        0.999
-    )
+    inner = (1 - r) ** -0.5 * norm.ppf(pd_value) + (r / (1 - r)) ** 0.5 * norm.ppf(0.999)
     k = lgd * norm.cdf(inner) - pd_value * lgd
     return max(k, 0.0)
 

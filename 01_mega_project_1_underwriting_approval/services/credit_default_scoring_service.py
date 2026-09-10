@@ -30,12 +30,7 @@ from serving.scoring_service_common import build_scoring_app
 BUNDLE_PATH = Path(
     os.environ.get(
         "NB01_BUNDLE_PATH",
-        str(
-            MP1_DIR
-            / "decision_engine"
-            / "artifacts"
-            / "notebook_01_champion_model.joblib"
-        ),
+        str(MP1_DIR / "decision_engine" / "artifacts" / "notebook_01_champion_model.joblib"),
     )
 )
 

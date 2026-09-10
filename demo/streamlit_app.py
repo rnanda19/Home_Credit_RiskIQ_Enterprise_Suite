@@ -108,9 +108,7 @@ with st.sidebar:
             "01_credit_default_prediction.ipynb on your own real Home "
             "Credit data) to try the demo."
         )
-        uploaded = st.file_uploader(
-            "Upload notebook_01_champion_model.joblib", type=["joblib"]
-        )
+        uploaded = st.file_uploader("Upload notebook_01_champion_model.joblib", type=["joblib"])
         if uploaded is not None:
             bundle = _load_bundle_from_upload(uploaded.getvalue())
             st.success("Uploaded bundle loaded.")
@@ -157,9 +155,7 @@ for i, feat in enumerate(top_features):
             if ord_enc is not None:
                 try:
                     idx = list(categorical_features).index(feat)
-                    options += [
-                        str(c) for c in ord_enc.categories_[idx] if c != "Missing"
-                    ]
+                    options += [str(c) for c in ord_enc.categories_[idx] if c != "Missing"]
                 except Exception:
                     pass
             choice = st.selectbox(feat, options, key=f"in_{feat}")

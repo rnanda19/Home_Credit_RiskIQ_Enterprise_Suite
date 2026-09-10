@@ -41,12 +41,7 @@ from serving.segment_assignment_common import build_segment_app
 BUNDLE_PATH = Path(
     os.environ.get(
         "NB04_SEGMENT_MODEL_PATH",
-        str(
-            MP5_DIR
-            / "decision_engine"
-            / "artifacts"
-            / "notebook_04_segment_model.joblib"
-        ),
+        str(MP5_DIR / "decision_engine" / "artifacts" / "notebook_04_segment_model.joblib"),
     )
 )
 

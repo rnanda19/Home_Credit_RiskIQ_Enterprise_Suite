@@ -80,13 +80,9 @@ def test_adverse_action_notice_requires_auth():
     feature_cols = ["AMT_CREDIT"]
     with tempfile.TemporaryDirectory() as td:
         bundle_path = _fit_tiny_classifier_bundle(Path(td), feature_cols)
-        app = build_scoring_app(
-            bundle_path, title="Tiny Risk Service 2", description="test"
-        )
+        app = build_scoring_app(bundle_path, title="Tiny Risk Service 2", description="test")
         client = TestClient(app)
-        resp = client.post(
-            "/adverse-action-notice", json={"AMT_CREDIT": 1.0, "threshold": 0.5}
-        )
+        resp = client.post("/adverse-action-notice", json={"AMT_CREDIT": 1.0, "threshold": 0.5})
         assert resp.status_code == 401
 
 

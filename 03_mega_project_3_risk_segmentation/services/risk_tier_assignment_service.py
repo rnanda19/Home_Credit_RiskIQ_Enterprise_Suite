@@ -87,8 +87,7 @@ class RiskTierRequest(BaseModel):
         ...,
         ge=0.0,
         le=1.0,
-        description="Real probability of default (0-1) -- from "
-        "Mega Project 1's real champion model.",
+        description="Real probability of default (0-1) -- from " "Mega Project 1's real champion model.",
     )
 
 
@@ -98,9 +97,7 @@ app = FastAPI(
     version="1.0.0",
 )
 limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
-add_token_route(
-    app, limiter=limiter
-)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -113,9 +110,7 @@ def health():
 def schema(request: Request):
     return {
         "tier_labels": TIER_LABELS,
-        "tier_bin_edges": [
-            None if not (-1e300 < e < 1e300) else e for e in TIER_BIN_EDGES
-        ],
+        "tier_bin_edges": [None if not (-1e300 < e < 1e300) else e for e in TIER_BIN_EDGES],
     }
 
 
@@ -125,7 +120,5 @@ def score(request: Request, body: RiskTierRequest):
     try:
         tier, idx = _assign_tier(body.PD)
     except Exception as e:
-        raise HTTPException(
-            status_code=422, detail=f"Tier assignment failed: {type(e).__name__}: {e}"
-        )
+        raise HTTPException(status_code=422, detail=f"Tier assignment failed: {type(e).__name__}: {e}")
     return {"risk_tier": tier, "tier_index": idx, "n_real_tiers": N_TIERS}
