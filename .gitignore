@@ -54,6 +54,14 @@ dist/
 **/monitoring/*_baseline.json
 **/monitoring/*_job_log.csv
 
+# real TLS certs/keys (2026-09-10) -- generated locally by
+# scripts/generate_local_tls_cert.sh for docker-compose.tls.yml, or
+# supplied as a real CA-issued cert/key for a real deployment. Never a
+# committed secret, same reasoning as .env above. The nginx.conf files
+# that reference these paths ARE committed -- only the key material isn't.
+**/docker/tls/cert.pem
+**/docker/tls/key.pem
+
 # Local scratch/junk -- never tracked
 _to_delete/
 all ipynb and py files/

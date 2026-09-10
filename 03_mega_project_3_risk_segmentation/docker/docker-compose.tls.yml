@@ -1,0 +1,99 @@
+# MP3 -- Risk Segmentation -- REAL TLS-terminated deployment.
+# Opt-in alternative to docker-compose.yml (that file is untouched and
+# still works exactly as before for plain-HTTP local dev). This file
+# terminates TLS in front of every service in this Mega Project with a
+# real nginx reverse proxy and does NOT publish any backend's plain-HTTP
+# port externally -- only reachable from nginx over the internal Docker
+# network (see TLS.md's disclosed "bind backend to internal network only"
+# recommendation, now closed here).
+#
+# Usage (from the suite root):
+#   1. scripts/generate_local_tls_cert.sh 03_mega_project_3_risk_segmentation/docker/tls
+#      (or supply a real CA-issued cert.pem/key.pem at that same path for
+#      a real deployment behind an actual domain)
+#   2. docker compose -f 03_mega_project_3_risk_segmentation/docker/docker-compose.tls.yml up --build
+#   curl -k https://localhost:9007/health   (risk-tier-assignment)
+#   curl -k https://localhost:9008/health   (bureau-segment-assignment)
+#   curl -k https://localhost:9009/health   (repayment-segment-assignment)
+#   curl -k https://localhost:9010/health   (utilization-segment-assignment)
+#
+# API_KEY is still REQUIRED (see docker/.env.example) -- TLS termination
+# protects the transport layer, it does not replace authentication.
+services:
+  risk-tier-assignment:
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "risk_tier_assignment_service:app", "--host", "0.0.0.0", "--port", "8007"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
+      - HEALTHCHECK_PORT=8007
+    expose:
+      - "8007"
+    # no `ports:` here on purpose -- only nginx (below) is reachable from
+    # outside this compose network. Use the nginx TLS port to reach this
+    # service, not this container's own plain-HTTP port.
+
+  bureau-segment-assignment:
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "bureau_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8008"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
+      - HEALTHCHECK_PORT=8008
+    expose:
+      - "8008"
+    # no `ports:` here on purpose -- only nginx (below) is reachable from
+    # outside this compose network. Use the nginx TLS port to reach this
+    # service, not this container's own plain-HTTP port.
+
+  repayment-segment-assignment:
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "repayment_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8009"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
+      - HEALTHCHECK_PORT=8009
+    expose:
+      - "8009"
+    # no `ports:` here on purpose -- only nginx (below) is reachable from
+    # outside this compose network. Use the nginx TLS port to reach this
+    # service, not this container's own plain-HTTP port.
+
+  utilization-segment-assignment:
+    build:
+      context: ../../
+      dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
+    command: ["uvicorn", "utilization_segment_assignment_service:app", "--host", "0.0.0.0", "--port", "8010"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
+      - HEALTHCHECK_PORT=8010
+    expose:
+      - "8010"
+    # no `ports:` here on purpose -- only nginx (below) is reachable from
+    # outside this compose network. Use the nginx TLS port to reach this
+    # service, not this container's own plain-HTTP port.
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - risk-tier-assignment
+      - bureau-segment-assignment
+      - repayment-segment-assignment
+      - utilization-segment-assignment
+    volumes:
+      - ./tls/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./tls/cert.pem:/etc/nginx/tls/cert.pem:ro
+      - ./tls/key.pem:/etc/nginx/tls/key.pem:ro
+    ports:
+      - "9007:9007"
+      - "9008:9008"
+      - "9009:9009"
+      - "9010:9010"
+

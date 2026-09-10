@@ -32,53 +32,63 @@ failure it raises with the real captured subprocess stdout/stderr attached
 — a bare timeout with no diagnosis was the wrong failure mode for a test
 whose whole point is closing a "harder to debug" gap.
 
-Three real end-to-end test files built on it, each hitting a real running
-subprocess over real HTTP via `requests` (not `TestClient`):
+Five real end-to-end test files built on it, one per Mega Project, together
+covering all 15 of the suite's deployable services — each hitting a real
+running subprocess over real HTTP via `requests` (not `TestClient`):
 
 - `01_mega_project_1_underwriting_approval/tests/test_e2e_live_service.py`
-  — MP1 Problem 1's `credit_default_scoring_service.py` (a
-  `scoring_service_common`-built classifier service). Exercises: `/health`
+  — all 4 MP1 services (Problem 1 added 2026-09-08; Problems 2/3/4 added
+  2026-09-10). Covers both real app shapes this Mega Project ships: 3
+  `scoring_service_common`-built classifier services and 1 hand-built,
+  no-model deterministic-formula service (Problem 4). Exercises: `/health`
   open with no auth, `/schema`/`/score` correctly reject missing auth, a
   real `POST /token` OAuth2 exchange followed by a real Bearer-authenticated
-  `/schema` call, a real `X-API-Key`-authenticated `/score` call, and a real
-  `/adverse-action-notice` call — end to end, through a real process, for
-  every hardening feature added this session.
+  `/schema` call, real `X-API-Key`-authenticated `/score` calls, and real
+  `/adverse-action-notice` calls where the service exposes one — 16 tests.
+- `02_mega_project_2_regulatory_capital/tests/test_e2e_live_service.py` —
+  both MP2 services (added 2026-09-10). Neither needs a model bundle at all
+  (real, closed-form Basel Vasicek/ASRF formulas) — every expected numeric
+  value in this file was independently hand-recomputed via `scipy.stats.norm`
+  against the exact same formula before being written into the test, not
+  copied from a live response — 9 tests.
 - `03_mega_project_3_risk_segmentation/tests/test_e2e_live_service.py` —
-  MP3 Problem 2's `bureau_segment_assignment_service.py` (a
-  `segment_assignment_common`-built **clustering** service — a genuinely
-  different app shape from MP1's classifier). Proves the harness is a real,
-  generalized component, not hardcoded to one service's shape.
+  all 4 MP3 services (Problem 2 added 2026-09-08; Problems 1/3/4 added
+  2026-09-10). Covers a third real app shape: a hand-built,
+  deterministic-lookup service with no trained model (Problem 1's risk-tier
+  assignment), alongside three `segment_assignment_common`-built clustering
+  services — 14 tests.
+- `04_mega_project_4_delinquency_prevention/tests/test_e2e_live_service.py`
+  — all 4 MP4 services (added 2026-09-10, this Mega Project's first E2E
+  coverage of any kind) — 14 tests.
 - `05_mega_project_5_liquidity_cashflow/tests/test_e2e_live_service.py` —
-  MP5 Problem 4's `prepayment_segment_assignment_service.py`, the third
-  Mega Project and third real service now covered by this harness.
+  MP5 Problem 4's `prepayment_segment_assignment_service.py` (added
+  2026-09-08, verified against a real trained bundle 2026-09-08) — 3 tests.
 
-Both tests use the exact same synthetic fixture bundle
+**56 real end-to-end tests total, across all 15 deployable services.**
+
+Every test uses the exact same synthetic fixture bundles
 `scripts/generate_ci_fixture_bundles.py` already uses to verify this
 suite's Docker images build and run in CI (`scoring_bundle()` /
-`segment_bundle()`, imported directly, not duplicated) — so this test needs
-no real Kaggle data and no locally-run notebook, and reuses real,
-already-audited fixture logic rather than inventing new fake data.
+`segment_bundle()`, imported directly, never duplicated) — so none of these
+tests need real Kaggle data or a locally-run notebook, and all of them
+reuse real, already-audited fixture logic rather than inventing new fake
+data per file.
 
 Wired into CI for free: `.github/workflows/ci.yml`'s existing `unit-tests`
 matrix job already runs `pytest tests/ -v` inside each Mega Project
-directory, so it picks these two files up automatically — the only change
-needed was adding `requests` to that job's install line.
+directory, so it picks up every one of these five files automatically —
+no CI configuration change was needed to add Mega Projects 2 and 4's new
+files, or Mega Projects 1 and 3's new tests within their existing files.
 
 ## Real, disclosed scope limits
 
-- Three services out of 15 are covered this way (one classifier, two
-  clustering — the two real app shapes this suite's shared serving
-  factories produce). The other 12 remain covered by `TestClient`-based
-  tests only. Extending to another service means copying any existing test
-  file's shape and pointing it at that service's module name, port, and
-  bundle-path env var — the harness itself needs no changes.
-- This proves the real process *starts* and *serves real traffic
-  correctly* — it does not additionally re-prove rate-limiting behavior
-  under load (see `src/tests/test_rate_limit_common.py`'s real end-to-end
-  429 proof) or real concurrent-load latency (see `LOAD_TESTING.md`'s real
-  Locust run) — those are already covered elsewhere and are not duplicated
-  here.
+- All 15 deployable services are now covered this way — this is not a
+  partial rollout. What it does NOT additionally re-prove: rate-limiting
+  behavior under load (see `src/tests/test_rate_limit_common.py`'s real
+  end-to-end 429 proof) or real concurrent-load latency (see
+  `LOAD_TESTING.md`'s real Locust run, currently one flagship service only)
+  — those are separate, disclosed scope boundaries, not gaps in this file.
 - Each test spins up and tears down a real subprocess per test function
-  (via a pytest fixture), which is why this suite is small (8 tests total)
-  rather than exhaustive — subprocess startup has real, measurable
-  overhead (each MP1 test run: 2-5 real seconds of `uvicorn` startup).
+  (via a pytest fixture) — real, measurable overhead per test (roughly
+  2-5 real seconds of `uvicorn` startup each), which is why the full
+  56-test suite takes low single-digit minutes to run, not seconds.

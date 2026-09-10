@@ -150,11 +150,16 @@ Immediate next steps below).
   factories + all standalone services) -- 6 new tests, including a real
   end-to-end proof against the real scoring-service factory (60 real
   calls succeed, the 61st gets a real 429). TLS termination is verified
-  end-to-end in CI (`tls-termination-verify` job) for one flagship
-  service -- a real self-signed cert, a real nginx TLS listener, a real
-  HTTPS request reaching the real running service -- see `TLS.md` for the
-  honest scope (one service demonstrated, not yet wired into
-  `docker-compose.yml` for local/production use).
+  end-to-end in CI (`tls-termination-verify` job) for **all 15 services**
+  (extended 2026-09-10 from one flagship service) -- a real self-signed
+  cert, a real nginx TLS listener, real HTTPS requests reaching every real
+  running service. **Also wired into `docker-compose.yml` for real
+  local/production use as of 2026-09-10** -- each Mega Project now has an
+  opt-in `docker/docker-compose.tls.yml` adding a real `nginx`
+  TLS-terminating service and unpublishing every backend's plain-HTTP
+  port, plus a shared `scripts/generate_local_tls_cert.sh`. See `TLS.md`
+  for the current honest scope (self-signed only, no automatic renewal --
+  both disclosed, open items).
 - **Real load testing**: done for one flagship service (MP1 Problem 1) --
   see `LOAD_TESTING.md`. A real Locust load test
   (`01_mega_project_1_underwriting_approval/loadtest/locustfile.py`) run

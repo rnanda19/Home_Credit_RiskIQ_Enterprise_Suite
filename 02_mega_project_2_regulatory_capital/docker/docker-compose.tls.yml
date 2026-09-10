@@ -1,0 +1,63 @@
+# MP2 -- Regulatory Capital & Stress Testing -- REAL TLS-terminated deployment.
+# Opt-in alternative to docker-compose.yml (that file is untouched and
+# still works exactly as before for plain-HTTP local dev). This file
+# terminates TLS in front of every service in this Mega Project with a
+# real nginx reverse proxy and does NOT publish any backend's plain-HTTP
+# port externally -- only reachable from nginx over the internal Docker
+# network (see TLS.md's disclosed "bind backend to internal network only"
+# recommendation, now closed here).
+#
+# Usage (from the suite root):
+#   1. scripts/generate_local_tls_cert.sh 02_mega_project_2_regulatory_capital/docker/tls
+#      (or supply a real CA-issued cert.pem/key.pem at that same path for
+#      a real deployment behind an actual domain)
+#   2. docker compose -f 02_mega_project_2_regulatory_capital/docker/docker-compose.tls.yml up --build
+#   curl -k https://localhost:9005/health   (capital-requirement)
+#   curl -k https://localhost:9006/health   (macro-stress-testing)
+#
+# API_KEY is still REQUIRED (see docker/.env.example) -- TLS termination
+# protects the transport layer, it does not replace authentication.
+services:
+  capital-requirement:
+    build:
+      context: ../../
+      dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
+    command: ["uvicorn", "capital_requirement_service:app", "--host", "0.0.0.0", "--port", "8005"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
+      - HEALTHCHECK_PORT=8005
+    expose:
+      - "8005"
+    # no `ports:` here on purpose -- only nginx (below) is reachable from
+    # outside this compose network. Use the nginx TLS port to reach this
+    # service, not this container's own plain-HTTP port.
+
+  macro-stress-testing:
+    build:
+      context: ../../
+      dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
+    command: ["uvicorn", "stress_testing_service:app", "--host", "0.0.0.0", "--port", "8006"]
+    environment:
+      - API_KEY=${API_KEY:?Set API_KEY before running -- see docker/.env.example}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}  # optional -- OAuth2/JWT path (2026-09-08 hardening)
+      - HEALTHCHECK_PORT=8006
+    expose:
+      - "8006"
+    # no `ports:` here on purpose -- only nginx (below) is reachable from
+    # outside this compose network. Use the nginx TLS port to reach this
+    # service, not this container's own plain-HTTP port.
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - capital-requirement
+      - macro-stress-testing
+    volumes:
+      - ./tls/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./tls/cert.pem:/etc/nginx/tls/cert.pem:ro
+      - ./tls/key.pem:/etc/nginx/tls/key.pem:ro
+    ports:
+      - "9005:9005"
+      - "9006:9006"
+
