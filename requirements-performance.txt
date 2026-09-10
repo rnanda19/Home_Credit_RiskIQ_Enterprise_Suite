@@ -7,21 +7,21 @@
 # requirements.txt, not exact pins, so security/perf patches are picked up automatically.
 
 # --- Thread-pool introspection & control -----------------------------------------------
-threadpoolctl>=3.5        # runtime BLAS thread-pool control (the C-level "second guard" used
+threadpoolctl>=3.6.0        # runtime BLAS thread-pool control (the C-level "second guard" used
                            # by threadpool_guard() in src/utils/performance_setup.py)
 
 # --- JIT compilation for any loop that genuinely cannot be vectorized -------------------
-numba>=0.60                # @njit(parallel=True) — WARP standard for the rare loop that
+numba>=0.67.0                # @njit(parallel=True) — WARP standard for the rare loop that
                             # Polars vectorization alone cannot express
 
 # --- Fast numerical expression evaluation & NaN-aware array ops ------------------------
-numexpr>=2.10               # used internally by pandas for large elementwise expressions;
+numexpr>=2.14.1               # used internally by pandas for large elementwise expressions;
                              # also directly usable for custom vectorized formulas
-bottleneck>=1.4              # fast NaN-aware numpy reductions (nanmean/nanstd/etc.), a
+bottleneck>=1.6.0              # fast NaN-aware numpy reductions (nanmean/nanstd/etc.), a
                               # drop-in speed-up pandas will pick up automatically once installed
 
 # --- Progress feedback (prevents "is this frozen?" uncertainty on long real-data cells) -
-tqdm>=4.66
+tqdm>=4.70.0
 
 # --- Already required elsewhere in this suite (listed here again for a one-command install
 #     of everything performance-relevant; no version conflicts with requirements.txt) ----
