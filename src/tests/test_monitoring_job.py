@@ -12,7 +12,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-MONITORING_JOB = Path(__file__).resolve().parents[1] / "monitoring" / "monitoring_job.py"
+MONITORING_JOB = (
+    Path(__file__).resolve().parents[1] / "monitoring" / "monitoring_job.py"
+)
 
 
 def _run(new_data_csv, baseline_json, config_json, out_log):

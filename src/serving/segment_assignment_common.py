@@ -131,7 +131,10 @@ def _distance_to_each_segment(bundle: dict, payload: dict) -> list[dict]:
             x[0, j] = float(np.clip(x[0, j], bounds["lo"], bounds["hi"]))
     x_scaled = scaler.transform(x)
     real_distances = kmeans.transform(x_scaled)[0]
-    rows = [{"segment": segment_labels[i], "distance": float(d)} for i, d in enumerate(real_distances)]
+    rows = [
+        {"segment": segment_labels[i], "distance": float(d)}
+        for i, d in enumerate(real_distances)
+    ]
     rows.sort(key=lambda r: r["distance"])
     return rows
 
@@ -159,7 +162,9 @@ def build_segment_app(
 
     app = FastAPI(title=title, description=description, version="1.0.0")
     limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
-    add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+    add_token_route(
+        app, limiter=limiter
+    )  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
     @app.get("/health")
     def health():
@@ -188,7 +193,10 @@ def build_segment_app(
         try:
             segment, idx = assign_segment(bundle, payload)
         except Exception as e:
-            raise HTTPException(status_code=422, detail=f"Segment assignment failed: {type(e).__name__}: {e}")
+            raise HTTPException(
+                status_code=422,
+                detail=f"Segment assignment failed: {type(e).__name__}: {e}",
+            )
         distances = _distance_to_each_segment(bundle, payload)
         return {
             segment_field_name: segment,

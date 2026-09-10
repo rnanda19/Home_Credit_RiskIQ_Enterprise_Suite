@@ -35,9 +35,13 @@ from serving.auth_common import (  # noqa: E402
 )
 from serving.explainability_common import top_reason_codes  # noqa: E402
 from serving.scoring_service_common import build_scoring_app  # noqa: E402
-from serving.scoring_service_common import load_bundle as load_scoring_bundle  # noqa: E402
+from serving.scoring_service_common import (
+    load_bundle as load_scoring_bundle,
+)  # noqa: E402
 from serving.segment_assignment_common import build_segment_app  # noqa: E402
-from serving.segment_assignment_common import load_bundle as load_segment_bundle  # noqa: E402
+from serving.segment_assignment_common import (
+    load_bundle as load_segment_bundle,
+)  # noqa: E402
 
 # --------------------------------------------------------------------------
 # auth_common.py
@@ -137,7 +141,9 @@ def _tiny_authenticated_app() -> FastAPI:
 def test_token_endpoint_issues_a_real_jwt_for_the_correct_api_key(monkeypatch):
     monkeypatch.setenv("API_KEY", "a-real-configured-key")
     client = TestClient(_tiny_authenticated_app())
-    resp = client.post("/token", data={"username": "anything", "password": "a-real-configured-key"})
+    resp = client.post(
+        "/token", data={"username": "anything", "password": "a-real-configured-key"}
+    )
     assert resp.status_code == 200
     body = resp.json()
     assert body["token_type"] == "bearer"
@@ -148,7 +154,9 @@ def test_token_endpoint_issues_a_real_jwt_for_the_correct_api_key(monkeypatch):
 def test_token_endpoint_rejects_wrong_client_secret(monkeypatch):
     monkeypatch.setenv("API_KEY", "a-real-configured-key")
     client = TestClient(_tiny_authenticated_app())
-    resp = client.post("/token", data={"username": "anything", "password": "not-the-real-key"})
+    resp = client.post(
+        "/token", data={"username": "anything", "password": "not-the-real-key"}
+    )
     assert resp.status_code == 401
 
 
@@ -161,11 +169,15 @@ def test_require_auth_accepts_a_valid_x_api_key_header_unchanged(monkeypatch):
     assert resp.status_code == 200
 
 
-def test_require_auth_accepts_a_valid_bearer_jwt_from_the_real_token_endpoint(monkeypatch):
+def test_require_auth_accepts_a_valid_bearer_jwt_from_the_real_token_endpoint(
+    monkeypatch,
+):
     monkeypatch.setenv("API_KEY", "a-real-configured-key")
     monkeypatch.setenv("JWT_SECRET_KEY", "a-real-configured-jwt-secret")
     client = TestClient(_tiny_authenticated_app())
-    token_resp = client.post("/token", data={"username": "x", "password": "a-real-configured-key"})
+    token_resp = client.post(
+        "/token", data={"username": "x", "password": "a-real-configured-key"}
+    )
     token = token_resp.json()["access_token"]
     resp = client.get("/protected", headers={"Authorization": f"Bearer {token}"})
     assert resp.status_code == 200
@@ -175,7 +187,9 @@ def test_require_auth_rejects_a_jwt_signed_with_the_wrong_secret(monkeypatch):
     monkeypatch.setenv("API_KEY", "a-real-configured-key")
     monkeypatch.setenv("JWT_SECRET_KEY", "the-real-secret")
     bad_token = create_access_token([API_ACCESS_SCOPE])  # signed with "the-real-secret"
-    monkeypatch.setenv("JWT_SECRET_KEY", "a-different-secret-now")  # rotate -- old token must die
+    monkeypatch.setenv(
+        "JWT_SECRET_KEY", "a-different-secret-now"
+    )  # rotate -- old token must die
     client = TestClient(_tiny_authenticated_app())
     resp = client.get("/protected", headers={"Authorization": f"Bearer {bad_token}"})
     assert resp.status_code == 401
@@ -186,7 +200,9 @@ def test_require_auth_rejects_an_expired_jwt(monkeypatch):
     monkeypatch.setenv("JWT_SECRET_KEY", "a-real-configured-jwt-secret")
     expired_token = create_access_token([API_ACCESS_SCOPE], expires_minutes=-1)
     client = TestClient(_tiny_authenticated_app())
-    resp = client.get("/protected", headers={"Authorization": f"Bearer {expired_token}"})
+    resp = client.get(
+        "/protected", headers={"Authorization": f"Bearer {expired_token}"}
+    )
     assert resp.status_code == 401
 
 
@@ -195,7 +211,9 @@ def test_require_auth_rejects_a_valid_jwt_missing_the_required_scope(monkeypatch
     monkeypatch.setenv("JWT_SECRET_KEY", "a-real-configured-jwt-secret")
     token_without_scope = create_access_token(["some:other:scope"])
     client = TestClient(_tiny_authenticated_app())
-    resp = client.get("/protected", headers={"Authorization": f"Bearer {token_without_scope}"})
+    resp = client.get(
+        "/protected", headers={"Authorization": f"Bearer {token_without_scope}"}
+    )
     assert resp.status_code == 401
 
 
@@ -224,7 +242,9 @@ def _linear_predict_fn(weights: dict, base: float):
     verifiable by hand, not just "does it run"."""
 
     def _predict(payload: dict) -> float:
-        return base + sum(weights.get(f, 0.0) * (payload.get(f) or 0.0) for f in payload)
+        return base + sum(
+            weights.get(f, 0.0) * (payload.get(f) or 0.0) for f in payload
+        )
 
     return _predict
 
@@ -346,13 +366,19 @@ def test_load_bundle_leaves_existing_categorical_fields_untouched(tmp_path):
     # the real saved encoder came through untouched (not silently replaced
     # by the fallback), by comparing its fitted categories instead.
     assert loaded["ordinal_encoder"] is not None
-    assert [list(c) for c in loaded["ordinal_encoder"].categories_] == [list(c) for c in enc.categories_]
+    assert [list(c) for c in loaded["ordinal_encoder"].categories_] == [
+        list(c) for c in enc.categories_
+    ]
 
 
-def test_build_scoring_app_serves_a_bundle_with_no_categorical_split(tmp_path, monkeypatch):
+def test_build_scoring_app_serves_a_bundle_with_no_categorical_split(
+    tmp_path, monkeypatch
+):
     monkeypatch.setenv("API_KEY", "testkey")
     bundle_path = _fit_classifier_bundle_no_categoricals(tmp_path)
-    app = build_scoring_app(bundle_path, title="TestScoring", description="test", score_label="probability")
+    app = build_scoring_app(
+        bundle_path, title="TestScoring", description="test", score_label="probability"
+    )
     client = TestClient(app)
 
     health = client.get("/health")
@@ -362,7 +388,9 @@ def test_build_scoring_app_serves_a_bundle_with_no_categorical_split(tmp_path, m
     unauth = client.post("/score", json={"f1": 1.0, "f2": 2.0})
     assert unauth.status_code == 401
 
-    resp = client.post("/score", json={"f1": 1.0, "f2": 2.0}, headers={"X-API-Key": "testkey"})
+    resp = client.post(
+        "/score", json={"f1": 1.0, "f2": 2.0}, headers={"X-API-Key": "testkey"}
+    )
     assert resp.status_code == 200
     body = resp.json()
     assert 0.0 <= body["probability"] <= 1.0
@@ -420,7 +448,9 @@ def test_segment_load_bundle_leaves_canonical_keys_untouched(tmp_path):
     assert loaded["segment_labels"] == ["Only"]
 
 
-def test_build_segment_app_serves_a_bundle_with_alternate_key_names(tmp_path, monkeypatch):
+def test_build_segment_app_serves_a_bundle_with_alternate_key_names(
+    tmp_path, monkeypatch
+):
     monkeypatch.setenv("API_KEY", "testkey")
     bundle_path = _fit_clustering_bundle_alt_key_names(tmp_path)
     app = build_segment_app(
@@ -439,7 +469,9 @@ def test_build_segment_app_serves_a_bundle_with_alternate_key_names(tmp_path, mo
     unauth = client.post("/score", json={"a": 1.0, "b": 1.0})
     assert unauth.status_code == 401
 
-    resp = client.post("/score", json={"a": 1.0, "b": 1.0}, headers={"X-API-Key": "testkey"})
+    resp = client.post(
+        "/score", json={"a": 1.0, "b": 1.0}, headers={"X-API-Key": "testkey"}
+    )
     assert resp.status_code == 200
     body = resp.json()
     assert body["pattern"] == "High"

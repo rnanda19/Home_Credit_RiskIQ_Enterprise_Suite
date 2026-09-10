@@ -44,7 +44,10 @@ def _fit_tiny_classifier_bundle(tmp_path, feature_cols):
 
 
 def _auth_headers(client):
-    resp = client.post("/token", data={"username": "x", "password": "dev-only-CHANGE-ME-before-deploying"})
+    resp = client.post(
+        "/token",
+        data={"username": "x", "password": "dev-only-CHANGE-ME-before-deploying"},
+    )
     token = resp.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
@@ -56,7 +59,12 @@ def test_adverse_action_notice_endpoint_denies_with_real_reasons(tmp_path):
     client = TestClient(app)
     headers = _auth_headers(client)
 
-    payload = {"AMT_CREDIT": 3.0, "AMT_INCOME_TOTAL": 2.5, "CODE_GENDER": 3.0, "threshold": 0.5}
+    payload = {
+        "AMT_CREDIT": 3.0,
+        "AMT_INCOME_TOTAL": 2.5,
+        "CODE_GENDER": 3.0,
+        "threshold": 0.5,
+    }
     resp = client.post("/adverse-action-notice", json=payload, headers=headers)
     assert resp.status_code == 200
     body = resp.json()
@@ -72,9 +80,13 @@ def test_adverse_action_notice_requires_auth():
     feature_cols = ["AMT_CREDIT"]
     with tempfile.TemporaryDirectory() as td:
         bundle_path = _fit_tiny_classifier_bundle(Path(td), feature_cols)
-        app = build_scoring_app(bundle_path, title="Tiny Risk Service 2", description="test")
+        app = build_scoring_app(
+            bundle_path, title="Tiny Risk Service 2", description="test"
+        )
         client = TestClient(app)
-        resp = client.post("/adverse-action-notice", json={"AMT_CREDIT": 1.0, "threshold": 0.5})
+        resp = client.post(
+            "/adverse-action-notice", json={"AMT_CREDIT": 1.0, "threshold": 0.5}
+        )
         assert resp.status_code == 401
 
 
@@ -82,7 +94,10 @@ def test_approval_style_score_label_flips_adverse_direction(tmp_path):
     feature_cols = ["EXT_SOURCE_1", "AMT_INCOME_TOTAL"]
     bundle_path = _fit_tiny_classifier_bundle(tmp_path, feature_cols)
     app = build_scoring_app(
-        bundle_path, title="Tiny Approval Service", description="test", score_label="approval_probability"
+        bundle_path,
+        title="Tiny Approval Service",
+        description="test",
+        score_label="approval_probability",
     )
     client = TestClient(app)
     headers = _auth_headers(client)

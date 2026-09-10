@@ -66,7 +66,9 @@ Problem 1/2's real 2026-09-01 fix for the identical root cause on
 import polars as pl
 
 
-def engineer_revolving_distress_features(credit_card: pl.DataFrame) -> tuple[pl.DataFrame, list[str]]:
+def engineer_revolving_distress_features(
+    credit_card: pl.DataFrame,
+) -> tuple[pl.DataFrame, list[str]]:
     """Real, vectorized (WARP -- no per-applicant Python loop) trajectory
     feature engineering from `credit_card_balance.csv`, one row per
     SK_ID_CURR. Returns (features_df, feature_cols). Only applicants with at
@@ -91,10 +93,15 @@ def engineer_revolving_distress_features(credit_card: pl.DataFrame) -> tuple[pl.
     """
     base = credit_card.sort(["SK_ID_CURR", "MONTHS_BALANCE"]).with_columns(
         [
-            (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias("_UTIL"),
+            (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias(
+                "_UTIL"
+            ),
             pl.col("AMT_DRAWINGS_CURRENT").fill_null(0.0).alias("_DRAWINGS"),
             pl.when(pl.col("AMT_INST_MIN_REGULARITY").is_not_null())
-            .then(pl.col("AMT_PAYMENT_TOTAL_CURRENT") <= pl.col("AMT_INST_MIN_REGULARITY") * 1.05)
+            .then(
+                pl.col("AMT_PAYMENT_TOTAL_CURRENT")
+                <= pl.col("AMT_INST_MIN_REGULARITY") * 1.05
+            )
             .otherwise(False)
             .alias("_IS_MIN_PAY_ONLY"),
         ]
@@ -111,7 +118,9 @@ def engineer_revolving_distress_features(credit_card: pl.DataFrame) -> tuple[pl.
             .alias("_UTIL_JUMP"),
         ]
     )
-    SPIKE_THRESHOLD = 0.15  # real, disclosed: a 15-percentage-point month-over-month utilization jump
+    SPIKE_THRESHOLD = (
+        0.15  # real, disclosed: a 15-percentage-point month-over-month utilization jump
+    )
     base = base.with_columns(
         [
             (pl.col("_UTIL_JUMP") >= SPIKE_THRESHOLD).alias("_IS_SPIKE_MONTH"),
@@ -132,14 +141,21 @@ def engineer_revolving_distress_features(credit_card: pl.DataFrame) -> tuple[pl.
     # `engineer_payment_streak_features()` (installments_payments.csv).
     base = base.with_columns(
         [
-            (pl.col("_IS_MIN_PAY_ONLY") != pl.col("_IS_MIN_PAY_ONLY").shift(1).over("SK_ID_CURR"))
+            (
+                pl.col("_IS_MIN_PAY_ONLY")
+                != pl.col("_IS_MIN_PAY_ONLY").shift(1).over("SK_ID_CURR")
+            )
             .fill_null(True)
             .alias("_NEW_STREAK"),
         ]
     )
     base = base.with_columns(
         [
-            pl.col("_NEW_STREAK").cast(pl.Int32).cum_sum().over("SK_ID_CURR").alias("_STREAK_ID"),
+            pl.col("_NEW_STREAK")
+            .cast(pl.Int32)
+            .cum_sum()
+            .over("SK_ID_CURR")
+            .alias("_STREAK_ID"),
         ]
     )
     streaks = base.group_by(["SK_ID_CURR", "_STREAK_ID"]).agg(
@@ -163,14 +179,26 @@ def engineer_revolving_distress_features(credit_card: pl.DataFrame) -> tuple[pl.
         .group_by("SK_ID_CURR", maintain_order=True)
         .agg(
             [
-                pl.col("STREAK_IS_MIN_PAY_ONLY").last().alias("_CURRENT_IS_MIN_PAY_ONLY"),
-                pl.col("STREAK_LEN").last().alias("CURRENT_MIN_PAYMENT_ONLY_STREAK_LEN"),
+                pl.col("STREAK_IS_MIN_PAY_ONLY")
+                .last()
+                .alias("_CURRENT_IS_MIN_PAY_ONLY"),
+                pl.col("STREAK_LEN")
+                .last()
+                .alias("CURRENT_MIN_PAYMENT_ONLY_STREAK_LEN"),
             ]
         )
         .with_columns(
-            pl.col("_CURRENT_IS_MIN_PAY_ONLY").cast(pl.Int32).alias("CURRENT_IS_MIN_PAYMENT_ONLY_INT")
+            pl.col("_CURRENT_IS_MIN_PAY_ONLY")
+            .cast(pl.Int32)
+            .alias("CURRENT_IS_MIN_PAYMENT_ONLY_INT")
         )
-        .select(["SK_ID_CURR", "CURRENT_IS_MIN_PAYMENT_ONLY_INT", "CURRENT_MIN_PAYMENT_ONLY_STREAK_LEN"])
+        .select(
+            [
+                "SK_ID_CURR",
+                "CURRENT_IS_MIN_PAYMENT_ONLY_INT",
+                "CURRENT_MIN_PAYMENT_ONLY_STREAK_LEN",
+            ]
+        )
     )
 
     # --- Drawdown velocity: real vectorized recency split (same rank-based
@@ -220,11 +248,13 @@ def engineer_revolving_distress_features(credit_card: pl.DataFrame) -> tuple[pl.
             [
                 # Real, normalized rate of change -- divided by (early + 1) so a
                 # small early balance doesn't produce an artificially huge ratio.
-                ((pl.col("_BAL_RECENT") - pl.col("_BAL_EARLY")) / (pl.col("_BAL_EARLY").abs() + 1.0)).alias(
-                    "BALANCE_GROWTH_VELOCITY"
-                ),
                 (
-                    (pl.col("_DRAW_RECENT") - pl.col("_DRAW_EARLY")) / (pl.col("_DRAW_EARLY").abs() + 1.0)
+                    (pl.col("_BAL_RECENT") - pl.col("_BAL_EARLY"))
+                    / (pl.col("_BAL_EARLY").abs() + 1.0)
+                ).alias("BALANCE_GROWTH_VELOCITY"),
+                (
+                    (pl.col("_DRAW_RECENT") - pl.col("_DRAW_EARLY"))
+                    / (pl.col("_DRAW_EARLY").abs() + 1.0)
                 ).alias("DRAWINGS_VELOCITY"),
             ]
         )

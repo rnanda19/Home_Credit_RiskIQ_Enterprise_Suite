@@ -19,7 +19,10 @@ SUITE_ROOT = MP2_DIR.parent
 sys.path.insert(0, str(SUITE_ROOT / "src"))
 sys.path.insert(0, str(MP2_DIR / "services"))
 
-from features.regulatory_capital_features import compute_capital_row, other_retail_correlation  # noqa: E402
+from features.regulatory_capital_features import (
+    compute_capital_row,
+    other_retail_correlation,
+)  # noqa: E402
 
 REAL_ROW = {
     "PD": 0.08,
@@ -49,16 +52,23 @@ def test_capital_requirement_service_matches_direct_computation(monkeypatch):
     body = resp.json()
 
     expected = compute_capital_row(
-        pd_value=REAL_ROW["PD"], lgd=0.20, segment="Secured — Real Estate", ead=REAL_ROW["AMT_CREDIT"]
+        pd_value=REAL_ROW["PD"],
+        lgd=0.20,
+        segment="Secured — Real Estate",
+        ead=REAL_ROW["AMT_CREDIT"],
     )
     assert body["capital_segment"] == "Secured — Real Estate"
     assert body["capital_k"] == pytest.approx(expected["CAPITAL_K"], abs=1e-9)
     assert body["expected_loss"] == pytest.approx(expected["EXPECTED_LOSS"], abs=1e-6)
     assert body["rwa"] == pytest.approx(expected["RWA"], abs=1e-6)
-    assert body["capital_requirement"] == pytest.approx(expected["CAPITAL_REQUIREMENT"], abs=1e-6)
+    assert body["capital_requirement"] == pytest.approx(
+        expected["CAPITAL_REQUIREMENT"], abs=1e-6
+    )
 
 
-def test_capital_requirement_service_revolving_segment_uses_pd_dependent_correlation(monkeypatch):
+def test_capital_requirement_service_revolving_segment_uses_pd_dependent_correlation(
+    monkeypatch,
+):
     monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("capital_requirement_service", None)
     import capital_requirement_service as svc
@@ -75,10 +85,14 @@ def test_capital_requirement_service_revolving_segment_uses_pd_dependent_correla
     assert resp.status_code == 200
     body = resp.json()
     assert body["capital_segment"] == "Unsecured — Other Retail"
-    assert body["correlation_r"] == pytest.approx(other_retail_correlation(0.15), abs=1e-9)
+    assert body["correlation_r"] == pytest.approx(
+        other_retail_correlation(0.15), abs=1e-9
+    )
 
 
-def test_stress_testing_service_baseline_matches_capital_requirement_service(monkeypatch):
+def test_stress_testing_service_baseline_matches_capital_requirement_service(
+    monkeypatch,
+):
     monkeypatch.setenv("API_KEY", TEST_API_KEY)
     sys.modules.pop("capital_requirement_service", None)
     sys.modules.pop("stress_testing_service", None)
@@ -89,8 +103,12 @@ def test_stress_testing_service_baseline_matches_capital_requirement_service(mon
     stress_client = TestClient(stress_svc.app)
 
     cap_resp = cap_client.post("/score", json=REAL_ROW, headers=AUTH).json()
-    base_resp = stress_client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()
-    assert base_resp["capital_requirement"] == pytest.approx(cap_resp["capital_requirement"], abs=1e-6)
+    base_resp = stress_client.post(
+        "/score/Baseline", json=REAL_ROW, headers=AUTH
+    ).json()
+    assert base_resp["capital_requirement"] == pytest.approx(
+        cap_resp["capital_requirement"], abs=1e-6
+    )
 
 
 def test_stress_testing_service_severity_strictly_increases(monkeypatch):
@@ -99,9 +117,15 @@ def test_stress_testing_service_severity_strictly_increases(monkeypatch):
     import stress_testing_service as svc
 
     client = TestClient(svc.app)
-    baseline = client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
-    adverse = client.post("/score/Adverse", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
-    severe = client.post("/score/Severely Adverse", json=REAL_ROW, headers=AUTH).json()["capital_requirement"]
+    baseline = client.post("/score/Baseline", json=REAL_ROW, headers=AUTH).json()[
+        "capital_requirement"
+    ]
+    adverse = client.post("/score/Adverse", json=REAL_ROW, headers=AUTH).json()[
+        "capital_requirement"
+    ]
+    severe = client.post("/score/Severely Adverse", json=REAL_ROW, headers=AUTH).json()[
+        "capital_requirement"
+    ]
     assert baseline < adverse < severe
 
 

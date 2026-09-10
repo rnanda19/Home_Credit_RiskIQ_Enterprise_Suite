@@ -69,19 +69,32 @@ SCENARIOS = {
 }
 
 
-def _assign_segment(name_contract_type: str, flag_own_realty: str, flag_own_car: str) -> str:
+def _assign_segment(
+    name_contract_type: str, flag_own_realty: str, flag_own_car: str
+) -> str:
     if name_contract_type == "Revolving loans":
         return "Revolving (QRRE)"
     if name_contract_type == "Cash loans" and flag_own_realty == "Y":
         return "Secured — Real Estate"
-    if name_contract_type == "Cash loans" and flag_own_realty == "N" and flag_own_car == "Y":
+    if (
+        name_contract_type == "Cash loans"
+        and flag_own_realty == "N"
+        and flag_own_car == "Y"
+    ):
         return "Secured — Other (Vehicle/Goods)"
     return "Unsecured — Other Retail"
 
 
 class StressRequest(BaseModel):
-    PD: float = Field(..., ge=0.0, le=1.0, description="Real, unstressed probability of default (0-1).")
-    AMT_CREDIT: float = Field(..., gt=0.0, description="Real disbursed/approved credit amount (EAD proxy).")
+    PD: float = Field(
+        ...,
+        ge=0.0,
+        le=1.0,
+        description="Real, unstressed probability of default (0-1).",
+    )
+    AMT_CREDIT: float = Field(
+        ..., gt=0.0, description="Real disbursed/approved credit amount (EAD proxy)."
+    )
     NAME_CONTRACT_TYPE: str = Field(
         ..., description="Real Home Credit field: 'Cash loans' or 'Revolving loans'."
     )
@@ -95,7 +108,9 @@ app = FastAPI(
     version="1.0.0",
 )
 limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
-add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+add_token_route(
+    app, limiter=limiter
+)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -115,11 +130,14 @@ def score(scenario: str, request: Request, body: StressRequest):
     if scenario not in SCENARIOS:
         raise HTTPException(
             status_code=404,
-            detail=f"Unknown scenario '{scenario}'. Choose one of: " f"{list(SCENARIOS.keys())}",
+            detail=f"Unknown scenario '{scenario}'. Choose one of: "
+            f"{list(SCENARIOS.keys())}",
         )
     try:
         segment = _assign_segment(
-            body.NAME_CONTRACT_TYPE, body.FLAG_OWN_REALTY or "N", body.FLAG_OWN_CAR or "N"
+            body.NAME_CONTRACT_TYPE,
+            body.FLAG_OWN_REALTY or "N",
+            body.FLAG_OWN_CAR or "N",
         )
         seg_def = SEGMENT_DEFINITIONS[segment]
         base_lgd = seg_def["lgd"]
@@ -148,7 +166,9 @@ def score(scenario: str, request: Request, body: StressRequest):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}")
+        raise HTTPException(
+            status_code=422, detail=f"Scoring failed: {type(e).__name__}: {e}"
+        )
     return {
         "scenario": scenario,
         "z_shock": z,

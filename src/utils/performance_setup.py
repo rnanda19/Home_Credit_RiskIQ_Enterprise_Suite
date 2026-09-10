@@ -69,7 +69,11 @@ def _detect_hardware():
     logical = psutil.cpu_count(logical=True) or multiprocessing.cpu_count() or 1
     physical = psutil.cpu_count(logical=False) or logical
     total_ram_gb = psutil.virtual_memory().total / (1024**3)
-    return {"logical_cores": logical, "physical_cores": physical, "total_ram_gb": total_ram_gb}
+    return {
+        "logical_cores": logical,
+        "physical_cores": physical,
+        "total_ram_gb": total_ram_gb,
+    }
 
 
 def configure_performance(
@@ -84,7 +88,9 @@ def configure_performance(
     """
     if _CONFIGURED["done"]:
         if verbose:
-            print("[PERF] configure_performance() already applied this session (idempotent no-op).")
+            print(
+                "[PERF] configure_performance() already applied this session (idempotent no-op)."
+            )
         return _CONFIGURED["config"]
 
     hw = _detect_hardware()
@@ -160,7 +166,11 @@ def gbm_thread_kwargs(config: dict = None) -> dict:
     """
     config = config or _CONFIGURED.get("config") or configure_performance(verbose=False)
     n = config["n_threads"]
-    return {"xgboost": {"n_jobs": n}, "lightgbm": {"n_jobs": n}, "catboost": {"thread_count": n}}
+    return {
+        "xgboost": {"n_jobs": n},
+        "lightgbm": {"n_jobs": n},
+        "catboost": {"thread_count": n},
+    }
 
 
 def pin_cpu_affinity(config: dict = None, verbose: bool = True) -> list:
@@ -209,7 +219,8 @@ def threadpool_guard(n_threads: int = None):
     """Belt-and-suspenders guard for any BLAS call issued after numpy/scipy were already
     imported elsewhere (e.g. inside a third-party library that imported numpy before this
     module ran) — threadpoolctl re-caps live thread pools at the C level, catching what the
-    environment variables above could not because they were set too late in that case."""
+    environment variables above could not because they were set too late in that case.
+    """
     try:
         from threadpoolctl import threadpool_limits
     except ImportError:
@@ -289,7 +300,8 @@ def load_csv_cached(path, cache_dir, verbose: bool = True, **read_csv_kwargs):
     project's own cache_dir.
 
     Zero-fabrication note: this only changes how fast the same real numbers are read off
-    disk. Every row and column value in the returned DataFrame is identical either way."""
+    disk. Every row and column value in the returned DataFrame is identical either way.
+    """
     import polars as pl
 
     path = Path(path)
@@ -313,7 +325,9 @@ def load_csv_cached(path, cache_dir, verbose: bool = True, **read_csv_kwargs):
             )
     except OSError as e:
         if verbose:
-            print(f"[PERF] {path.name}: read real CSV; Parquet cache write skipped ({e}).")
+            print(
+                f"[PERF] {path.name}: read real CSV; Parquet cache write skipped ({e})."
+            )
     return df
 
 
@@ -332,7 +346,8 @@ def progress(iterable, **kwargs):
 
 def timer(label: str = ""):
     """Decorator: prints real wall-clock time for the function it wraps — cheap, honest
-    timing feedback so a long real-data cell's completion is visible, not just assumed."""
+    timing feedback so a long real-data cell's completion is visible, not just assumed.
+    """
 
     def decorator(fn):
         @functools.wraps(fn)

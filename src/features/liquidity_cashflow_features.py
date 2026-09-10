@@ -42,7 +42,9 @@ import numpy as np
 import polars as pl
 
 
-def reconstruct_portfolio_cashflow_periods(installments: pl.DataFrame, period_days: int = 30) -> pl.DataFrame:
+def reconstruct_portfolio_cashflow_periods(
+    installments: pl.DataFrame, period_days: int = 30
+) -> pl.DataFrame:
     """Real, vectorized (WARP) reconstruction of aggregate portfolio cash
     inflow by calendar period, from real `installments_payments.csv`.
 
@@ -72,7 +74,10 @@ def reconstruct_portfolio_cashflow_periods(installments: pl.DataFrame, period_da
     base = installments.with_columns(
         [
             pl.col("AMT_PAYMENT").fill_null(0.0).alias("_AMT_PAYMENT_REAL"),
-            (pl.col("DAYS_INSTALMENT") / period_days).floor().cast(pl.Int64).alias("_PERIOD_ID"),
+            (pl.col("DAYS_INSTALMENT") / period_days)
+            .floor()
+            .cast(pl.Int64)
+            .alias("_PERIOD_ID"),
         ]
     )
 
@@ -138,7 +143,9 @@ def engineer_applicant_cash_reliability_features(
     base = installments.with_columns(
         [
             pl.col("AMT_PAYMENT").fill_null(0.0).alias("_AMT_PAYMENT_REAL"),
-            (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias("_DAYS_LATE"),
+            (pl.col("DAYS_ENTRY_PAYMENT") - pl.col("DAYS_INSTALMENT")).alias(
+                "_DAYS_LATE"
+            ),
         ]
     ).with_columns(
         [
@@ -169,7 +176,9 @@ def engineer_applicant_cash_reliability_features(
                 # reports its dollar amount separately, via the shortfall
                 # measure below, rather than inventing a days-late value for
                 # cash that hasn't arrived).
-                (pl.col("_DAYS_LATE_IF_PAID") * pl.col("AMT_INSTALMENT")).sum().alias("_WEIGHTED_LATE_SUM"),
+                (pl.col("_DAYS_LATE_IF_PAID") * pl.col("AMT_INSTALMENT"))
+                .sum()
+                .alias("_WEIGHTED_LATE_SUM"),
                 pl.col("AMT_INSTALMENT")
                 .filter(pl.col("_DAYS_LATE_IF_PAID").is_not_null())
                 .sum()
@@ -179,10 +188,16 @@ def engineer_applicant_cash_reliability_features(
         .with_columns(
             [
                 pl.when(pl.col("TOTAL_SCHEDULED_CASH_AMT") > 0)
-                .then(pl.col("TOTAL_COLLECTED_CASH_AMT") / pl.col("TOTAL_SCHEDULED_CASH_AMT"))
+                .then(
+                    pl.col("TOTAL_COLLECTED_CASH_AMT")
+                    / pl.col("TOTAL_SCHEDULED_CASH_AMT")
+                )
                 .otherwise(None)
                 .alias("DOLLAR_COLLECTION_RATE"),
-                (pl.col("TOTAL_SCHEDULED_CASH_AMT") - pl.col("TOTAL_COLLECTED_CASH_AMT"))
+                (
+                    pl.col("TOTAL_SCHEDULED_CASH_AMT")
+                    - pl.col("TOTAL_COLLECTED_CASH_AMT")
+                )
                 .clip(lower_bound=0)
                 .alias("OUTSTANDING_SHORTFALL_AMT"),
                 pl.when(pl.col("_PAID_AMT_BASIS") > 0)
@@ -207,7 +222,9 @@ def engineer_applicant_cash_reliability_features(
     return feat.select(["SK_ID_CURR"] + feature_cols), feature_cols
 
 
-def attach_repayment_capacity(cash_reliability: pl.DataFrame, application: pl.DataFrame) -> pl.DataFrame:
+def attach_repayment_capacity(
+    cash_reliability: pl.DataFrame, application: pl.DataFrame
+) -> pl.DataFrame:
     """HYPER reuse (per this Mega Project's own scope README): joins in Mega
     Project 1 Notebook 04's real REPAYMENT_CAPACITY_RATIO formula --
     `AMT_INCOME_TOTAL / (AMT_ANNUITY + 1.0)`, the identical formula served
@@ -297,8 +314,14 @@ def bootstrap_cash_flow_at_risk(
         simulated_collected = anchor_scheduled_per_period * draws.sum(axis=1)
 
         mc_mean = float(simulated_collected.mean())
-        closed_form_mean = anchor_scheduled_per_period * n_periods_h * float(real_rates.mean())
-        rel_diff = abs(mc_mean - closed_form_mean) / closed_form_mean if closed_form_mean else float("inf")
+        closed_form_mean = (
+            anchor_scheduled_per_period * n_periods_h * float(real_rates.mean())
+        )
+        rel_diff = (
+            abs(mc_mean - closed_form_mean) / closed_form_mean
+            if closed_form_mean
+            else float("inf")
+        )
         p5, p50, p95 = np.percentile(simulated_collected, [5, 50, 95])
         by_horizon[horizon_days] = {
             "n_periods": n_periods_h,

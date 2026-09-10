@@ -54,7 +54,11 @@ import time
 from typing import Optional
 
 from fastapi import Depends, HTTPException, Request, Security
-from fastapi.security import APIKeyHeader, OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import (
+    APIKeyHeader,
+    OAuth2PasswordBearer,
+    OAuth2PasswordRequestForm,
+)
 from jose import JWTError, jwt
 
 from serving.rate_limit_common import TOKEN_RATE_LIMIT
@@ -108,11 +112,15 @@ def require_api_key(presented: str = Security(_api_key_header)) -> str:
     require_auth() below for the newer, scoped OAuth2/JWT-aware dependency."""
     expected = configured_api_key()
     if not presented or not secrets.compare_digest(presented, expected):
-        raise HTTPException(status_code=401, detail="Missing or invalid X-API-Key header.")
+        raise HTTPException(
+            status_code=401, detail="Missing or invalid X-API-Key header."
+        )
     return presented
 
 
-def create_access_token(scopes: list[str], expires_minutes: int = JWT_DEFAULT_EXPIRE_MINUTES) -> str:
+def create_access_token(
+    scopes: list[str], expires_minutes: int = JWT_DEFAULT_EXPIRE_MINUTES
+) -> str:
     """Real, signed JWT (HS256) carrying a real `scopes` claim and a real
     expiry -- not a placeholder token. `iat`/`exp` are real Unix timestamps."""
     now = int(time.time())

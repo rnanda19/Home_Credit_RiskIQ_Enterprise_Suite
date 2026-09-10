@@ -45,11 +45,15 @@ def engineer_bureau_history_features(
     bureau: pl.DataFrame, bureau_balance: pl.DataFrame
 ) -> tuple[pl.DataFrame, list[str]]:
     """Real, vectorized (WARP) bureau + bureau_balance aggregation to one row per
-    SK_ID_CURR. Safe to join in full onto any target granularity (see module docstring)."""
+    SK_ID_CURR. Safe to join in full onto any target granularity (see module docstring).
+    """
     bb_agg = bureau_balance.group_by("SK_ID_BUREAU").agg(
         [
             pl.len().alias("BB_N_MONTHS"),
-            pl.col("STATUS").is_in(["1", "2", "3", "4", "5"]).sum().alias("BB_N_DPD_MONTHS"),
+            pl.col("STATUS")
+            .is_in(["1", "2", "3", "4", "5"])
+            .sum()
+            .alias("BB_N_DPD_MONTHS"),
         ]
     )
     bureau_with_bb = bureau.join(bb_agg, on="SK_ID_BUREAU", how="left").with_columns(
@@ -65,19 +69,24 @@ def engineer_bureau_history_features(
                 pl.len().alias("BUREAU_CNT_CREDITS"),
                 (pl.col("CREDIT_ACTIVE") == "Active").sum().alias("BUREAU_CNT_ACTIVE"),
                 pl.col("AMT_CREDIT_SUM").sum().alias("BUREAU_AMT_CREDIT_SUM_TOTAL"),
-                pl.col("AMT_CREDIT_SUM_DEBT").sum().alias("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL"),
+                pl.col("AMT_CREDIT_SUM_DEBT")
+                .sum()
+                .alias("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL"),
                 pl.col("CREDIT_DAY_OVERDUE").max().alias("BUREAU_MAX_DAYS_OVERDUE"),
                 pl.col("BB_N_DPD_MONTHS").sum().alias("BUREAU_TOTAL_DPD_MONTHS"),
             ]
         )
         .with_columns(
             (
-                pl.col("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL") / (pl.col("BUREAU_AMT_CREDIT_SUM_TOTAL") + 1.0)
+                pl.col("BUREAU_AMT_CREDIT_SUM_DEBT_TOTAL")
+                / (pl.col("BUREAU_AMT_CREDIT_SUM_TOTAL") + 1.0)
             ).alias("BUREAU_DEBT_TO_CREDIT_RATIO")
         )
     )
     feature_names = [c for c in bureau_agg.columns if c != "SK_ID_CURR"]
-    bureau_agg = bureau_agg.with_columns([pl.col(c).fill_null(0) for c in feature_names])
+    bureau_agg = bureau_agg.with_columns(
+        [pl.col(c).fill_null(0) for c in feature_names]
+    )
     return bureau_agg, feature_names
 
 
@@ -95,7 +104,9 @@ def engineer_prev_loan_servicing_features_loo(
     pos_prev = pos_cash.group_by("SK_ID_PREV").agg(
         [
             pl.len().alias("POS_N_OWN"),
-            (pl.col("NAME_CONTRACT_STATUS") == "Completed").sum().alias("POS_N_COMPLETED_OWN"),
+            (pl.col("NAME_CONTRACT_STATUS") == "Completed")
+            .sum()
+            .alias("POS_N_COMPLETED_OWN"),
             pl.col("SK_DPD").sum().alias("POS_SUM_SK_DPD_OWN"),
             pl.col("SK_DPD_DEF").sum().alias("POS_SUM_SK_DPD_DEF_OWN"),
         ]
@@ -103,7 +114,9 @@ def engineer_prev_loan_servicing_features_loo(
     pos_curr = pos_cash.group_by("SK_ID_CURR").agg(
         [
             pl.len().alias("POS_N_TOT"),
-            (pl.col("NAME_CONTRACT_STATUS") == "Completed").sum().alias("POS_N_COMPLETED_TOT"),
+            (pl.col("NAME_CONTRACT_STATUS") == "Completed")
+            .sum()
+            .alias("POS_N_COMPLETED_TOT"),
             pl.col("SK_DPD").sum().alias("POS_SUM_SK_DPD_TOT"),
             pl.col("SK_DPD_DEF").sum().alias("POS_SUM_SK_DPD_DEF_TOT"),
         ]
@@ -122,7 +135,10 @@ def engineer_prev_loan_servicing_features_loo(
                 pl.len().alias("INSTAL_N_OWN"),
                 pl.col("_pr").sum().alias("INSTAL_SUM_PAY_RATIO_OWN"),
                 (pl.col("_dl") > 0).sum().alias("INSTAL_N_LATE_OWN"),
-                pl.col("_dl").filter(pl.col("_dl") > 0).sum().alias("INSTAL_SUM_DAYS_LATE_OWN"),
+                pl.col("_dl")
+                .filter(pl.col("_dl") > 0)
+                .sum()
+                .alias("INSTAL_SUM_DAYS_LATE_OWN"),
             ]
         )
         .with_columns(pl.col("INSTAL_SUM_DAYS_LATE_OWN").fill_null(0.0))
@@ -140,7 +156,10 @@ def engineer_prev_loan_servicing_features_loo(
                 pl.len().alias("INSTAL_N_TOT"),
                 pl.col("_pr").sum().alias("INSTAL_SUM_PAY_RATIO_TOT"),
                 (pl.col("_dl") > 0).sum().alias("INSTAL_N_LATE_TOT"),
-                pl.col("_dl").filter(pl.col("_dl") > 0).sum().alias("INSTAL_SUM_DAYS_LATE_TOT"),
+                pl.col("_dl")
+                .filter(pl.col("_dl") > 0)
+                .sum()
+                .alias("INSTAL_SUM_DAYS_LATE_TOT"),
             ]
         )
         .with_columns(pl.col("INSTAL_SUM_DAYS_LATE_TOT").fill_null(0.0))
@@ -148,7 +167,9 @@ def engineer_prev_loan_servicing_features_loo(
 
     cc_prev = (
         credit_card.with_columns(
-            (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias("_ut")
+            (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias(
+                "_ut"
+            )
         )
         .group_by("SK_ID_PREV")
         .agg(
@@ -162,7 +183,9 @@ def engineer_prev_loan_servicing_features_loo(
     )
     cc_curr = (
         credit_card.with_columns(
-            (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias("_ut")
+            (pl.col("AMT_BALANCE") / (pl.col("AMT_CREDIT_LIMIT_ACTUAL") + 1.0)).alias(
+                "_ut"
+            )
         )
         .group_by("SK_ID_CURR")
         .agg(
@@ -244,8 +267,12 @@ def engineer_previous_application_features(
         .agg(
             [
                 pl.len().alias("PREVAPP_CNT_TOTAL"),
-                (pl.col("NAME_CONTRACT_STATUS") == "Approved").sum().alias("PREVAPP_CNT_APPROVED"),
-                (pl.col("NAME_CONTRACT_STATUS") == "Refused").sum().alias("PREVAPP_CNT_REFUSED"),
+                (pl.col("NAME_CONTRACT_STATUS") == "Approved")
+                .sum()
+                .alias("PREVAPP_CNT_APPROVED"),
+                (pl.col("NAME_CONTRACT_STATUS") == "Refused")
+                .sum()
+                .alias("PREVAPP_CNT_REFUSED"),
                 pl.col("AMT_APPLICATION").mean().alias("PREVAPP_MEAN_AMT_APPLICATION"),
                 pl.col("AMT_CREDIT").mean().alias("PREVAPP_MEAN_AMT_CREDIT"),
                 pl.col("AMT_ANNUITY").mean().alias("PREVAPP_MEAN_AMT_ANNUITY"),
@@ -254,12 +281,12 @@ def engineer_previous_application_features(
         )
         .with_columns(
             [
-                (pl.col("PREVAPP_CNT_APPROVED") / (pl.col("PREVAPP_CNT_TOTAL") + 1.0)).alias(
-                    "PREVAPP_APPROVAL_RATE"
-                ),
-                (pl.col("PREVAPP_CNT_REFUSED") / (pl.col("PREVAPP_CNT_TOTAL") + 1.0)).alias(
-                    "PREVAPP_REFUSAL_RATE"
-                ),
+                (
+                    pl.col("PREVAPP_CNT_APPROVED") / (pl.col("PREVAPP_CNT_TOTAL") + 1.0)
+                ).alias("PREVAPP_APPROVAL_RATE"),
+                (
+                    pl.col("PREVAPP_CNT_REFUSED") / (pl.col("PREVAPP_CNT_TOTAL") + 1.0)
+                ).alias("PREVAPP_REFUSAL_RATE"),
             ]
         )
     )

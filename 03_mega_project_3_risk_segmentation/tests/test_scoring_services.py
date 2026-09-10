@@ -35,7 +35,9 @@ NB03_CSV = ARTIFACTS_DIR / "notebook_03_repayment_segments.csv"
 NB04_BUNDLE_PATH = ARTIFACTS_DIR / "notebook_04_segment_model.joblib"
 NB04_CSV = ARTIFACTS_DIR / "notebook_04_utilization_segments.csv"
 
-skip_no_nb01 = pytest.mark.skipif(not NB01_SUMMARY_PATH.exists(), reason="Notebook 01 has not been run yet")
+skip_no_nb01 = pytest.mark.skipif(
+    not NB01_SUMMARY_PATH.exists(), reason="Notebook 01 has not been run yet"
+)
 # 2026-09-02 fix: these 3 cross-check tests also read raw fixture CSVs
 # (FIXTURE_DIR below) to independently re-derive features -- a real gap
 # existed where the skip guard only checked the .joblib bundle + notebook
@@ -64,7 +66,9 @@ skip_no_nb03 = pytest.mark.skipif(
 )
 skip_no_nb04 = pytest.mark.skipif(
     not (
-        NB04_BUNDLE_PATH.exists() and NB04_CSV.exists() and (FIXTURE_DIR / "credit_card_balance.csv").exists()
+        NB04_BUNDLE_PATH.exists()
+        and NB04_CSV.exists()
+        and (FIXTURE_DIR / "credit_card_balance.csv").exists()
     ),
     reason="Notebook 04 has not been run yet, or raw fixture CSVs are not present locally",
 )
@@ -115,7 +119,9 @@ def _cross_check_segment_service(
     feature_names = bundle["feature_names"]
 
     seg_df = pl.read_csv(csv_path)
-    real_row = seg_df.filter(pl.col(segment_col) != seg_df[segment_col][seg_df.height - 1]).head(1)
+    real_row = seg_df.filter(
+        pl.col(segment_col) != seg_df[segment_col][seg_df.height - 1]
+    ).head(1)
     if real_row.height == 0:
         real_row = seg_df.head(1)
     sk_id = real_row["SK_ID_CURR"][0]
@@ -124,7 +130,9 @@ def _cross_check_segment_service(
     feat_df, _ = feature_module_fn(*feature_module_args)
     feat_row = feat_df.filter(pl.col("SK_ID_CURR") == sk_id)
     if feat_row.height == 0:
-        pytest.skip(f"Real applicant {sk_id} not found in re-engineered features -- environment mismatch")
+        pytest.skip(
+            f"Real applicant {sk_id} not found in re-engineered features -- environment mismatch"
+        )
     payload = {f: float(feat_row[f][0]) for f in feature_names}
 
     got_segment, _ = assign_segment(bundle, payload)
@@ -178,7 +186,9 @@ def test_repayment_segment_service_matches_notebook_assignment(monkeypatch):
 
 @skip_no_nb04
 def test_utilization_segment_service_matches_notebook_assignment(monkeypatch):
-    from features.risk_segmentation_features import engineer_revolving_credit_utilization_features
+    from features.risk_segmentation_features import (
+        engineer_revolving_credit_utilization_features,
+    )
 
     nb01 = pl.read_csv(NB01_CSV)
     credit_card = pl.read_csv(FIXTURE_DIR / "credit_card_balance.csv")

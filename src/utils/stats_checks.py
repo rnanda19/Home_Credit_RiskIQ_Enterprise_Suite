@@ -151,7 +151,11 @@ def monotonic_within_noise(
         row: dict = {"pair_index": i, "reversed": bool(reversed_pair)}
         if reversed_pair:
             magnitude = p2 - p1
-            se = math.sqrt(p1 * (1 - p1) / n1 + p2 * (1 - p2) / n2) if n1 > 0 and n2 > 0 else float("nan")
+            se = (
+                math.sqrt(p1 * (1 - p1) / n1 + p2 * (1 - p2) / n2)
+                if n1 > 0 and n2 > 0
+                else float("nan")
+            )
             z = (p2 - p1) / se if se and se > 0 and math.isfinite(se) else float("inf")
             p_value = 2 * (1 - _norm_cdf(abs(z))) if math.isfinite(z) else 0.0
             significant = p_value < corrected_alpha

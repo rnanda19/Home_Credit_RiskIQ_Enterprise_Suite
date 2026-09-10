@@ -64,7 +64,9 @@ def test_large_real_reversal_is_flagged_significant():
     counts = [10_000] * 5
     holds, detail = monotonic_within_noise(rates, counts)
     assert holds is False
-    significant = [row for row in detail if row.get("statistically_significant_reversal")]
+    significant = [
+        row for row in detail if row.get("statistically_significant_reversal")
+    ]
     assert len(significant) >= 1
 
 

@@ -58,7 +58,16 @@ from openpyxl.formatting.rule import ColorScaleRule
 # Canonical home for this palette: every notebook imports it from here (HYPER)
 # instead of redefining it.
 # ---------------------------------------------------------------------------
-VIVID_PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"]
+VIVID_PALETTE = [
+    "#2a78d6",
+    "#eb6834",
+    "#1baf7a",
+    "#eda100",
+    "#e87ba4",
+    "#008300",
+    "#4a3aa7",
+    "#e34948",
+]
 STATUS_GOOD = "#0ca30c"
 STATUS_CRITICAL = "#d03b3b"
 STATUS_WARNING = "#fab219"
@@ -340,7 +349,9 @@ def build_excel_workbook(
             tbl_name = "T" + "".join(ch for ch in sheet["name"] if ch.isalnum())[:20]
             table_ref = f"A1:{last_col}{last_row}"
             excel_tbl = Table(displayName=tbl_name, ref=table_ref)
-            excel_tbl.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showRowStripes=True)
+            excel_tbl.tableStyleInfo = TableStyleInfo(
+                name="TableStyleMedium2", showRowStripes=True
+            )
             ws.add_table(excel_tbl)
             highlight_col = sheet.get("highlight_col")
             if highlight_col and highlight_col in sheet["headers"]:
@@ -355,9 +366,13 @@ def build_excel_workbook(
                     end_type="max",
                     end_color="63BE7B",
                 )
-                ws.conditional_formatting.add(f"{col_letter}2:{col_letter}{last_row}", rule)
+                ws.conditional_formatting.add(
+                    f"{col_letter}2:{col_letter}{last_row}", rule
+                )
         for i, header in enumerate(sheet["headers"], start=1):
-            ws.column_dimensions[get_column_letter(i)].width = max(14, len(str(header)) + 4)
+            ws.column_dimensions[get_column_letter(i)].width = max(
+                14, len(str(header)) + 4
+            )
 
     if formula_sheet:
         ws = wb.create_sheet(safe_sheet_name(formula_sheet["name"]))
@@ -373,7 +388,15 @@ def build_excel_workbook(
 
     if insights_sheet:
         ws = wb.create_sheet(safe_sheet_name(insights_sheet["name"]))
-        headers = ["#", "Headline", "Specific", "Measurable", "Achievable", "Relevant", "Time-bound"]
+        headers = [
+            "#",
+            "Headline",
+            "Specific",
+            "Measurable",
+            "Achievable",
+            "Relevant",
+            "Time-bound",
+        ]
         widths = [4, 30, 38, 32, 32, 32, 32]
         ws.append(headers)
         for c in ws[1]:
@@ -656,11 +679,18 @@ def build_html_dashboard(
         views = ch.get("views")
         if not views:
             views = [
-                {"key": "default", "label": "Default", "labels": ch["labels"], "datasets": ch["datasets"]}
+                {
+                    "key": "default",
+                    "label": "Default",
+                    "labels": ch["labels"],
+                    "datasets": ch["datasets"],
+                }
             ]
         filter_html = ""
         if len(views) > 1:
-            options = "\n".join(f'<option value="{v["key"]}">{v["label"]}</option>' for v in views)
+            options = "\n".join(
+                f'<option value="{v["key"]}">{v["label"]}</option>' for v in views
+            )
             filter_html = f'<select id="filter-{ch["id"]}">{options}</select>'
         note = f'<div class="note">{ch["note"]}</div>' if ch.get("note") else ""
         story_html = ""
@@ -690,7 +720,9 @@ def build_html_dashboard(
         rows = data_table["rows"]
         records = [dict(zip(cols, row)) for row in rows]
         filter_col = data_table.get("filter_column")
-        search_box = '<input id="table-search" type="text" placeholder="Search sampled rows...">'
+        search_box = (
+            '<input id="table-search" type="text" placeholder="Search sampled rows...">'
+        )
         col_select = '<select id="table-colfilter"></select>' if filter_col else ""
         table_section = (
             f'<h2 class="section-title">{data_table.get("title", "Sampled Real Records")}</h2>'

@@ -43,7 +43,9 @@ def _direct_score(bundle, row: dict) -> float:
         pdf[c] = pdf[c].astype("float32")
     X = pdf[feature_cols].copy()
     if categorical_features:
-        X[categorical_features] = bundle["ordinal_encoder"].transform(pdf[categorical_features].astype(str))
+        X[categorical_features] = bundle["ordinal_encoder"].transform(
+            pdf[categorical_features].astype(str)
+        )
     X[numeric_features] = bundle["imputer"].transform(pdf[numeric_features])
     return float(np.clip(bundle["model"].predict_proba(X)[:, 1][0], 0.0, 1.0))
 
@@ -61,8 +63,12 @@ def _sample_row(bundle) -> dict:
 
 NB01_BUNDLE_PATH = ARTIFACTS_DIR / "notebook_01_champion_model.joblib"
 NB02_BUNDLE_PATH = ARTIFACTS_DIR / "notebook_02_champion_model.joblib"
-skip_no_nb01 = pytest.mark.skipif(not NB01_BUNDLE_PATH.exists(), reason="Notebook 01 has not been run yet")
-skip_no_nb02 = pytest.mark.skipif(not NB02_BUNDLE_PATH.exists(), reason="Notebook 02 has not been run yet")
+skip_no_nb01 = pytest.mark.skipif(
+    not NB01_BUNDLE_PATH.exists(), reason="Notebook 01 has not been run yet"
+)
+skip_no_nb02 = pytest.mark.skipif(
+    not NB02_BUNDLE_PATH.exists(), reason="Notebook 02 has not been run yet"
+)
 
 
 @skip_no_nb01
@@ -167,7 +173,9 @@ def test_repayment_capacity_service_formulas(monkeypatch):
     body = resp.json()
     expected_capacity = 200000.0 / (24000.0 + 1.0)
     expected_burden = (100000.0 + 500000.0) / (200000.0 + 1.0)
-    assert body["repayment_capacity_ratio"] == pytest.approx(expected_capacity, abs=1e-9)
+    assert body["repayment_capacity_ratio"] == pytest.approx(
+        expected_capacity, abs=1e-9
+    )
     assert body["total_debt_burden_ratio"] == pytest.approx(expected_burden, abs=1e-9)
 
 

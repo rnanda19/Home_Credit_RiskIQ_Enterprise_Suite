@@ -242,11 +242,15 @@ def render_adverse_action_notice(
     if adverse_direction not in ("positive", "negative"):
         raise ValueError("adverse_direction must be 'positive' or 'negative'")
 
-    is_adverse = score >= threshold if adverse_direction == "positive" else score < threshold
+    is_adverse = (
+        score >= threshold if adverse_direction == "positive" else score < threshold
+    )
 
     ranked = sorted(
         top_reasons,
-        key=lambda r: (r["contribution"] if adverse_direction == "positive" else -r["contribution"]),
+        key=lambda r: (
+            r["contribution"] if adverse_direction == "positive" else -r["contribution"]
+        ),
         reverse=True,
     )
 
@@ -255,7 +259,9 @@ def render_adverse_action_notice(
     for reason in ranked:
         factor = reason["factor"]
         contribution = reason["contribution"]
-        worked_against_applicant = contribution > 0 if adverse_direction == "positive" else contribution < 0
+        worked_against_applicant = (
+            contribution > 0 if adverse_direction == "positive" else contribution < 0
+        )
         if not worked_against_applicant:
             continue
         category = _suppression_category(factor)

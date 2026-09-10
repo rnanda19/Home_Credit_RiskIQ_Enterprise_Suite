@@ -39,7 +39,8 @@ from serving.rate_limit_common import DEFAULT_RATE_LIMIT, install_rate_limiting
 
 SUMMARY_PATH = Path(
     os.environ.get(
-        "NB01_SUMMARY_PATH", str(MP3_DIR / "decision_engine" / "artifacts" / "notebook_01_summary.json")
+        "NB01_SUMMARY_PATH",
+        str(MP3_DIR / "decision_engine" / "artifacts" / "notebook_01_summary.json"),
     )
 )
 if not SUMMARY_PATH.exists():
@@ -56,7 +57,11 @@ _raw_edges = _summary["tiering_config"]["tier_bin_edges"]
 # (Notebook 01 substitutes None for +/-inf before JSON serialization -- inf
 # is not valid JSON). Reconstructed here exactly as pd.cut() needs them.
 TIER_BIN_EDGES = [
-    float("-inf") if i == 0 and e is None else (float("inf") if i == len(_raw_edges) - 1 and e is None else e)
+    (
+        float("-inf")
+        if i == 0 and e is None
+        else (float("inf") if i == len(_raw_edges) - 1 and e is None else e)
+    )
     for i, e in enumerate(_raw_edges)
 ]
 N_TIERS = len(TIER_BIN_EDGES) - 1
@@ -82,7 +87,8 @@ class RiskTierRequest(BaseModel):
         ...,
         ge=0.0,
         le=1.0,
-        description="Real probability of default (0-1) -- from " "Mega Project 1's real champion model.",
+        description="Real probability of default (0-1) -- from "
+        "Mega Project 1's real champion model.",
     )
 
 
@@ -92,7 +98,9 @@ app = FastAPI(
     version="1.0.0",
 )
 limiter = install_rate_limiting(app)  # real rate limiting (2026-09-08 hardening)
-add_token_route(app, limiter=limiter)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
+add_token_route(
+    app, limiter=limiter
+)  # real POST /token -- OAuth2/JWT (2026-09-08 hardening)
 
 
 @app.get("/health")
@@ -105,7 +113,9 @@ def health():
 def schema(request: Request):
     return {
         "tier_labels": TIER_LABELS,
-        "tier_bin_edges": [None if not (-1e300 < e < 1e300) else e for e in TIER_BIN_EDGES],
+        "tier_bin_edges": [
+            None if not (-1e300 < e < 1e300) else e for e in TIER_BIN_EDGES
+        ],
     }
 
 
@@ -115,5 +125,7 @@ def score(request: Request, body: RiskTierRequest):
     try:
         tier, idx = _assign_tier(body.PD)
     except Exception as e:
-        raise HTTPException(status_code=422, detail=f"Tier assignment failed: {type(e).__name__}: {e}")
+        raise HTTPException(
+            status_code=422, detail=f"Tier assignment failed: {type(e).__name__}: {e}"
+        )
     return {"risk_tier": tier, "tier_index": idx, "n_real_tiers": N_TIERS}

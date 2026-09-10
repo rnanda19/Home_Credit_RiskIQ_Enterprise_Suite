@@ -100,15 +100,32 @@ jobs:
   # "No rate limiting or TLS termination anywhere in the service layer."
   # A real self-signed cert (generated fresh each run -- never a committed
   # cert/key), a real nginx TLS listener, reverse-proxying to real running
-  # instances of every service. Extended 2026-09-10 from one representative
-  # service (MP1 Problem 1 only) to all 15 deployable services across all 5
-  # Mega Projects -- one matrix entry per Mega Project, each spinning up
-  # every one of that project's services as its own real container and
-  # verifying every one of them through the real TLS listener. Uses each
-  # project's own real `docker/tls/nginx.conf` (the same file
-  # docker-compose.tls.yml bind-mounts for local/production use -- CI now
-  # tests the exact file that gets deployed, not a separate CI-only
-  # variant). See TLS.md for the honest scope.
+  # instances of every service.
+  #
+  # REWRITTEN 2026-09-10 (root-cause fix, not a workaround): the prior
+  # version of this job ran nginx directly on the GitHub Actions runner
+  # (apt-get installed) and started each backend as its own standalone
+  # `docker run` container on Docker's default bridge network. That
+  # combination can never work: docker/tls/nginx.conf's `proxy_pass`
+  # targets are real Docker Compose service names (e.g.
+  # `credit-default-prediction`), which only resolve via Docker's embedded
+  # DNS *inside* a Compose-managed network -- not from a process running on
+  # the bare host, and not across standalone `docker run` containers with
+  # no shared user-defined network. Every one of the 5 matrix entries was
+  # failing identically for this one structural reason (confirmed by
+  # reproducing the design on paper against nginx.conf's own "service name
+  # = hostname ... since nginx runs in its own container" comment -- this
+  # job just wasn't honoring that).
+  #
+  # The fix: stop hand-rolling a parallel run mechanism and use each Mega
+  # Project's own real `docker/docker-compose.tls.yml` directly via
+  # `docker compose ... up --build`. This is simpler, and more correct than
+  # the old approach -- it now verifies the *actual* deployment artifact
+  # (Dockerfile + docker-compose.tls.yml + nginx.conf together, on a real
+  # Compose network with real embedded DNS), not a CI-only reimplementation
+  # of it. Extended 2026-09-10 from one representative service (MP1 Problem
+  # 1 only) to all 15 deployable services across all 5 Mega Projects -- one
+  # matrix entry per Mega Project. See TLS.md for the honest scope.
   tls-termination-verify:
     runs-on: ubuntu-latest
     strategy:
@@ -116,30 +133,25 @@ jobs:
       matrix:
         include:
           - name: "MP1 -- Underwriting & Approval Intelligence"
-            dockerfile: 01_mega_project_1_underwriting_approval/docker/Dockerfile
-            image: hc-mp1-tls
-            nginx_conf: 01_mega_project_1_underwriting_approval/docker/tls/nginx.conf
-            services_json: '[{"name": "credit-default-prediction", "port": 8001, "module": "credit_default_scoring_service:app", "tls_port": 9001}, {"name": "loan-application-approval", "port": 8002, "module": "loan_approval_scoring_service:app", "tls_port": 9002}, {"name": "credit-score-estimation", "port": 8003, "module": "credit_score_service:app", "tls_port": 9003}, {"name": "repayment-capacity-analysis", "port": 8004, "module": "repayment_capacity_service:app", "tls_port": 9004}]'
+            compose_file: 01_mega_project_1_underwriting_approval/docker/docker-compose.tls.yml
+            tls_dir: 01_mega_project_1_underwriting_approval/docker/tls
+            tls_ports: "9001 9002 9003 9004"
           - name: "MP2 -- Regulatory Capital & Stress Testing"
-            dockerfile: 02_mega_project_2_regulatory_capital/docker/Dockerfile
-            image: hc-mp2-tls
-            nginx_conf: 02_mega_project_2_regulatory_capital/docker/tls/nginx.conf
-            services_json: '[{"name": "capital-requirement", "port": 8005, "module": "capital_requirement_service:app", "tls_port": 9005}, {"name": "macro-stress-testing", "port": 8006, "module": "stress_testing_service:app", "tls_port": 9006}]'
+            compose_file: 02_mega_project_2_regulatory_capital/docker/docker-compose.tls.yml
+            tls_dir: 02_mega_project_2_regulatory_capital/docker/tls
+            tls_ports: "9005 9006"
           - name: "MP3 -- Risk Segmentation"
-            dockerfile: 03_mega_project_3_risk_segmentation/docker/Dockerfile
-            image: hc-mp3-tls
-            nginx_conf: 03_mega_project_3_risk_segmentation/docker/tls/nginx.conf
-            services_json: '[{"name": "risk-tier-assignment", "port": 8007, "module": "risk_tier_assignment_service:app", "tls_port": 9007}, {"name": "bureau-segment-assignment", "port": 8008, "module": "bureau_segment_assignment_service:app", "tls_port": 9008}, {"name": "repayment-segment-assignment", "port": 8009, "module": "repayment_segment_assignment_service:app", "tls_port": 9009}, {"name": "utilization-segment-assignment", "port": 8010, "module": "utilization_segment_assignment_service:app", "tls_port": 9010}]'
+            compose_file: 03_mega_project_3_risk_segmentation/docker/docker-compose.tls.yml
+            tls_dir: 03_mega_project_3_risk_segmentation/docker/tls
+            tls_ports: "9007 9008 9009 9010"
           - name: "MP4 -- Delinquency Prevention"
-            dockerfile: 04_mega_project_4_delinquency_prevention/docker/Dockerfile
-            image: hc-mp4-tls
-            nginx_conf: 04_mega_project_4_delinquency_prevention/docker/tls/nginx.conf
-            services_json: '[{"name": "early-delinquency-scoring", "port": 8011, "module": "early_delinquency_scoring_service:app", "tls_port": 9011}, {"name": "payment-pattern-assignment", "port": 8012, "module": "payment_pattern_assignment_service:app", "tls_port": 9012}, {"name": "revolving-distress-scoring", "port": 8013, "module": "revolving_distress_scoring_service:app", "tls_port": 9013}, {"name": "pos-cash-trajectory-scoring", "port": 8014, "module": "pos_cash_trajectory_scoring_service:app", "tls_port": 9014}]'
+            compose_file: 04_mega_project_4_delinquency_prevention/docker/docker-compose.tls.yml
+            tls_dir: 04_mega_project_4_delinquency_prevention/docker/tls
+            tls_ports: "9011 9012 9013 9014"
           - name: "MP5 -- Liquidity & Cashflow"
-            dockerfile: 05_mega_project_5_liquidity_cashflow/docker/Dockerfile
-            image: hc-mp5-tls
-            nginx_conf: 05_mega_project_5_liquidity_cashflow/docker/tls/nginx.conf
-            services_json: '[{"name": "prepayment-segment-assignment", "port": 8015, "module": "prepayment_segment_assignment_service:app", "tls_port": 9015}]'
+            compose_file: 05_mega_project_5_liquidity_cashflow/docker/docker-compose.tls.yml
+            tls_dir: 05_mega_project_5_liquidity_cashflow/docker/tls
+            tls_ports: "9015"
     steps:
       - uses: actions/checkout@v7
 
@@ -153,62 +165,42 @@ jobs:
       - name: Generate synthetic CI fixture bundles (not real models -- see script docstring)
         run: python scripts/generate_ci_fixture_bundles.py
 
-      - name: docker build -- ${{ matrix.name }}
-        run: docker build -f ${{ matrix.dockerfile }} -t ${{ matrix.image }} .
+      - name: Generate a real self-signed cert for this run (never committed --
+          fresh every run; same real scripts/generate_local_tls_cert.sh a real
+          local/production deployment would run once)
+        run: scripts/generate_local_tls_cert.sh ${{ matrix.tls_dir }}
 
-      - name: Start every service in this Mega Project as its own real container (plain HTTP, as designed -- TLS is terminated in front, not inside)
+      - name: docker compose up --build -- ${{ matrix.name }} (real build, real
+          containers, real Compose network -- the exact deployment artifact,
+          not a CI-only reimplementation of it)
         run: |
-          echo '${{ matrix.services_json }}' > /tmp/services.json
-          jq -c '.[]' /tmp/services.json | while read -r svc; do
-            name=$(echo "$svc" | jq -r '.name')
-            port=$(echo "$svc" | jq -r '.port')
-            module=$(echo "$svc" | jq -r '.module')
-            docker run -d --name "$name" -p "$port:$port" -e HEALTHCHECK_PORT="$port" \
-              ${{ matrix.image }} uvicorn "$module" --host 0.0.0.0 --port "$port"
+          API_KEY=ci-fixture-key-not-a-real-secret \
+            docker compose -f ${{ matrix.compose_file }} up --build -d
+
+      - name: Wait for every real TLS port to answer over real HTTPS -- ${{ matrix.name }}
+        run: |
+          for port in ${{ matrix.tls_ports }}; do
+            ok=""
             for i in $(seq 1 30); do
-              if curl -sf "http://127.0.0.1:$port/health" > /dev/null; then
-                echo "$name healthy on $port after ${i} attempt(s)."
+              if curl -sf -k "https://127.0.0.1:$port/health" > /dev/null; then
+                echo "port $port healthy after ${i} attempt(s)."
+                ok=1
                 break
               fi
-              sleep 1
+              sleep 2
             done
-          done
-
-      - name: Generate a real self-signed cert for this run (never committed -- fresh every run)
-        run: |
-          sudo mkdir -p /etc/nginx/tls
-          sudo openssl req -x509 -newkey rsa:2048 -nodes \
-            -keyout /etc/nginx/tls/key.pem -out /etc/nginx/tls/cert.pem -days 1 -subj "/CN=localhost"
-
-      - name: Install and run nginx as a real TLS-terminating reverse proxy, using this Mega Project's own real nginx.conf
-        run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq nginx
-          sudo nginx -c "$(pwd)/${{ matrix.nginx_conf }}"
-          sleep 1
-
-      - name: Real HTTPS request through TLS termination to every real running service in this Mega Project
-        run: |
-          jq -c '.[]' /tmp/services.json | while read -r svc; do
-            name=$(echo "$svc" | jq -r '.name')
-            tls_port=$(echo "$svc" | jq -r '.tls_port')
-            echo "Checking $name over TLS on $tls_port ..."
-            curl -sf -k "https://127.0.0.1:$tls_port/health"
-            echo
+            if [ -z "$ok" ]; then
+              echo "port $port never became healthy -- container logs:"
+              docker compose -f ${{ matrix.compose_file }} logs
+              exit 1
+            fi
           done
           echo "Real TLS termination + reverse proxy verified for every service in ${{ matrix.name }}."
 
       - name: Container logs (always shown for visibility)
         if: always()
-        run: |
-          jq -r '.[].name' /tmp/services.json | while read -r name; do
-            echo "--- $name ---"
-            docker logs "$name" || true
-          done
+        run: docker compose -f ${{ matrix.compose_file }} logs || true
 
       - name: Cleanup
         if: always()
-        run: |
-          sudo nginx -s stop || true
-          jq -r '.[].name' /tmp/services.json | while read -r name; do
-            docker rm -f "$name" || true
-          done
+        run: docker compose -f ${{ matrix.compose_file }} down -v || true

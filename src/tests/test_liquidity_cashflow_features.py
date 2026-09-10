@@ -135,7 +135,9 @@ def test_attach_repayment_capacity_reuses_mp1_formula_exactly():
     row100 = joined.filter(pl.col("SK_ID_CURR") == 100).to_dicts()[0]
     row200 = joined.filter(pl.col("SK_ID_CURR") == 200).to_dicts()[0]
     # Exact MP1 formula: AMT_INCOME_TOTAL / (AMT_ANNUITY + 1.0)
-    assert row100["REPAYMENT_CAPACITY_RATIO"] == pytest.approx(180000.0 / (24000.0 + 1.0))
+    assert row100["REPAYMENT_CAPACITY_RATIO"] == pytest.approx(
+        180000.0 / (24000.0 + 1.0)
+    )
     # Real, disclosed: null AMT_ANNUITY -> null ratio, never a fabricated fallback
     assert row200["REPAYMENT_CAPACITY_RATIO"] is None
 
@@ -183,7 +185,9 @@ def test_bootstrap_cash_flow_at_risk_matches_hand_computed_closed_form():
     assert result["real_rates_n"] == 5
     # Hand-computed: mean of the 3 most recent real SCHEDULED_CASH_AMT values
     # [1000, 2000, 3000] = 2000.0 exactly.
-    assert result["near_term_scheduled_cash_per_period_assumption"] == pytest.approx(2000.0)
+    assert result["near_term_scheduled_cash_per_period_assumption"] == pytest.approx(
+        2000.0
+    )
 
     h30 = result["by_horizon"][30]
     # Hand-computed closed-form: 2000.0 * 1 period * mean(rates)=0.90 = 1800.0
@@ -201,7 +205,15 @@ def test_bootstrap_cash_flow_at_risk_matches_hand_computed_closed_form():
 
 
 def test_bootstrap_cash_flow_at_risk_is_deterministic_given_same_seed():
-    result_a = bootstrap_cash_flow_at_risk(_hand_built_periods(), horizons_days=[30], seed=42, n_draws=5_000)
-    result_b = bootstrap_cash_flow_at_risk(_hand_built_periods(), horizons_days=[30], seed=42, n_draws=5_000)
-    assert result_a["by_horizon"][30]["mc_mean"] == result_b["by_horizon"][30]["mc_mean"]
-    assert result_a["by_horizon"][30]["p5_cfar"] == result_b["by_horizon"][30]["p5_cfar"]
+    result_a = bootstrap_cash_flow_at_risk(
+        _hand_built_periods(), horizons_days=[30], seed=42, n_draws=5_000
+    )
+    result_b = bootstrap_cash_flow_at_risk(
+        _hand_built_periods(), horizons_days=[30], seed=42, n_draws=5_000
+    )
+    assert (
+        result_a["by_horizon"][30]["mc_mean"] == result_b["by_horizon"][30]["mc_mean"]
+    )
+    assert (
+        result_a["by_horizon"][30]["p5_cfar"] == result_b["by_horizon"][30]["p5_cfar"]
+    )
