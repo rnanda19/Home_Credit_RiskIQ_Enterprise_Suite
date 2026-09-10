@@ -61,7 +61,7 @@ notebook — `score_monotonicity_holds`, i.e. does SCORE decrease as PD
 increases, as it must by construction of the transform), separate from its
 Pipeline Integrity Checks. On the real, full-scale 2026-09-02 rerun, all
 four checks passed — including the calibration-gap check — and the
-deployment verdict is `RECOMMENDED FOR PRODUCTION` (see
+deployment verdict is **`RECOMMENDED FOR PRODUCTION`** (see
 `decision_engine/artifacts/notebook_03_summary.json`'s
 `statistical_validation` field). A small or noisy run can still see the
 calibration-gap check fail in isolation without any integrity-check

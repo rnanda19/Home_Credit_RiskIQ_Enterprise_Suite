@@ -49,7 +49,7 @@ applicant fields — it does not train a classifier, and there is no
 
 This is the problem where a user of this suite actually observed the issue
 fixed in `CHANGELOG.md` entry [1.0.1]: the executive rollup showed
-"NOT YET ROBUST — one or more validation checks failed" right next to a
+NOT YET ROBUST — one or more validation checks failed right next to a
 passing "13/13 PASS" Integrity Checks count, which read as a
 contradiction. It wasn't one — they are two different, independently-
 computed check families:

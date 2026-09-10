@@ -67,8 +67,7 @@ capital-to-EAD rate rising from 3.76% at Tier 1 to a peak of 8.82% at Tier
 formally confirmed monotonic within noise by Notebook 05's own synthesis
 check.
 
-**Real Statistical Robustness Verdict: STATISTICALLY ROBUST — RECOMMENDED
-FOR PRODUCTION.** All 10 structural Pipeline Integrity Checks pass. This
+**Real Statistical Robustness Verdict:** **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**. All 10 structural Pipeline Integrity Checks pass. This
 is this notebook's final, confirmed result on real data — no further
 pipeline changes are needed.
 

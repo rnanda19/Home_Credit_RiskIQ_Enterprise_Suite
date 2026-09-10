@@ -151,12 +151,11 @@ Validated with a real chi-square/Cramer's V test (with a bootstrap 95%
 CI) against real `TARGET`, and — honestly, not gated pass/fail — a real
 one-way ANOVA cross-check against Notebook 01's continuous risk score when
 present. On this build's synthetic fixture the statistical-robustness
-verdict came back **NOT YET STATISTICALLY ROBUST** (chi-square p≈0.085 on
+verdict came back NOT YET STATISTICALLY ROBUST (chi-square p≈0.085 on
 a small, randomly-generated 2,715-applicant fixture) — reported as-is,
 not smoothed over. **Update, 2026-09-02:** this notebook has since been
 run against your real, full-scale data (n_scope=291,643) — the real
-chi-square/Cramer's V test now comes back **STATISTICALLY ROBUST —
-RECOMMENDED FOR PRODUCTION** (chi-square p≈6.37e-234, Cramer's
+chi-square/Cramer's V test now comes back **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** (chi-square p≈6.37e-234, Cramer's
 V=0.0609, 95% CI [0.0572, 0.0645]); see the
 [model card](model_cards/02_installment_payment_behavior_detection_MODEL_CARD.md)
 for the full methodology, **a real crash this notebook had on full-scale

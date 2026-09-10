@@ -97,8 +97,7 @@ failing check(s).
 
 ## Two real bugs found and fixed in `default_rate_monotonic_by_pd_band`
 
-This notebook's first version showed a false "NOT YET STATISTICALLY
-ROBUST — failed: default_rate_monotonic_by_pd_band" verdict — including on
+This notebook's first version showed a false NOT YET STATISTICALLY ROBUST — failed: default_rate_monotonic_by_pd_band verdict — including on
 the user's own real, full-scale 307,511-applicant run — despite a highly
 significant chi-square (p < 0.001) and a tight bootstrap 95% CI on Cramer's
 V clearly excluding zero. Root-caused to two separate, real, disclosed
@@ -116,8 +115,7 @@ issues (see `CHANGELOG.md` [1.4.3] for the full record):
    Notebook 04 already used correctly. Confirmed on the user's own real, full-scale 307,511-applicant rerun:
    the real, unchanged band-level default rates (1.86% → 6.52% →
    15.01% → 29.31% → 53.90%) are genuinely, strongly monotonic, and the
-   verdict now correctly reads "STATISTICALLY ROBUST — RECOMMENDED FOR
-   PRODUCTION" once compared in the right direction — the underlying
+   verdict now correctly reads **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** once compared in the right direction — the underlying
    z-statistics in the JSON audit trail are byte-identical to before the
    fix, only the direction of comparison changed.
 2. **A large-sample statistical-power issue, addressed defensively.**

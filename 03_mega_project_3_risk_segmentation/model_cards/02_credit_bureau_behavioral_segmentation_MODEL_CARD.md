@@ -60,8 +60,7 @@ to 19.9%. Real cross-check against Problem 1's Risk Tier: Cramer's
 V=0.049 — genuinely low, evidencing these are independent axes, not a
 relabeling.
 
-**Statistical Robustness Verdict on the fixture: NOT YET STATISTICALLY
-ROBUST** — the chi-square test against real `TARGET` did not reach
+**Statistical Robustness Verdict on the fixture:** NOT YET STATISTICALLY ROBUST — the chi-square test against real `TARGET` did not reach
 significance at this scale (p=0.453, Cramer's V=0.041, 95% bootstrap CI
 [0.032, 0.082], entirely below this suite's 0.05 materiality threshold).
 This is a real, honestly-computed result, not a code defect — see
@@ -88,8 +87,7 @@ History 44,020 applicants (10.12%). Real cross-check against Problem 1's
 Risk Tier: Cramer's V=0.092 — genuinely low, evidencing these are
 independent axes, not a relabeling.
 
-**Real Statistical Robustness Verdict: STATISTICALLY ROBUST — RECOMMENDED
-FOR PRODUCTION** — the chi-square test against real `TARGET` is
+**Real Statistical Robustness Verdict:** **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** — the chi-square test against real `TARGET` is
 significant at real production scale (chi2=925.79, df=4, p=4.3e-199) and
 Cramer's V=0.055 (95% bootstrap CI [0.051, 0.058]) clears this suite's
 0.05 materiality threshold (the CI's own lower bound, 0.051, is just
@@ -180,7 +178,7 @@ both gates (see "Real production run confirmed" above).
   verdict was NOT YET ROBUST (see above) — expected at that scale and, as
   it turned out, not a sign of a real problem: the real, confirmed
   verdict on the actual 307,511-applicant production run is
-  **STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION** (see "Real
+  **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** (see "Real
   production run confirmed" above).
 
 ## Deployable service (hardening pass)

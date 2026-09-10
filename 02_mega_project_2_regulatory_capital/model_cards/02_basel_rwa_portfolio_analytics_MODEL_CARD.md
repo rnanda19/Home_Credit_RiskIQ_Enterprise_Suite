@@ -62,8 +62,7 @@ the wrong way for that same ascending order. Fixed by reversing before the
 `monotonic_within_noise()` call and flipping the density comparison to
 `<=`. Confirmed via real re-execution on the user's own real, full-scale
 307,511-applicant rerun: the verdict
-flips from "NOT YET STATISTICALLY ROBUST" to "STATISTICALLY ROBUST —
-RECOMMENDED FOR PRODUCTION" against the same underlying, unchanged data —
+flips from NOT YET STATISTICALLY ROBUST to **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** against the same underlying, unchanged data —
 see `CHANGELOG.md` [1.4.3] and Notebook 01's model card for the full
 disclosure, including the separate large-sample practical-materiality
 threshold added to `monotonic_within_noise()` at the same time.

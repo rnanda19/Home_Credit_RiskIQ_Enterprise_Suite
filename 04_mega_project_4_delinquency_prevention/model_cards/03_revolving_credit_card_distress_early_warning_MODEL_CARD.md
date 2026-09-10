@@ -175,7 +175,7 @@ in `decision_engine/reports/notebook_03_summary.json`: champion
 `random_forest` (real 5-fold CV mean AUC 0.6475 vs. `gradient_boosting`'s
 0.6455), real holdout ROC-AUC **0.6570** (95% CI [0.6442, 0.6707]) on the
 real 86,905-applicant scope population (real default rate 8.67%), verdict
-**STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION**. No `sample_reports/
+**`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**. No `sample_reports/
 SAMPLE_*` fixture demo file was ever generated for this problem, and
 still isn't — that is a separate, narrower fact from execution status.
 

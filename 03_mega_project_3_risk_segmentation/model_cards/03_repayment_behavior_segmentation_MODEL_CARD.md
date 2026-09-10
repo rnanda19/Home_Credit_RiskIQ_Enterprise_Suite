@@ -38,7 +38,7 @@ cross-checks: Cramer's V=0.044 vs. Problem 1's Risk Tier, 0.039 vs.
 Problem 2's Bureau Segment — both genuinely low, confirming real
 cross-axis independence.
 
-**Real Statistical Robustness Verdict: NOT YET STATISTICALLY ROBUST** —
+**Real Statistical Robustness Verdict:** NOT YET STATISTICALLY ROBUST —
 `chi_square_significant` PASSED (p=3.2e-22; at N≈307K real chi-square
 tests become significant for almost any real effect) but
 `cramers_v_ci_excludes_zero` FAILED (real Cramer's V=0.0179, 95%
@@ -152,8 +152,7 @@ against Problem 2's Bureau Segment — both genuinely low, evidencing this
 is a real, independent third axis, not a relabeling of either prior
 segmentation.
 
-**Statistical Robustness Verdict on the fixture: NOT YET STATISTICALLY
-ROBUST** — the chi-square test against real `TARGET` did not reach
+**Statistical Robustness Verdict on the fixture:** NOT YET STATISTICALLY ROBUST — the chi-square test against real `TARGET` did not reach
 significance at this scale (p=0.459, Cramer's V=0.041, 95% bootstrap CI
 [0.033, 0.084], entirely below this suite's 0.05 materiality threshold).
 This is the same expected fixture-scale limitation already documented for
@@ -246,7 +245,7 @@ that is real and expected, not a code defect.
   verdict was NOT YET ROBUST (see above) — expected at that scale. The
   real, confirmed verdict on the actual 307,511-applicant production run
   (see "Real production run confirmed" at the top of this card) is also
-  **NOT YET STATISTICALLY ROBUST**, but for a different, honest reason:
+  NOT YET STATISTICALLY ROBUST, but for a different, honest reason:
   chi-square is easily significant at real N (p=3.2e-22), while Cramer's
   V (0.018) stays below the 0.05 materiality bar — a real, cross-axis-
   independent, statistically detectable signal that is honestly too small

@@ -18,11 +18,11 @@ Per `decision_engine/artifacts/mp1_executive_summary.json`:
 
 | # | Problem | Method | Verdict | Integrity checks |
 |---|---|---|---|---|
-| 1 | Credit Default Prediction | LightGBM | RECOMMENDED FOR PRODUCTION | 13/13 PASS |
-| 2 | Loan Application Approval | LightGBM | RECOMMENDED FOR PRODUCTION | 18/18 PASS |
-| 3 | Credit Score Estimation | Statistical/tiering analysis (no model trained) | RECOMMENDED FOR PRODUCTION | 11/11 PASS |
-| 4 | Repayment Capacity Analysis | Statistical/tiering analysis (no model trained) | STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION | 13/13 PASS |
-| 5 | Previous Application Outcomes | Statistical/tiering analysis (no model trained) | STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION | 13/13 PASS |
+| 1 | Credit Default Prediction | LightGBM | **`RECOMMENDED FOR PRODUCTION`** | 13/13 PASS |
+| 2 | Loan Application Approval | LightGBM | **`RECOMMENDED FOR PRODUCTION`** | 18/18 PASS |
+| 3 | Credit Score Estimation | Statistical/tiering analysis (no model trained) | **`RECOMMENDED FOR PRODUCTION`** | 11/11 PASS |
+| 4 | Repayment Capacity Analysis | Statistical/tiering analysis (no model trained) | **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** | 13/13 PASS |
+| 5 | Previous Application Outcomes | Statistical/tiering analysis (no model trained) | **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** | 13/13 PASS |
 
 All 5/5 real problem summaries found. Real total annual benefit run-rate:
 **$37,421,672**, built only from real benefit fields — cost-context rows

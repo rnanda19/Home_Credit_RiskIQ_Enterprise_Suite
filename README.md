@@ -168,7 +168,7 @@ check families run on every notebook, every time:
   chi-square significance.
 
 A model can pass every integrity check and still be honestly reported
-**"NOT RECOMMENDED FOR PRODUCTION YET"** if it fails a robustness gate —
+NOT RECOMMENDED FOR PRODUCTION YET if it fails a robustness gate —
 this suite surfaces that outcome instead of hiding it (see the dashboard
 below: 2 of Mega Project 1's 5 problems currently read that way; Mega
 Projects 2 and 3 report the same two-tier verdict separately for each of

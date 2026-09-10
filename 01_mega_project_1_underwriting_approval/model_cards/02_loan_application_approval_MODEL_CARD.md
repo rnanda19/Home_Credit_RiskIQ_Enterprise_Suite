@@ -58,7 +58,7 @@ Same distinction as Notebook 01's model card — the Deployment/Statistical
 Robustness Verdict and the Pipeline Integrity Checks are two different,
 independently-computed check families, not the same result shown twice.
 On the real, full-scale 2026-09-02 rerun, this notebook's Statistical
-Robustness Verdict is `RECOMMENDED FOR PRODUCTION` — all deployment
+Robustness Verdict is **`RECOMMENDED FOR PRODUCTION`** — all deployment
 checks passed (see `decision_engine/artifacts/notebook_02_summary.json`'s
 `statistical_validation` field); see
 `01_credit_default_prediction_MODEL_CARD.md` for the full explanation and

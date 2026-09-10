@@ -102,12 +102,12 @@ score 0.5181) — see the notebook's own printed output and
   direction, the same disclosed choice this suite already makes for its
   other unsupervised segmentations.
 - On this suite's original small synthetic fixture (2,715 applicants), the
-  honest result was **NOT YET STATISTICALLY ROBUST** (chi-square p≈0.085,
+  honest result was NOT YET STATISTICALLY ROBUST (chi-square p≈0.085,
   Cramer's V 95% CI [0.032, 0.099] included 0) — reported as-is, not
   smoothed over; a small, randomly-generated fixture is not expected to
   show strong real statistical structure. **Update, 2026-09-02 — real,
   full-scale run:** on the real 291,643-applicant scope population, the
-  real result is **STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION**
+  real result is **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**
   (chi-square p≈6.37e-234, Cramer's V=0.0609, 95% CI [0.0572, 0.0645],
   excludes 0) — see
   `decision_engine/reports/notebook_02_summary.json` for the real numbers.

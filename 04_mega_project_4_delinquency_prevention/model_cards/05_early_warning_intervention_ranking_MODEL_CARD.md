@@ -82,13 +82,12 @@ and real `TARGET` are all present:
   honest context on how (dis)similar they are.
 
 **Verdict logic** (adapted honestly for a ranking-comparison task, not a
-classifier): "COMPOSITE RANKING MATERIALLY OUTPERFORMS NAIVE BASELINE"
+classifier): **`COMPOSITE RANKING MATERIALLY OUTPERFORMS NAIVE BASELINE`**
 requires ALL of: a sufficient real evaluation population (≥50), the
 composite's real top-decile rate exceeding the naive baseline's, that
 difference being real and statistically significant (chi-square p<0.05),
 and the composite's real lift over the overall rate exceeding 1.0. Any
-failure is reported as "NOT YET DEMONSTRATED TO OUTPERFORM NAIVE
-BASELINE" with the specific failed check(s) named — never smoothed over
+failure is reported as NOT YET DEMONSTRATED TO OUTPERFORM NAIVE BASELINE with the specific failed check(s) named — never smoothed over
 if the naive baseline wins or ties.
 
 ## Limitations
@@ -131,7 +130,7 @@ real results now exist in
 top-decile default rate **16.89%** vs. real naive top-decile default rate
 8.58% (real composite lift **2.07x** vs. real naive lift 1.05x), on
 n_eval=289,444 (chi-square p≈3.27e-197, Spearman ρ=0.110, p≈0), verdict
-**COMPOSITE RANKING MATERIALLY OUTPERFORMS NAIVE BASELINE**.
+**`COMPOSITE RANKING MATERIALLY OUTPERFORMS NAIVE BASELINE`**.
 
 ## How to reproduce
 

@@ -79,8 +79,7 @@ Segment — all evidencing this is a real, independent fourth axis, though
 the Repayment Segment cross-check is the least independent of the three
 (still a moderate-low association, not a relabeling).
 
-**Statistical Robustness Verdict on the fixture: NOT YET STATISTICALLY
-ROBUST** — the chi-square test against real `TARGET` did not reach
+**Statistical Robustness Verdict on the fixture:** NOT YET STATISTICALLY ROBUST — the chi-square test against real `TARGET` did not reach
 significance at this scale (p=0.949, Cramer's V=0.023, 95% bootstrap CI
 [0.023, 0.070], entirely below this suite's 0.05 materiality threshold).
 This is the same expected fixture-scale limitation already documented for
@@ -107,8 +106,7 @@ Cramer's V=0.100 against Problem 1's Risk Tier, 0.045 against Problem
 all genuinely low, confirming real cross-axis independence on all
 three.
 
-**Real Statistical Robustness Verdict: STATISTICALLY ROBUST — RECOMMENDED
-FOR PRODUCTION** — the chi-square test against real `TARGET` is
+**Real Statistical Robustness Verdict:** **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** — the chi-square test against real `TARGET` is
 significant at real production scale (chi2=1,912.80, df=8, p<0.001) and
 Cramer's V=0.079 (95% bootstrap CI [0.075, 0.083]) clears this suite's
 0.05 materiality threshold with room to spare. Unlike Problems 2 and 3,
@@ -199,7 +197,7 @@ confirmed" above).
 - On this suite's small synthetic fixture, the statistical robustness
   verdict was NOT YET ROBUST (see above) — expected at that scale. The
   real, confirmed verdict on the actual 307,511-applicant production run
-  is **STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION** (see "Real
+  is **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** (see "Real
   production run confirmed" above).
 
 ## Deployable service (hardening pass)

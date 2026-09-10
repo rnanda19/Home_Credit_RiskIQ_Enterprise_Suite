@@ -8,9 +8,7 @@ differentiate treatment, not a single blended risk score. Every problem
 below, including the Notebook 06 executive rollup, has been rerun
 end-to-end on your own real, full-scale Kaggle data (307,511 real
 applicants) and confirmed clean; see each section for the real, current
-verdict — 4 of 5 statistically-gated problems are STATISTICALLY ROBUST —
-RECOMMENDED FOR PRODUCTION, and Problem 3 is real and confirmed NOT YET
-STATISTICALLY ROBUST (see its section and model card).
+verdict — 4 of 5 statistically-gated problems are **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**, and Problem 3 is real and confirmed NOT YET STATISTICALLY ROBUST (see its section and model card).
 
 **History:** see this Mega Project's own [`CHANGELOG.md`](CHANGELOG.md)
 for a curated version history, or the
@@ -87,7 +85,7 @@ output, matched for all 307,511 applicants — 100% match rate) rises from
 3.76% at Tier 1 to a peak of 8.82% at Tier 5, easing slightly to 8.74% at
 Tier 6 — real capital tracking real risk, formally confirmed monotonic
 within noise by Notebook 05's own synthesis check. Real statistical
-robustness verdict: STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION.
+robustness verdict: **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**.
 
 ## Problem 2 — Credit Bureau Behavioral Segmentation ✅ built
 
@@ -125,7 +123,7 @@ the highest); plus 44,020 (14.3%) applicants with no real bureau history
 V=0.055 (95% bootstrap CI [0.051, 0.058]) — chi-square significant
 (chi2=925.79, p<0.001); real cross-check against Problem 1's Risk Tier:
 Cramer's V=0.092, genuine axis independence. Real statistical robustness
-verdict: STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION — the real,
+verdict: **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`** — the real,
 production-scale data did clear the materiality bar that the fixture's
 limited statistical power could not (see the model card).
 
@@ -225,8 +223,7 @@ were reported as their own explicit "No Revolving Credit History" segment
 bootstrap CI [0.075, 0.083]) — chi-square significant (chi2=1,912.80,
 p<0.001); real cross-checks: Cramer's V=0.100 vs. Risk Tier, 0.045 vs.
 Bureau Segment, 0.099 vs. Repayment Segment — genuine axis independence
-from all three. Real statistical robustness verdict: STATISTICALLY
-ROBUST — RECOMMENDED FOR PRODUCTION.
+from all three. Real statistical robustness verdict: **`STATISTICALLY ROBUST — RECOMMENDED FOR PRODUCTION`**.
 
 ## Problem 5 — Cross-Axis Risk-Return Synthesis ✅ built
 
@@ -253,7 +250,7 @@ most sharply (97.97% default-rate spread across 6 tiers — expected,
 since it is built directly from real PD), followed by Repayment Segment
 (7.84%), Bureau Segment (6.68%), and Utilization Segment (5.96%). Real
 capital-rate monotonicity across Risk Tier: HOLDS. Synthesis verdict:
-SYNTHESIS VALIDATED — CAPITAL TRACKS RISK AS EXPECTED. Verified
+**`SYNTHESIS VALIDATED — CAPITAL TRACKS RISK AS EXPECTED`**. Verified
 end-to-end: 0 execution errors, all structural pipeline integrity checks
 pass, HTML dashboard confirmed under a network-blocked Playwright check,
 Excel workbook confirmed via LibreOffice headless recalculation — clean
@@ -265,7 +262,7 @@ re-ranking to 2nd place at real scale, ahead of Bureau Segment (5.37%)
 and Repayment Segment (2.42%), a reversal from the small fixture's
 ranking), Bureau Segment 5.37%, Repayment Segment 2.42%. Real
 capital-rate monotonicity across Risk Tier: HOLDS. Real synthesis
-verdict: SYNTHESIS VALIDATED — CAPITAL TRACKS RISK AS EXPECTED. 0
+verdict: **`SYNTHESIS VALIDATED — CAPITAL TRACKS RISK AS EXPECTED`**. 0
 execution errors, all checks pass.
 
 ## Problem 6 — Executive Rollup ✅ built
@@ -296,8 +293,7 @@ errors, all rollup integrity checks pass, HTML dashboard confirmed under
 a network-blocked Playwright check, Excel workbook confirmed via
 LibreOffice headless recalculation. **Note:** this rollup consolidates
 all 5 problems' real summaries regardless of each one's own
-statistical-robustness verdict — Problem 3's own real verdict is **NOT
-YET STATISTICALLY ROBUST** on this run (see its own model card); this
+statistical-robustness verdict — Problem 3's own real verdict is NOT YET STATISTICALLY ROBUST on this run (see its own model card); this
 Notebook 06 rollup surfaces that verdict rather than hiding or averaging
 it away.
 
