@@ -77,28 +77,35 @@ _oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 def configured_api_key() -> str:
     """Real value from the real environment, or the published dev-only fallback
-    (with a loud warning) -- never a silently-generated or hidden default."""
+    (with a loud warning) -- never a silently-generated or hidden default.
+
+    2026-09-10: the warning names the fallback but no longer prints its
+    value -- CodeQL (py/clear-text-logging-sensitive-data) correctly flags
+    any log call that interpolates a secret-typed value, even one this
+    module also happens to publish as a source-level constant. The
+    constant is still one line above, in source, for anyone who needs the
+    actual value; runtime logs just don't carry it."""
     key = os.environ.get("API_KEY")
     if not key:
         _logger.warning(
             "API_KEY is not set -- falling back to the published dev-only default "
-            "(%s). Set API_KEY before deploying this service anywhere reachable by "
-            "anyone but you.",
-            DEV_DEFAULT_API_KEY,
+            "(see this module's DEV_DEFAULT_API_KEY constant). Set API_KEY before "
+            "deploying this service anywhere reachable by anyone but you."
         )
         return DEV_DEFAULT_API_KEY
     return key
 
 
 def configured_jwt_secret() -> str:
-    """Same real-env-or-loud-dev-fallback convention as configured_api_key()."""
+    """Same real-env-or-loud-dev-fallback convention as configured_api_key()
+    (see that function's docstring for the 2026-09-10 clear-text-logging fix)."""
     secret = os.environ.get("JWT_SECRET_KEY")
     if not secret:
         _logger.warning(
             "JWT_SECRET_KEY is not set -- falling back to the published dev-only "
-            "default (%s). Set JWT_SECRET_KEY before deploying this service "
-            "anywhere reachable by anyone but you.",
-            DEV_DEFAULT_JWT_SECRET,
+            "default (see this module's DEV_DEFAULT_JWT_SECRET constant). Set "
+            "JWT_SECRET_KEY before deploying this service anywhere reachable by "
+            "anyone but you."
         )
         return DEV_DEFAULT_JWT_SECRET
     return secret
