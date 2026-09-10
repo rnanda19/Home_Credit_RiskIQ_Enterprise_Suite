@@ -14,20 +14,23 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
-      - name: Install lint tools (2026-09-10: pinned -- an unpinned `pip install
-          pyflakes black` silently picked up a new black release with different
-          formatting output than the repo was last reformatted against, and
-          broke this gate on a commit that changed none of the linted files.
-          Pinning makes this job deterministic; bump these two versions
-          deliberately, together with a repo-wide `black` reformat pass, rather
-          than letting PyPI change CI's behavior underneath an unrelated push.)
+      # 2026-09-10: pinned -- an unpinned `pip install pyflakes black` silently
+      # picked up a new black release with different formatting output than the
+      # repo was last reformatted against, and broke this gate on a commit that
+      # changed none of the linted files. Pinning makes this job deterministic;
+      # bump these two versions deliberately, together with a repo-wide `black`
+      # reformat pass, rather than letting PyPI change CI's behavior underneath
+      # an unrelated push.
+      - name: Install lint tools (pinned versions)
         run: pip install pyflakes==3.4.0 black==26.3.1
-      - name: pyflakes (BLOCKING as of 2026-09-08 -- was advisory-only; repo is clean, 0 findings)
+      # BLOCKING as of 2026-09-08 -- was advisory-only; repo is clean, 0 findings.
+      - name: pyflakes
         run: pyflakes src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ 04_mega_project_4_delinquency_prevention/services/ 04_mega_project_4_delinquency_prevention/tests/ 05_mega_project_5_liquidity_cashflow/services/ 05_mega_project_5_liquidity_cashflow/tests/ demo/
-      - name: black --check (BLOCKING as of 2026-09-08 -- was advisory-only; repo-wide
-          reformat applied in the same commit that flipped this gate on.
-          2026-09-10: repo-wide reformat applied again, against the pinned
-          black==26.3.1 above, to fix the drift described in the install step)
+      # BLOCKING as of 2026-09-08 -- was advisory-only; repo-wide reformat applied
+      # in the same commit that flipped this gate on. 2026-09-10: repo-wide
+      # reformat applied again, against the pinned black==26.3.1 above, to fix
+      # the version-drift bug described in the install step.
+      - name: black --check
         run: black --check --diff src/ 01_mega_project_1_underwriting_approval/services/ 01_mega_project_1_underwriting_approval/tests/ 02_mega_project_2_regulatory_capital/services/ 02_mega_project_2_regulatory_capital/tests/ 03_mega_project_3_risk_segmentation/services/ 03_mega_project_3_risk_segmentation/tests/ 04_mega_project_4_delinquency_prevention/services/ 04_mega_project_4_delinquency_prevention/tests/ 05_mega_project_5_liquidity_cashflow/services/ 05_mega_project_5_liquidity_cashflow/tests/ demo/
 
   security-scan:
@@ -37,8 +40,9 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
-      - name: Install bandit (2026-09-10: pinned for the same determinism reason as pyflakes/black above)
+      # 2026-09-10: pinned for the same determinism reason as pyflakes/black above.
+      - name: Install bandit (pinned version)
         run: pip install bandit==1.9.4
-      - name: bandit security scan of src/, services/, and demo/ (BLOCKING - excludes
-          tests/ to avoid false positives on test fixtures/assertions)
+      # BLOCKING -- excludes tests/ to avoid false positives on test fixtures/assertions.
+      - name: bandit security scan of src/, services/, and demo/
         run: bandit -r src/ 01_mega_project_1_underwriting_approval/services/ 02_mega_project_2_regulatory_capital/services/ 03_mega_project_3_risk_segmentation/services/ 04_mega_project_4_delinquency_prevention/services/ 05_mega_project_5_liquidity_cashflow/services/ demo/ -ll
