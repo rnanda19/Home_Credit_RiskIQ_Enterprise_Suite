@@ -46,3 +46,31 @@ jobs:
       # BLOCKING -- excludes tests/ to avoid false positives on test fixtures/assertions.
       - name: bandit security scan of src/, services/, and demo/
         run: bandit -r src/ 01_mega_project_1_underwriting_approval/services/ 02_mega_project_2_regulatory_capital/services/ 03_mega_project_3_risk_segmentation/services/ 04_mega_project_4_delinquency_prevention/services/ 05_mega_project_5_liquidity_cashflow/services/ demo/ -ll
+
+  dependency-audit:
+    # 2026-10-14 hardening: automated supply-chain security gate -- added
+    # after Phase 1's audit found this suite had bandit (SAST) but no
+    # dependency-vulnerability scanning at all. Scoped to constraints.txt
+    # (the suite's own locked/pinned dependency set, not the CI runner's
+    # ambient/unrelated packages -- auditing the whole environment is
+    # noisy and was explicitly rejected during that audit; see
+    # VALIDATION_REPORT.md section 8). BLOCKING: fails the build on any
+    # finding not listed in security/pip-audit-exceptions.txt.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install pip-audit (pinned, for the same determinism reason as pyflakes/black/bandit above)
+        run: pip install pip-audit==2.10.1
+      - name: Audit constraints.txt for known vulnerabilities (documented exceptions only)
+        run: |
+          IGNORE_ARGS=""
+          if [ -f security/pip-audit-exceptions.txt ]; then
+            for id in $(grep -oE '^(CVE|PYSEC)-[A-Za-z0-9-]+' security/pip-audit-exceptions.txt); do
+              IGNORE_ARGS="$IGNORE_ARGS --ignore-vuln $id"
+            done
+          fi
+          echo "Active pip-audit exceptions: ${IGNORE_ARGS:-<none>}"
+          pip-audit -r constraints.txt $IGNORE_ARGS

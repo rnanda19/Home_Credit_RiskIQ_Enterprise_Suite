@@ -20,7 +20,10 @@ WORKDIR /app
 # Only the real dependencies these 2 services need at runtime (not the full
 # notebook/EDA/reporting stack — this is a lean serving image, not the dev env).
 COPY 02_mega_project_2_regulatory_capital/services/requirements-services.txt /app/requirements-services.txt
-RUN pip install --no-cache-dir -r /app/requirements-services.txt
+COPY constraints.txt /app/constraints.txt
+# 2026-10-14: -c pins to the suite's tested, reproducible versions
+# (see /app/constraints.txt) without relaxing this file's own floors.
+RUN pip install --no-cache-dir -c /app/constraints.txt -r /app/requirements-services.txt
 
 # Shared HYPER feature module + this project's services.
 COPY src/features/regulatory_capital_features.py /app/src/features/regulatory_capital_features.py

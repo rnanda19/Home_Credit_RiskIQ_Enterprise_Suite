@@ -31,7 +31,10 @@ WORKDIR /app
 # Only the real dependency this 1 service needs at runtime (not the full
 # notebook/EDA/reporting stack — this is a lean serving image, not the dev env).
 COPY 05_mega_project_5_liquidity_cashflow/services/requirements-services.txt /app/requirements-services.txt
-RUN pip install --no-cache-dir -r /app/requirements-services.txt
+COPY constraints.txt /app/constraints.txt
+# 2026-10-14: -c pins to the suite's tested, reproducible versions
+# (see /app/constraints.txt) without relaxing this file's own floors.
+RUN pip install --no-cache-dir -c /app/constraints.txt -r /app/requirements-services.txt
 
 # Shared HYPER serving module + real trained model bundle.
 COPY src/serving /app/src/serving

@@ -56,7 +56,7 @@ jobs:
         # module) does `import polars as pl` at module level, which was not
         # declared here either, so a fresh CI runner ModuleNotFoundError'd during
         # collection and interrupted the whole job (1 error, 0 tests run). Added.
-        run: pip install fastapi "uvicorn[standard]" pydantic pytest httpx joblib numpy scikit-learn pandas polars "python-jose[cryptography]" python-multipart slowapi
+        run: pip install -c constraints.txt fastapi "uvicorn[standard]" pydantic pytest httpx joblib numpy scikit-learn pandas polars pyjwt python-multipart slowapi  # 2026-10-14: python-jose replaced with pyjwt (CVE-2026-85394); -c constraints.txt pins the tested, reproducible versions
       - name: Run src/tests/ (HYPER shared-component tests -- auth_common.py,
           explainability_common.py; no business data, no notebook artifacts needed)
         run: python -m pytest src/tests/ -v
@@ -79,9 +79,9 @@ jobs:
       - name: Install serving + test dependencies
         run: |
           if [ -f "${{ matrix.project }}/services/requirements-services.txt" ]; then
-            pip install -r ${{ matrix.project }}/services/requirements-services.txt
+            pip install -c constraints.txt -r ${{ matrix.project }}/services/requirements-services.txt
           fi
-          pip install pytest httpx requests
+          pip install -c constraints.txt pytest httpx requests
         if: hashFiles(format('{0}/tests/**', matrix.project)) != ''
       - name: Run scoring-service tests
         run: |
@@ -105,3 +105,28 @@ jobs:
         # subprocess (not in-process TestClient) and talks to it over real
         # HTTP via `requests`, added to this job's install line above. See
         # src/testing/e2e_process_harness.py and E2E_TESTING.md.
+
+  validation-gate:
+    # 2026-10-14: automates the Phase 1/2 audit itself -- runs the suite's
+    # real test evidence + the bundle/sklearn-version consistency check
+    # and uploads validation-results.json (commit SHA + per-check
+    # PASS/FAIL/BLOCKED/NOT RUN) as a build artifact, so "did this pass"
+    # is answered by a downloadable file, not a claim in a PR description.
+    # pip-audit runs as its own job (code-quality.yml's dependency-audit);
+    # skipped here to avoid running it twice per push.
+    needs: [unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install test dependencies (pinned)
+        run: pip install -c constraints.txt pytest httpx requests joblib numpy scikit-learn pandas polars fastapi "uvicorn[standard]" pydantic pyjwt python-multipart slowapi
+      - name: Run validation gate (skips pip-audit -- see dependency-audit job; skips per-project live-service tests -- those need real .joblib bundles this CI runner does not have)
+        run: python scripts/run_validation_gate.py --skip-pip-audit --skip-project-tests
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation-results
+          path: validation-results.json

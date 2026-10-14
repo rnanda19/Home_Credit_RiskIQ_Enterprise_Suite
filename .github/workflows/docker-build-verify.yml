@@ -59,7 +59,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install fixture-generation dependencies
-        run: pip install joblib numpy scikit-learn
+        run: pip install -c constraints.txt joblib numpy scikit-learn  # 2026-10-14: pinned so these synthetic fixture bundles are trained with the same scikit-learn==1.9.0 the services install via constraints.txt -- otherwise this job would reintroduce the exact version-mismatch bug constraints.txt exists to prevent
 
       - name: Generate synthetic CI fixture bundles (not real models -- see script docstring)
         run: python scripts/generate_ci_fixture_bundles.py
@@ -160,7 +160,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install fixture-generation dependencies
-        run: pip install joblib numpy scikit-learn
+        run: pip install -c constraints.txt joblib numpy scikit-learn  # 2026-10-14: pinned so these synthetic fixture bundles are trained with the same scikit-learn==1.9.0 the services install via constraints.txt -- otherwise this job would reintroduce the exact version-mismatch bug constraints.txt exists to prevent
 
       - name: Generate synthetic CI fixture bundles (not real models -- see script docstring)
         run: python scripts/generate_ci_fixture_bundles.py

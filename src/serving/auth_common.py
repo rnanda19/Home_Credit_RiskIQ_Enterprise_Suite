@@ -26,6 +26,29 @@ OR a valid, unexpired Bearer JWT carrying the required scope. The old
 that imported it directly breaks -- `require_auth` is the new, preferred,
 scoped entry point.
 
+HARDENING (2026-10-14): migrated the JWT backend from python-jose to
+PyJWT. python-jose[cryptography]==3.5.0 (the version this suite had
+pinned) carries CVE-2026-85394 (CVSS 9.1, algorithm confusion via
+DER-encoded keys accepted as HMAC secrets) with no fixed release
+available upstream as of this writing -- see VALIDATION_REPORT.md and
+CHANGELOG.md for the audit trail. This module never used asymmetric
+keys (it is HS256-only, one shared secret, no public/private keypair),
+so the specific DER-public-key-as-HMAC-secret attack path was not
+reachable here, but shipping a dependency with an unpatched critical
+CVE and no upstream fix is not acceptable for a suite that presents
+itself as production-grade. PyJWT is actively maintained, has no open
+CVEs at the time of this change, and exposes the same encode/decode
+contract jose did -- `jwt.encode(payload, secret, algorithm=...)` /
+`jwt.decode(token, secret, algorithms=[...])` -- so this is a like-for-
+like swap, not a behavior change. The `algorithms=[JWT_ALGORITHM]`
+allow-list below (unchanged from the jose version) is itself the
+standard mitigation for JWT algorithm-confusion attacks: it is what
+makes `jwt.decode()` reject any token whose header `alg` is not
+exactly "HS256", including an attacker-forged `alg: none` token or one
+re-signed with a different algorithm. See
+src/tests/test_auth_jwt_security.py for regression tests covering
+exactly this.
+
 Environment variables:
     API_KEY        -- see each Mega Project's docker/.env.example, and
                        docker-compose.yml's `${API_KEY:?...}` requirement.
@@ -59,7 +82,8 @@ from fastapi.security import (
     OAuth2PasswordBearer,
     OAuth2PasswordRequestForm,
 )
-from jose import JWTError, jwt
+import jwt
+from jwt import InvalidTokenError
 
 from serving.rate_limit_common import TOKEN_RATE_LIMIT
 
@@ -138,11 +162,16 @@ def create_access_token(scopes: list[str], expires_minutes: int = JWT_DEFAULT_EX
 
 def _decode_bearer_token(token: str) -> Optional[dict]:
     """Returns the decoded claims for a valid, unexpired, correctly-signed
-    token, or None for anything invalid/expired/tampered -- python-jose's
-    jwt.decode() itself enforces `exp` and signature verification."""
+    token, or None for anything invalid/expired/tampered/wrong-algorithm --
+    PyJWT's jwt.decode() itself enforces `exp`, signature verification, and
+    (because `algorithms=[JWT_ALGORITHM]` is passed explicitly, never
+    inferred from the token's own header) that the token was actually
+    signed with HS256 -- the explicit allow-list that mitigates JWT
+    algorithm-confusion attacks (see this module's 2026-10-14 docstring
+    note and src/tests/test_auth_jwt_security.py)."""
     try:
         return jwt.decode(token, configured_jwt_secret(), algorithms=[JWT_ALGORITHM])
-    except JWTError:
+    except InvalidTokenError:
         return None
 
 
@@ -158,8 +187,8 @@ def require_auth(
         POST /token -- see add_token_route()) carrying the API_ACCESS_SCOPE
         scope.
     401s if neither credential is valid. Real constant-time comparison for
-    the API-key path (secrets.compare_digest); real signature+expiry
-    verification for the JWT path (python-jose)."""
+    the API-key path (secrets.compare_digest); real signature+expiry+
+    algorithm verification for the JWT path (PyJWT)."""
     expected_key = configured_api_key()
     if api_key and secrets.compare_digest(api_key, expected_key):
         return "api-key-client"

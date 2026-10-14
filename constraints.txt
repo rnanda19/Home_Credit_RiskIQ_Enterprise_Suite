@@ -1,0 +1,85 @@
+# constraints.txt -- the suite's single reproducibility lock.
+#
+# WHY THIS FILE EXISTS (2026-10-14 hardening): every requirements*.txt in
+# this suite declared only floors (`>=`), on purpose, to pick up patches
+# automatically -- but that same convention is what let scikit-learn drift
+# to 1.9.0 at model-training time while a fresh `pip install` elsewhere
+# could resolve a different, incompatible scikit-learn and silently
+# corrupt every .joblib bundle's behavior (see VALIDATION_REPORT.md
+# section 8 and the Phase 2 before/after report for the real
+# InconsistentVersionWarning this caused). A pip *constraints* file does
+# not add new dependencies and does not relax or override any
+# requirements file's own `>=` floor -- it only pins which exact version
+# pip picks when a floor is satisfiable by many versions. Nothing here
+# conflicts with any requirements*.txt; every version below is one that
+# file's own `>=` range already permits.
+#
+# HOW TO USE:
+#   pip install -r requirements.txt -c constraints.txt
+#   pip install -r <project>/services/requirements-services.txt -c constraints.txt
+#
+# CI and the 5 Dockerfiles have been updated to pass -c constraints.txt on
+# every install (see .github/workflows/ and */docker/Dockerfile).
+#
+# HOW THESE EXACT VERSIONS WERE CHOSEN (not guessed):
+#   - scikit-learn==1.9.0 is the exact version every one of this suite's
+#     10 real, currently-committed-as-gitignored-but-locally-present
+#     .joblib bundles was actually trained with -- confirmed by loading
+#     all 10 under this pin with warnings-as-errors and observing zero
+#     sklearn.exceptions.InconsistentVersionWarning (previously: all 10
+#     warned "trained with 1.9.0, using 1.7.2" under the unpinned floor).
+#   - Every other pin below was verified, not assumed: a Python 3.11 venv
+#     (matching this suite's own CI python-version and every Dockerfile's
+#     FROM python:3.11-slim) was built with these exact pins, and the
+#     suite's full real pytest suite (150 tests across src/tests/ and all
+#     5 Mega Projects' tests/, including live-subprocess e2e tests) was
+#     run against it end to end: 150 passed, 5 skipped (pre-existing,
+#     fixture-CSV-gated skips unrelated to this change -- see
+#     VALIDATION_REPORT.md), 0 failed. Reproduction commands are in the
+#     Phase 2 before/after report.
+#   - polars is pinned to the newest 1.x release (1.44.2), not the newly
+#     released 2.0.0 major version -- this suite's own code was written
+#     against the >=1.20 (1.x) API, and a major-version jump was not
+#     something this pass had fixture data available to fully exercise.
+#     Revisit once polars 2.x has been validated against a real notebook
+#     rerun.
+#   - python-jose was removed outright (see PyJWT below).
+#
+# NOT YET COVERED by this pin / verification pass (left on their existing
+# >= floors in each requirements*.txt, unchanged by this file; pinning
+# these would need their own install-and-test pass, which this change did
+# not do -- listed here instead of silently claimed as done):
+#   streamlit, shap, lime, python-docx, openpyxl, nbformat, locust,
+#   numba, threadpoolctl, numexpr, bottleneck, tqdm, psutil, matplotlib,
+#   black, pyflakes, bandit (the latter three are already exact-pinned
+#   directly in code-quality.yml, separately from this file).
+
+# --- Core ML / reproducibility-critical (verified against all 10 real .joblib bundles) ---
+scikit-learn==1.9.0
+numpy==2.4.6
+pandas==2.3.3
+joblib==1.6.0
+xgboost==3.2.0
+lightgbm==4.7.0
+catboost==1.2.10
+polars==1.44.2
+scipy==1.17.1
+
+# --- Serving stack (verified via the real FastAPI TestClient + live-subprocess e2e suites) ---
+fastapi==0.143.0
+uvicorn==0.54.0
+pydantic==2.14.1
+python-multipart==0.0.32
+slowapi==0.1.10
+
+# --- Auth (2026-10-14: python-jose replaced -- see CHANGELOG.md and
+#     src/serving/auth_common.py's docstring for CVE-2026-85394) ---
+pyjwt==2.15.1
+
+# --- Test/CI-time only (not installed into any deployed service image) ---
+pytest==9.1.1
+httpx==0.28.1
+requests==2.34.2
+
+# --- Build tooling (2026-10-14: setuptools<83 carries PYSEC-2026-3447) ---
+setuptools==84.0.0

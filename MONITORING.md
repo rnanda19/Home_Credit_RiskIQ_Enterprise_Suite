@@ -84,10 +84,90 @@ file, nothing is hardcoded to Problem 1), so extending coverage to
 another model is: run the generator against that model's bundle, commit
 its `config.json`, schedule the job. No new code required.
 
-**No live scheduler wired up.** This repo does not run a cron job or
-Task Scheduler task itself — that's a deployment-environment concern, not
-something a portfolio repo's CI can demonstrate continuously. The command
-above is what such a scheduler would run.
+## Running monitoring for every onboarded model at once (2026-10-14)
+
+Added `scripts/run_all_monitoring_jobs.py` to close a real gap this
+section used to describe: extending monitoring to a second model meant
+hand-building and separately scheduling its own `monitoring_job.py`
+invocation. This script discovers every `*/monitoring/*_config.json` in
+the repo, checks whether it has a matching `*_baseline.json` (an
+"onboarded" model — see `generate_monitoring_baseline.py`), runs
+`monitoring_job.py` against each onboarded model's new-data CSV, and
+exits 1 if *any* model ALERTs:
+
+```
+python scripts/run_all_monitoring_jobs.py --list-only   # onboarding status, runs nothing
+
+python scripts/run_all_monitoring_jobs.py \
+    --new-data-csv 01_mega_project_1_underwriting_approval/monitoring/mp1_01_config.json=path/to/mp1_batch.csv \
+    --new-data-csv 04_mega_project_4_delinquency_prevention/monitoring/mp4_01_config.json=path/to/mp4_batch.csv
+```
+
+A model with a committed `config.json` but no `baseline.json` yet is
+reported as `NOT_ONBOARDED` — counted, never silently skipped, never
+treated as a passing check. As of 2026-10-14 every model in this suite
+is `NOT_ONBOARDED` (see "Not yet generated" above) — this script makes
+*running* N onboarded models one command instead of N commands; it does
+not itself onboard any new model, which still needs a real trained
+bundle and real reference data this build environment does not have.
+
+Verified (2026-10-14) against synthetic baseline/config/new-data
+fixtures — the same kind `src/tests/test_monitoring_job.py` already
+uses — across all four real code paths: `NOT_ONBOARDED`, `BLOCKED`
+(onboarded, no `--new-data-csv` given for it this run), `OK`, and
+`ALERT` (verified exit code 1, and the real failing metric —
+`default_rate_swing_pp=32.0` in the test run — surfaced in the output).
+
+## Scheduling and alerting (concrete, not just "use a scheduler")
+
+**Linux/macOS — cron, with built-in email alerting** (no extra
+integration to wire up: cron's own `MAILTO` mails a job's stdout/stderr
+to the address below whenever it exits non-zero, and
+`run_all_monitoring_jobs.py` exits 1 on any ALERT):
+
+```cron
+MAILTO=risk-oncall@example.com
+# Daily at 06:00, all onboarded models in one run:
+0 6 * * * cd /opt/home-credit-enterprise-suite && /opt/home-credit-enterprise-suite/.venv/bin/python scripts/run_all_monitoring_jobs.py --new-data-csv ... >> /var/log/hc-monitoring.log 2>&1
+```
+
+**Windows — Task Scheduler**, same command, via a `.bat`/PowerShell
+wrapper and an action of type "Send an e-mail" (deprecated in newer
+Windows — prefer a wrapper script that calls a webhook, below) or "Start
+a program" pointed at a small notifier script that checks `%ERRORLEVEL%`.
+
+**Any scheduler — Slack/Teams incoming webhook on failure** (works the
+same whether the scheduler is cron, Task Scheduler, or a CI runner;
+needs only `requests`, already a pinned dependency — see
+`constraints.txt`):
+
+```python
+# notify_on_alert.py -- wrap the real command, e.g.:
+#   python notify_on_alert.py -- python scripts/run_all_monitoring_jobs.py --new-data-csv ...
+import subprocess, sys, requests
+
+WEBHOOK_URL = "https://hooks.slack.com/services/REPLACE/ME"  # real secret -- set via env var, never commit it
+
+cmd = sys.argv[sys.argv.index("--") + 1:]
+result = subprocess.run(cmd, capture_output=True, text=True)
+print(result.stdout, result.stderr)
+if result.returncode != 0:
+    requests.post(WEBHOOK_URL, json={"text": f"Monitoring ALERT (exit {result.returncode}):\n```{result.stdout[-1500:]}```"})
+sys.exit(result.returncode)
+```
+
+**Why this isn't wired into this repo's own CI**: `monitoring_job.py`
+checks a real production-scored batch against a real training baseline
+— GitHub Actions has neither (no production traffic reaches CI, and as
+noted above, no real baseline exists in this repo yet either). A
+scheduled CI workflow that ran this against fabricated data and called
+it "monitoring" would be exactly the kind of fabricated evidence this
+suite's own validation standard rules out (see VALIDATION_REPORT.md's
+methodology note). The commands and snippets above are real and
+runnable the moment a real baseline and a real scored batch exist —
+that is a deployment-environment action, not a CI one, and this section
+now says so with working commands instead of leaving it as a bare
+assertion.
 
 ## Real PSI thresholds used
 

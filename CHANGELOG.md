@@ -3,6 +3,75 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.2.0] - 2026-10-14
+
+### Dependency reproducibility, python-jose CVE fix, automated validation gate, monitoring automation, 2nd load-test service
+
+Closes the Phase 2 priorities VALIDATION_REPORT.md's Phase 1 audit
+flagged (unpinned dependencies drifting from the versions real trained
+bundles were built with; no dependency-vulnerability CI gate; monitoring
+and load testing each wired for exactly one model/service with no
+automation to extend them).
+
+- **`constraints.txt`** (new) -- a single pip constraints file pinning
+  the suite's reproducibility-critical dependencies to exact versions,
+  verified by actually loading all 10 real `.joblib` bundles under
+  Python 3.11 + `scikit-learn==1.9.0` (the exact version every one of
+  them was trained with -- confirmed zero
+  `InconsistentVersionWarning`, down from all 10 warning under the
+  previously-unpinned floor) and running this suite's full real pytest
+  suite end to end: 150 passed, 5 skipped (pre-existing, fixture-CSV
+  gated, unrelated to this change), 0 failed. Wired into every
+  Dockerfile and CI workflow's install steps via `-c constraints.txt`.
+- **`python-jose` replaced with `PyJWT`** in `src/serving/auth_common.py`
+  and every `requirements*.txt`/`pyproject.toml`. `python-jose[cryptography]==3.5.0`
+  (this suite's previously-pinned floor) carries CVE-2026-85394 (CVSS
+  9.1, JWT algorithm confusion) with no fixed release available
+  upstream. This module was never exposed to the CVE's specific
+  DER-public-key-as-HMAC-secret attack path (HS256-only, one shared
+  secret, no asymmetric keys) and already passed `algorithms=["HS256"]`
+  explicitly to `decode()` -- the standard mitigation -- but shipping an
+  unpatched critical CVE with no upstream fix was not acceptable
+  regardless. Like-for-like API swap (`jwt.encode`/`jwt.decode` is
+  unchanged), verified by the suite's existing auth test suite plus 9
+  new regression tests in `src/tests/test_auth_jwt_security.py`
+  (malformed/tampered tokens, expired tokens, algorithm-confusion
+  attacks including a hand-crafted `alg: none` forgery, and
+  unauthorized-access cases) -- 74/74 passed with `python-jose`
+  completely uninstalled from the test environment.
+- **`pip-audit` CI gate** (new `dependency-audit` job,
+  `.github/workflows/code-quality.yml`) -- scoped to `constraints.txt`
+  (this suite's own locked dependency set, not the CI runner's ambient
+  packages), with a documented exception mechanism
+  (`security/pip-audit-exceptions.txt`, currently empty: `pip-audit -r
+  constraints.txt` reports zero known vulnerabilities as of this pass).
+- **`scripts/run_validation_gate.py`** (new) -- one command that runs
+  the shared + all 5 per-project test suites, the bundle/sklearn-version
+  consistency check, and `pip-audit`, and writes `validation-results.json`
+  (commit SHA, branch, per-check PASS/FAIL/BLOCKED/NOT RUN, evidence).
+  Wired into CI as a new `validation-gate` job uploading the JSON as a
+  build artifact.
+- **Load testing extended to a 2nd service** -- `02_mega_project_2_regulatory_capital/loadtest/locustfile.py`
+  (new), a genuinely different case from the existing MP1 Problem 1 load
+  test (no trained model, deterministic Basel formula). Real 30-second
+  run against a real local instance documented in `LOAD_TESTING.md`
+  (same rate-limiter-driven failure pattern independently reproduced on
+  a second, architecturally unrelated service). MP3/MP4/MP5 remain
+  not-yet-run -- disclosed, not claimed.
+- **`scripts/run_all_monitoring_jobs.py`** (new) -- discovers every
+  onboarded model (a committed `config.json` with a matching
+  `baseline.json`) and runs `monitoring_job.py` against each in one
+  command/exit-code instead of one hand-built invocation per model.
+  `MONITORING.md` gained a concrete scheduling + alerting section (cron
+  `MAILTO`, Task Scheduler, Slack/Teams webhook snippets) in place of
+  the previous bare "no live scheduler wired up" disclosure. Does not
+  itself onboard any new model -- every model in this suite remains
+  `NOT_ONBOARDED` pending a real baseline, which needs real data this
+  build environment does not have; fabricating one to populate this
+  section was deliberately not done.
+- `setuptools` build-system floor bumped `>=68` -> `>=83`
+  (`pyproject.toml`) -- `setuptools<83` carries PYSEC-2026-3447.
+
 ## [2.1.9] - 2026-09-08
 
 ### Mega Project 5 Problem 4: real bundle produced, service verified

@@ -15,5 +15,11 @@ python-docx>=1.1
 openpyxl>=3.1
 
 # 2026-09-08 hardening: real OAuth2/JWT support (see src/serving/auth_common.py)
-python-jose[cryptography]>=3.5.0
+# 2026-10-14: python-jose replaced with PyJWT -- python-jose carried
+# CVE-2026-85394 (CVSS 9.1) with no fixed release available upstream.
+# See CHANGELOG.md and src/serving/auth_common.py's docstring.
+pyjwt>=2.15.1
 python-multipart>=0.0.32  # required by OAuth2PasswordRequestForm (POST /token)
+
+# Reproducibility: install with `-c constraints.txt` to pin exact,
+# tested versions (see that file for how each pin was verified).

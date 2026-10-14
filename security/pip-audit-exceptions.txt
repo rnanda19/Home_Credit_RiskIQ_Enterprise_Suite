@@ -1,0 +1,28 @@
+# security/pip-audit-exceptions.txt
+#
+# Documented exception list for the dependency-audit CI job
+# (.github/workflows/code-quality.yml). pip-audit is run against
+# constraints.txt -- the suite's single reproducibility lock -- and FAILS
+# the build on any finding unless that finding's ID is listed here.
+#
+# RULES for adding a line:
+#   1. One vulnerability ID per line (a CVE-#### or PYSEC-#### id, exactly
+#      as pip-audit prints it).
+#   2. Every line MUST be followed by a comment on the next line explaining:
+#      which package/version it affects, why it cannot be fixed by
+#      upgrading right now (e.g. "no fixed release exists upstream" --
+#      verify this is still true before reusing an old justification),
+#      and why this suite's specific usage of that package is not exposed
+#      to the actual attack path the finding describes.
+#   3. Exceptions are reviewed every time constraints.txt changes -- an
+#      exception for a package version that constraints.txt no longer
+#      pins is stale and must be deleted, not carried forward.
+#
+# As of 2026-10-14 (the pass that introduced this file and
+# constraints.txt): pip-audit run against constraints.txt's exact pinned
+# set reports ZERO known vulnerabilities. This file is intentionally
+# empty of active exceptions -- it exists so the mechanism is in place
+# and documented before it is ever needed, not because anything is
+# exempted today.
+#
+# <no active exceptions>

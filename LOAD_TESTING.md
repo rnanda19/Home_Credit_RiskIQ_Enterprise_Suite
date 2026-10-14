@@ -62,15 +62,55 @@ capacity would mean running Locust from several distinct source IPs (or
 temporarily raising the configured limit for a dedicated capacity test)
 -- a real, disclosed extension, not done here.
 
+## MP2 Problem 1 -- a second, architecturally different real run (2026-10-14)
+
+Extended past the single MP1 Problem 1 service as part of the 2026-10-14
+Phase 2 hardening pass. `02_mega_project_2_regulatory_capital/loadtest/
+locustfile.py` is a second, genuinely new load test (not a copy-pasted
+rename) against `capital_requirement_service.py` -- a deterministic,
+no-trained-model Basel Vasicek/ASRF formula service, deliberately chosen
+because it exercises a different code path than MP1 Problem 1's
+trained-model + SHAP-style explainability path: real auth + real rate
+limiting + a real closed-form financial calculation, with zero
+scikit-learn/.joblib dependency.
+
+Run against a real local instance, 10 simulated users ramping up at
+5/second, 30 real seconds:
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 163 | 0 | 2 ms | 3 ms | 3 ms | 4 ms | 14 ms | 5.6 req/s |
+| `POST /score` | 774 | 714 (668 `429`, ~1 user's worth of `401`) | 4 ms | 6 ms | 7 ms | 10 ms | 42 ms | 26.7 req/s |
+| `POST /token` | 10 | 1 (`429`) | 12 ms | 27 ms | 27 ms | 27 ms | 27 ms | 0.3 req/s |
+
+**Real, disclosed finding, same root cause as MP1's run**: the same
+60/minute-per-IP rate limiter again accounts for the bulk of `/score`
+failures (668 `429`s). The remaining ~73 `/score` failures are `401`s
+from the one simulated user whose own `/token` call was itself rate-
+limited (visible above: 1 of 10 `/token` calls returned `429`) -- that
+user's `on_start()` never got a token, so every subsequent `/score` call
+from it correctly fails authentication rather than silently succeeding
+unauthenticated. This is the real auth + real rate-limiting code working
+exactly as designed under concurrent load, independently reproduced on a
+second, architecturally unrelated service.
+
 ## Honest scope: what this covers today, and what it doesn't yet
 
-Wired for one flagship service (MP1 Problem 1) -- same disclosed,
-partial-but-real scope as `MONITORING.md` and `TLS.md`. Extending to
-another service means pointing `--host` at that service's own port and
-adjusting `FIXTURE_FEATURES` (or, for a load test against a real trained
-model instead of the CI fixture bundle, pointing the target service at
-its real `.joblib` bundle and adjusting the payload to that bundle's real
-feature names).
+Two of five Mega Projects now have a real, executed load-testing run
+(MP1 Problem 1; MP2 Problem 1, added 2026-10-14) -- up from one, but
+still a disclosed, partial scope, same as `MONITORING.md` and `TLS.md`.
+MP3, MP4, and MP5 are not yet run. Extending to another of this suite's
+13 services built on the shared `scoring_service_common`/
+`segment_assignment_common` factories (MP1/MP3/MP4/MP5) means pointing
+`--host` at that service's own port and adjusting `FIXTURE_FEATURES` in
+a copy of MP1's `locustfile.py` (or, for a load test against a real
+trained model instead of the CI fixture bundle, pointing the target
+service at its real `.joblib` bundle and adjusting the payload to that
+bundle's real feature names). MP2's second service
+(`stress_testing_service.py`) and the remaining Mega Projects' services
+each need their own bespoke locustfile the same way MP2 Problem 1's did
+here (their request schemas are not interchangeable) -- genuinely new
+work, not a config change, same as this pass's own MP2 locustfile was.
 
 This is real synthetic/local load, not genuine, unpredictable production
 traffic -- see `remediation_data.js`'s own caveat on this gap: "This
