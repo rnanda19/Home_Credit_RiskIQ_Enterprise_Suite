@@ -15,6 +15,19 @@ expect — built end-to-end on the [Home Credit Default
 Risk](https://www.kaggle.com/competitions/home-credit-default-risk) Kaggle
 dataset.
 
+## System Architecture (At a Glance)
+
+![System Architecture Diagram](docs/system_architecture_flow.png)
+
+*The suite-wide view: real Kaggle data in, the shared `src/` HYPER library used by
+all 5 Mega Projects, each Mega Project's real recommended/total problem count, all
+15 deployable services behind real nginx TLS termination, the CI that verifies all
+of it on every push, and the real suite-wide executive rollup
+(`00_suite_executive_summary.json` — 24/25 recommended, $951,500,234 illustrative
+annual benefit) that consolidates every Mega Project's results. Full write-up and
+the per-Mega-Project diagrams further down: [System Architecture](#system-architecture)
+· [Architecture Diagrams](#architecture-diagrams).*
+
 ## Status — all 5 Mega Projects built (25 problems, 30 notebooks)
 
 **All 5 Mega Projects are built and verified end-to-end on your own real,
