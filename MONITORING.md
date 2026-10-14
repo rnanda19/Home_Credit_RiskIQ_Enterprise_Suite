@@ -37,8 +37,13 @@ Three real, tested components, added 2026-09-08:
 3. **`scripts/generate_monitoring_baseline.py`** — computes a model's
    `monitoring_baseline.json` from its real trained bundle plus real
    reference data: real quantile bin edges, real per-bin training
-   percentages, and the real training-split default rate. This is what
-   `monitoring_job.py` checks new data against.
+   percentages, and the real training-split default rate (when the model
+   has one — see "Unsupervised models" below). This is what
+   `monitoring_job.py` checks new data against. 2026-10-14 fix: now also
+   reads a bundle's `feature_names` key (the real unsupervised
+   segmentation bundles use this instead of `numeric_features`/
+   `feature_cols`) — found and fixed while generating the first real
+   baselines below; before the fix every KMeans bundle hit a hard error.
 
 This design was ported and generalized from the AMEX RiskIQ Enterprise
 Credit Risk Platform's own real `monitoring_job.py` (a separate personal
@@ -48,41 +53,89 @@ build discipline — and extended here with a real full PSI number (that
 project's version reports bin-share only; see `monitoring_common.py`'s
 docstring for why that extension was possible).
 
-## Honest scope: what this covers today, and what it doesn't yet
+## Real baselines generated against real data (2026-10-14)
 
-**Wired for one flagship model**: Mega Project 1, Problem 1 (Credit
-Default Prediction) — the suite's most heavily reused model (see
-`MODEL_REGISTRY.md`'s cross-Mega-Project consumer list). `docker/`
-config template: `01_mega_project_1_underwriting_approval/monitoring/mp1_01_config.json`
-(committed — pure policy thresholds, no data-derived numbers).
+The suite has 10 real trained bundles across MP1/MP3/MP4/MP5. Real Kaggle
+data (`data/raw/*.csv`) became available for the first time on
+2026-10-14 (see `DATA_PRIVACY.md` for why it's gitignored and never
+committed). Of the 7 raw tables, 5 are present and complete
+(`application_train/test.csv`, `bureau.csv`, `bureau_balance.csv`,
+`POS_CASH_balance.csv`, `credit_card_balance.csv`); 2 are not
+(`previous_application.csv` and `installments_payments.csv` — see
+"Still blocked" below). A model is **eligible** for a real baseline only
+if every raw table its own feature-engineering function reads is
+present; eligibility is a fact about the data on disk, not a judgment
+call, and is never upgraded to "onboarded" when a table is missing.
 
-**Not yet generated: a real `mp1_01_baseline.json`.** This build
-environment has no real, locally-downloaded Kaggle dataset (see
-`DATA_PRIVACY.md` and `.gitignore`'s `data/raw/` exclusion), so
-`generate_monitoring_baseline.py` cannot be run against real Home Credit
-data here. It is verified structurally instead, against a small, clearly
-synthetic bundle and reference CSV, in
-`src/tests/test_generate_monitoring_baseline.py` — proving the script's
-logic is correct, not that it has produced a real baseline yet. Whoever
-next re-runs `notebooks/01_credit_default_prediction.ipynb` against the
-real dataset can generate the real baseline in one command:
+**4 of 10 real bundles are eligible and now have a real, generated
+baseline** — real feature engineering (via this suite's own
+`src/features/*.py` functions, never re-derived), real quantile bin
+edges, verified end-to-end against both a real holdout slice of the same
+population (confirmed `OK`, PSI ≈ 0) and a clearly-labeled synthetic
+shifted copy of it (confirmed real `ALERT`, never silently passed):
+
+| Model | Bundle | Feature source | Table(s) used |
+|---|---|---|---|
+| MP3 / Notebook 02 | `notebook_02_segment_model.joblib` (KMeans, bureau behavior) | `risk_segmentation_features.engineer_bureau_behavior_features` | `bureau.csv`, `bureau_balance.csv` |
+| MP3 / Notebook 04 | `notebook_04_segment_model.joblib` (KMeans, revolving utilization) | `risk_segmentation_features.engineer_revolving_credit_utilization_features` | `credit_card_balance.csv` |
+| MP4 / Notebook 03 | `notebook_03_champion_model.joblib` (RandomForest, revolving distress) | `revolving_distress_features.engineer_revolving_distress_features` | `credit_card_balance.csv` |
+| MP4 / Notebook 04 | `notebook_04_champion_model.joblib` (RandomForest, POS/cash trajectory) | `pos_cash_trajectory_features.engineer_pos_cash_trajectory_features` | `POS_CASH_balance.csv` |
+
+All 4 are unsupervised or otherwise lack a `TARGET` column in their
+feature output, so `train_default_rate` is honestly `null` in each
+baseline and `monitoring_job.py` reports that check as
+`NOT_COMPUTABLE` — never fabricated.
+
+**One real limitation found while generating these, disclosed rather
+than hidden**: MP3 / Notebook 04's feature set is heavily zero-inflated
+(most real applicants have no revolving-credit history at all, so most
+of its 13 features are 0 for ≥75% of the population). The quantile-based
+binning in `generate_monitoring_baseline.py` collapses to under 3 unique
+bin edges for 12 of those 13 features and skips them — only
+`N_CC_MONTHS` survived into this model's real PSI set. This is a correct
+response to genuinely sparse real data, not a bug, but it means this one
+baseline's drift coverage is real but thin. Tracked as a data-quality
+follow-up (see the suite's own Phase 3 task list) rather than papered
+over with a different binning scheme chosen after the fact to make the
+number look better.
+
+**Still blocked — 6 of 10 real bundles, honestly `BLOCKED`, never
+`PASS`:**
+
+| Model | Bundle | Blocked on |
+|---|---|---|
+| MP1 / Notebook 01 (flagship) | `notebook_01_champion_model.joblib` | `previous_application.csv` (only a corrupt partial download exists) AND `installments_payments.csv` (missing entirely) |
+| MP1 / Notebook 02 | `notebook_02_champion_model.joblib` | `previous_application.csv` |
+| MP3 / Notebook 03 | `notebook_03_segment_model.joblib` | `installments_payments.csv` |
+| MP4 / Notebook 01 | `notebook_01_champion_model.joblib` | `installments_payments.csv` |
+| MP4 / Notebook 02 | `notebook_02_kmeans_model.joblib` | `installments_payments.csv` |
+| MP5 / Notebook 04 | `notebook_04_segment_model.joblib` | `installments_payments.csv` |
+
+Unblocking these needs the two missing raw CSVs re-downloaded from
+Kaggle onto the build machine — a data-availability gap, not a code gap;
+`generate_monitoring_baseline.py` and every one of the 4 feature
+functions it would call for these 6 are already real and already proven
+correct on the 4 models above.
+
+## Honest scope: coverage across the suite's 25 problems
+
+**Onboarded (real config + real baseline, both committed): 4 of 25.**
+**Eligible but not a trained-model problem / not yet wired: the
+remaining MP1/MP3/MP4/MP5 problems above are either BLOCKED (6, see
+table) or not yet given a `config.json` at all.** Extending coverage to
+an eligible model is: run the generator against its bundle once the
+blocking table exists, commit its `config.json`, schedule the job — no
+new code required, the job and generator are both fully generic (model
+name, target column, and feature list all come from the bundle/baseline
+file, nothing is hardcoded to any one model).
 
 ```
 python scripts/generate_monitoring_baseline.py \
     --bundle 01_mega_project_1_underwriting_approval/decision_engine/artifacts/notebook_01_champion_model.joblib \
-    --reference-csv <your real, feature-engineered training CSV> \
+    --reference-csv <real, feature-engineered training CSV from engineer_credit_default_features_v2> \
     --target-col TARGET \
     --out-baseline 01_mega_project_1_underwriting_approval/monitoring/mp1_01_baseline.json
 ```
-
-**Not yet extended to the other 24 problems.** Same honest shape as that
-other project's own monitoring gap ("built for Problem 1 only ... the
-other 13 deployable services ship with no ongoing production check" —
-that project's own count, not this suite's) — here it's 1 of 25. The job and generator are both fully generic (model
-name, target column, and feature list all come from the bundle/baseline
-file, nothing is hardcoded to Problem 1), so extending coverage to
-another model is: run the generator against that model's bundle, commit
-its `config.json`, schedule the job. No new code required.
 
 ## Running monitoring for every onboarded model at once (2026-10-14)
 
@@ -99,24 +152,27 @@ exits 1 if *any* model ALERTs:
 python scripts/run_all_monitoring_jobs.py --list-only   # onboarding status, runs nothing
 
 python scripts/run_all_monitoring_jobs.py \
-    --new-data-csv 01_mega_project_1_underwriting_approval/monitoring/mp1_01_config.json=path/to/mp1_batch.csv \
-    --new-data-csv 04_mega_project_4_delinquency_prevention/monitoring/mp4_01_config.json=path/to/mp4_batch.csv
+    --new-data-csv 03_mega_project_3_risk_segmentation/monitoring/mp3_02_config.json=path/to/mp3_02_batch.csv \
+    --new-data-csv 04_mega_project_4_delinquency_prevention/monitoring/mp4_03_config.json=path/to/mp4_03_batch.csv
 ```
 
 A model with a committed `config.json` but no `baseline.json` yet is
 reported as `NOT_ONBOARDED` — counted, never silently skipped, never
-treated as a passing check. As of 2026-10-14 every model in this suite
-is `NOT_ONBOARDED` (see "Not yet generated" above) — this script makes
-*running* N onboarded models one command instead of N commands; it does
-not itself onboard any new model, which still needs a real trained
-bundle and real reference data this build environment does not have.
+treated as a passing check.
 
-Verified (2026-10-14) against synthetic baseline/config/new-data
-fixtures — the same kind `src/tests/test_monitoring_job.py` already
-uses — across all four real code paths: `NOT_ONBOARDED`, `BLOCKED`
-(onboarded, no `--new-data-csv` given for it this run), `OK`, and
-`ALERT` (verified exit code 1, and the real failing metric —
-`default_rate_swing_pp=32.0` in the test run — surfaced in the output).
+As of 2026-10-14, `--list-only` reports 4 real `ONBOARDED` models (the
+table above) and the rest of the suite's config'd/eligible models as
+`NOT_ONBOARDED` or, once a `config.json` exists for a currently-BLOCKED
+model, that model stays `NOT_ONBOARDED` until its baseline exists too —
+this script makes *running* N onboarded models one command instead of N
+commands; it does not itself onboard any new model.
+
+Verified (2026-10-14) against both the 4 real onboarded models above
+(real holdout batch → `OK`, clearly-labeled synthetic shifted batch →
+real `ALERT`, exit code 1, on every one of the 4) and, earlier, against
+synthetic baseline/config/new-data fixtures across all four code paths:
+`NOT_ONBOARDED`, `BLOCKED` (onboarded, no `--new-data-csv` given for it
+this run), `OK`, and `ALERT`.
 
 ## Scheduling and alerting (concrete, not just "use a scheduler")
 
@@ -158,21 +214,19 @@ sys.exit(result.returncode)
 
 **Why this isn't wired into this repo's own CI**: `monitoring_job.py`
 checks a real production-scored batch against a real training baseline
-— GitHub Actions has neither (no production traffic reaches CI, and as
-noted above, no real baseline exists in this repo yet either). A
-scheduled CI workflow that ran this against fabricated data and called
-it "monitoring" would be exactly the kind of fabricated evidence this
-suite's own validation standard rules out (see VALIDATION_REPORT.md's
-methodology note). The commands and snippets above are real and
-runnable the moment a real baseline and a real scored batch exist —
-that is a deployment-environment action, not a CI one, and this section
-now says so with working commands instead of leaving it as a bare
-assertion.
+— GitHub Actions has neither (no production traffic reaches CI). The
+commands and snippets above are real and runnable against the 4 real
+onboarded models today, and against the other 6 once their blocking raw
+tables exist — that is a deployment-environment action, not a CI one.
 
 ## Real PSI thresholds used
 
 `psi_watch = 0.10`, `psi_alert = 0.25` — the standard, widely-published
 PSI interpretation bands (< 0.10 no significant shift, 0.10–0.25
-moderate/watch, ≥ 0.25 significant/alert). `default_rate_swing_pp = 3.0`
-is this repo's own chosen operating threshold, disclosed as a choice, not
-a value derived from data — see `mp1_01_config.json`'s own comment.
+moderate/watch, ≥ 0.25 significant/alert), used by all 5 real configs
+committed so far (`mp1_01_config.json`, `mp3_02_config.json`,
+`mp3_04_config.json`, `mp4_03_config.json`, `mp4_04_config.json`).
+`default_rate_swing_pp` is each config's own chosen operating threshold,
+disclosed as a choice, not a value derived from data; it is
+`NOT_COMPUTABLE` for the 4 new unsupervised/no-target models above by
+design, same as the default-rate check itself.

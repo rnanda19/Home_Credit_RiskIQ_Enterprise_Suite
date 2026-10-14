@@ -1,0 +1,9 @@
+{
+  "model_name": "mp3_02_bureau_behavior_segmentation",
+  "notes": "PSI thresholds use the standard industry convention monitoring_job.py already defaults to (psi_watch=0.10, psi_alert=0.25 -- Population Stability Index bands widely cited in credit-risk model governance: <0.10 no significant shift, 0.10-0.25 moderate shift worth watching, >=0.25 significant shift). default_rate_swing_pp is not applicable here (MP3-02 is unsupervised KMeans with no TARGET -- monitoring_job.py reports this check as NOT_COMPUTABLE rather than fabricating a value), left at a placeholder for config-schema compatibility with the supervised models' configs.",
+  "thresholds": {
+    "psi_watch": 0.10,
+    "psi_alert": 0.25,
+    "default_rate_swing_pp": 5.0
+  }
+}

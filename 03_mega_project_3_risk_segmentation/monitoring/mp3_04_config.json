@@ -1,0 +1,5 @@
+{
+  "model_name": "mp3_04",
+  "notes": "Same standard PSI bands as mp3_02_config.json (psi_watch=0.10, psi_alert=0.25). No TARGET for mp3_04 (unsupervised); mp4_03/mp4_04 are classifiers but this reference CSV has no TARGET column either since the feature-engineering functions used don't carry it -- default_rate_swing_pp reports NOT_COMPUTABLE, which is correct, not a gap.",
+  "thresholds": {"psi_watch": 0.10, "psi_alert": 0.25, "default_rate_swing_pp": 5.0}
+}

@@ -49,11 +49,18 @@ import pandas as pd
 
 def build_baseline(bundle_path, reference_csv, target_col, top_n_features, model_name):
     bundle = joblib.load(bundle_path)
-    feature_cols = bundle.get("numeric_features") or bundle.get("feature_cols") or []
+    # 2026-10-14 fix: the real unsupervised segmentation bundles (MP3-02/03/04,
+    # MP4-02 -- all KMeans + scaler, no TARGET) store their feature list under
+    # 'feature_names', not 'numeric_features' or 'feature_cols'. Confirmed by
+    # loading all 10 real bundles and reading their stored keys directly (see
+    # Phase 3 inventory). Before this fix every KMeans bundle would hit the
+    # ValueError below -- not a hypothetical, this is the first time this
+    # script has been pointed at real KMeans bundles at all.
+    feature_cols = bundle.get("numeric_features") or bundle.get("feature_cols") or bundle.get("feature_names") or []
     if not feature_cols:
         raise ValueError(
-            f"Bundle at {bundle_path} has neither 'numeric_features' nor "
-            "'feature_cols' -- cannot pick PSI features from it."
+            f"Bundle at {bundle_path} has none of 'numeric_features', "
+            "'feature_cols', or 'feature_names' -- cannot pick PSI features from it."
         )
 
     ref = pd.read_csv(reference_csv)
