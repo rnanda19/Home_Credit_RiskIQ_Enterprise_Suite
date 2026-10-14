@@ -94,26 +94,143 @@ unauthenticated. This is the real auth + real rate-limiting code working
 exactly as designed under concurrent load, independently reproduced on a
 second, architecturally unrelated service.
 
-## Honest scope: what this covers today, and what it doesn't yet
+## MP1 Problems 2-4, MP2 Problem 2, MP3 (all 4), MP4 (all 4), MP5 Problem 4 -- the remaining 13 real runs (2026-10-14, Phase 4.1)
 
-Two of five Mega Projects now have a real, executed load-testing run
-(MP1 Problem 1; MP2 Problem 1, added 2026-10-14) -- up from one, but
-still a disclosed, partial scope, same as `MONITORING.md` and `TLS.md`.
-MP3, MP4, and MP5 are not yet run. Extending to another of this suite's
-13 services built on the shared `scoring_service_common`/
-`segment_assignment_common` factories (MP1/MP3/MP4/MP5) means pointing
-`--host` at that service's own port and adjusting `FIXTURE_FEATURES` in
-a copy of MP1's `locustfile.py` (or, for a load test against a real
-trained model instead of the CI fixture bundle, pointing the target
-service at its real `.joblib` bundle and adjusting the payload to that
-bundle's real feature names). MP2's second service
-(`stress_testing_service.py`) and the remaining Mega Projects' services
-each need their own bespoke locustfile the same way MP2 Problem 1's did
-here (their request schemas are not interchangeable) -- genuinely new
-work, not a config change, same as this pass's own MP2 locustfile was.
+Extended past the 2 services above as part of Phase 4.1 (Production Reliability Engineering). Each of the 13 remaining real, deployable services now has its own bespoke locustfile (field names matched to that service's own real request schema -- none of these are copy-pasted renames) under `<mega_project>/loadtest/`, run the exact same way as the two runs above: a real `uvicorn` subprocess per service (one at a time, never concurrently), real OAuth2 `/token` exchange, 10 simulated users ramping up at 5/second, 25 real seconds, against the real CI fixture bundle (`scripts/generate_ci_fixture_bundles.py`) for every service that depends on a trained model -- the same, already-disclosed fixture convention this suite's Docker build verification and end-to-end tests already use, not a new scope choice invented for this benchmark pass.
 
-This is real synthetic/local load, not genuine, unpredictable production
-traffic -- see `remediation_data.js`'s own caveat on this gap: "This
-validates real architecture and latency under synthetic load -- it will
-not reflect genuine, unpredictable production user traffic patterns, but
-the load-testing methodology itself is fully real and fillable."
+**Real, disclosed finding, identical root cause across all 13 runs**: every single `/score` failure below is a `429 Too Many Requests` from the same real 60/minute-per-IP rate limiter (`src/serving/rate_limit_common.py`) already documented above -- verified directly against each run's own `*_failures.csv` (not inferred): zero `5xx` errors, zero timeouts, zero connection errors across all 13 services. `GET /health` never failed on any of them.
+
+### MP1 Problem 2 -- Loan Approval Scoring (`loan_approval_scoring_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 146 | 0 | 2 ms | 4 ms | 6 ms | 15 ms | 22 ms | 6.1 req/s |
+| `POST /score` | 617 | 557 | 4 ms | 10 ms | 21 ms | 75 ms | 125 ms | 25.7 req/s |
+| `POST /token` | 10 | 0 | 30 ms | 34 ms | 34 ms | 34 ms | 34 ms | 0.4 req/s |
+
+557 of 617 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP1 Problem 3 -- Credit Score Estimation (`credit_score_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 114 | 0 | 3 ms | 5 ms | 6 ms | 14 ms | 19 ms | 4.7 req/s |
+| `POST /score` | 645 | 585 | 4 ms | 11 ms | 22 ms | 76 ms | 107 ms | 26.8 req/s |
+| `POST /token` | 10 | 0 | 18 ms | 24 ms | 24 ms | 24 ms | 24 ms | 0.4 req/s |
+
+585 of 645 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP1 Problem 4 -- Repayment Capacity Analysis (`repayment_capacity_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 126 | 0 | 2 ms | 3 ms | 3 ms | 4 ms | 4 ms | 5.2 req/s |
+| `POST /score` | 651 | 591 | 4 ms | 6 ms | 7 ms | 10 ms | 25 ms | 27.1 req/s |
+| `POST /token` | 10 | 0 | 16 ms | 18 ms | 18 ms | 18 ms | 18 ms | 0.4 req/s |
+
+591 of 651 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP2 Problem 2 -- Macro Stress Testing (`stress_testing_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 129 | 0 | 2 ms | 4 ms | 5 ms | 6 ms | 8 ms | 5.4 req/s |
+| `POST /score/{scenario}` | 656 | 476 | 4 ms | 7 ms | 8 ms | 12 ms | 67 ms | 27.4 req/s |
+| `POST /token` | 10 | 0 | 16 ms | 22 ms | 22 ms | 22 ms | 22 ms | 0.4 req/s |
+
+476 of 656 `/score/{scenario}` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP3 Problem 1 -- Risk Tier Assignment (`risk_tier_assignment_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 130 | 0 | 2 ms | 4 ms | 6 ms | 7 ms | 9 ms | 5.4 req/s |
+| `POST /score` | 646 | 586 | 4 ms | 6 ms | 7 ms | 10 ms | 13 ms | 27.0 req/s |
+| `POST /token` | 10 | 0 | 16 ms | 22 ms | 22 ms | 22 ms | 22 ms | 0.4 req/s |
+
+586 of 646 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP3 Problem 2 -- Bureau Behavioral Segmentation (`bureau_segment_assignment_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 127 | 0 | 3 ms | 4 ms | 5 ms | 10 ms | 11 ms | 5.3 req/s |
+| `POST /score` | 643 | 583 | 4 ms | 7 ms | 8 ms | 15 ms | 206 ms | 26.8 req/s |
+| `POST /token` | 10 | 0 | 16 ms | 20 ms | 20 ms | 20 ms | 20 ms | 0.4 req/s |
+
+583 of 643 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP3 Problem 3 -- Repayment Behavior Segmentation (`repayment_segment_assignment_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 134 | 0 | 3 ms | 5 ms | 6 ms | 12 ms | 13 ms | 5.6 req/s |
+| `POST /score` | 638 | 578 | 4 ms | 7 ms | 8 ms | 20 ms | 195 ms | 26.6 req/s |
+| `POST /token` | 10 | 0 | 18 ms | 26 ms | 26 ms | 26 ms | 26 ms | 0.4 req/s |
+
+578 of 638 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP3 Problem 4 -- Revolving Utilization Segmentation (`utilization_segment_assignment_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 141 | 0 | 3 ms | 4 ms | 8 ms | 48 ms | 117 ms | 5.8 req/s |
+| `POST /score` | 632 | 572 | 4 ms | 7 ms | 10 ms | 120 ms | 192 ms | 26.2 req/s |
+| `POST /token` | 10 | 0 | 25 ms | 30 ms | 30 ms | 30 ms | 30 ms | 0.4 req/s |
+
+572 of 632 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP4 Problem 1 -- Early Delinquency Scoring (`early_delinquency_scoring_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 122 | 0 | 3 ms | 4 ms | 4 ms | 7 ms | 8 ms | 5.1 req/s |
+| `POST /score` | 645 | 585 | 4 ms | 10 ms | 20 ms | 76 ms | 113 ms | 26.9 req/s |
+| `POST /token` | 10 | 0 | 20 ms | 25 ms | 25 ms | 25 ms | 25 ms | 0.4 req/s |
+
+585 of 645 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP4 Problem 2 -- Installment Payment Pattern Detection (`payment_pattern_assignment_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 125 | 0 | 2 ms | 4 ms | 5 ms | 6 ms | 9 ms | 5.2 req/s |
+| `POST /score` | 644 | 584 | 4 ms | 6 ms | 7 ms | 40 ms | 194 ms | 26.9 req/s |
+| `POST /token` | 10 | 0 | 17 ms | 21 ms | 21 ms | 21 ms | 21 ms | 0.4 req/s |
+
+584 of 644 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP4 Problem 3 -- Revolving Distress Scoring (`revolving_distress_scoring_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 121 | 0 | 2 ms | 4 ms | 5 ms | 8 ms | 12 ms | 5.0 req/s |
+| `POST /score` | 655 | 595 | 4 ms | 10 ms | 21 ms | 76 ms | 82 ms | 27.3 req/s |
+| `POST /token` | 10 | 0 | 15 ms | 21 ms | 21 ms | 21 ms | 21 ms | 0.4 req/s |
+
+595 of 655 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP4 Problem 4 -- POS/Cash Trajectory Scoring (`pos_cash_trajectory_scoring_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 125 | 0 | 2 ms | 4 ms | 4 ms | 15 ms | 16 ms | 5.2 req/s |
+| `POST /score` | 643 | 583 | 4 ms | 11 ms | 23 ms | 83 ms | 100 ms | 26.9 req/s |
+| `POST /token` | 10 | 0 | 20 ms | 26 ms | 26 ms | 26 ms | 26 ms | 0.4 req/s |
+
+583 of 643 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+### MP5 Problem 4 -- Prepayment Behavior Segmentation (`prepayment_segment_assignment_service.py`)
+
+| Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
+|---|---|---|---|---|---|---|---|---|
+| `GET /health` | 123 | 0 | 2 ms | 4 ms | 5 ms | 10 ms | 10 ms | 5.1 req/s |
+| `POST /score` | 649 | 589 | 4 ms | 6 ms | 7 ms | 18 ms | 188 ms | 27.0 req/s |
+| `POST /token` | 10 | 0 | 20 ms | 25 ms | 25 ms | 25 ms | 25 ms | 0.4 req/s |
+
+589 of 649 `/score` calls returned `429` (rate limiter) -- 0 other failures.
+
+## Honest scope: what Phase 4.1 covers today, and what it doesn't yet
+
+All 15 of this suite's real, deployable FastAPI services now have a real, executed load-testing run (up from 2). Every run above is real synthetic/local load from one machine against the real CI fixture bundle (or, for MP1 P4/MP2 P2/MP3 P1, the real deterministic formula/tiering path with no bundle at all) -- not genuine, unpredictable production traffic, and not yet run against any real production-trained `.joblib` bundle (those are `.gitignore`d, see DATA_PRIVACY.md, and would need a locally re-trained notebook to supply). It also does not yet cover: peak/sustained load beyond the 25s/10-user profile used here, CPU/memory usage under load (not captured by Locust itself -- a separate `psutil`/container-stats pass), or multi-tenant throughput from more than one source IP (see the MP1 P1 run's own caveat above, which still applies to every run in this document equally). These are real, disclosed extensions for a follow-up pass, not silently completed here.
+

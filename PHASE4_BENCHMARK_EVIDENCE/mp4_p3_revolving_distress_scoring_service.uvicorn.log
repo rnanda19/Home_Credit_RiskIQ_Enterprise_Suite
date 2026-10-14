@@ -1,0 +1,1895 @@
+INFO:     Started server process [5814]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18913 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33676 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /token HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:149: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  return self._jws.encode(
+INFO:     127.0.0.1:33692 - "POST /token HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:149: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  return self._jws.encode(
+INFO:     127.0.0.1:33742 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /token HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but SimpleImputer was fitted without feature names
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/sklearn/utils/validation.py:2823: UserWarning: X has feature names, but LogisticRegression was fitted without feature names
+  warnings.warn(
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33730 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33740 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33694 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33742 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33716 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33768 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33754 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33700 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33692 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33722 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [5814]

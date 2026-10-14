@@ -13,10 +13,24 @@ notebook in this suite already saves its champion bundle; wiring this
 generator as each notebook's own final cell is the natural next step once
 a given problem's monitoring is turned on (see MONITORING.md's "Extending
 to more models" section for the honest, un-fabricated status of that
-rollout). Today it is wired for one flagship model -- Mega Project 1
-Problem 1, Credit Default Prediction -- and run by hand or as a follow-up
-notebook cell, exactly like generate_ci_fixture_bundles.py's fixture
-bundles are separate from the notebooks that produce the real ones.
+rollout).
+
+STATUS (2026-10-14, updated to match MONITORING.md): this script has now
+been run against real, locally-downloaded Home Credit raw data for 4
+models -- MP3-02 (bureau behavior), MP3-04 (revolving utilization),
+MP4-03 (revolving distress), MP4-04 (POS/cash trajectory) -- producing
+real monitoring_baseline.json files in a local working copy. Those
+baseline.json files are intentionally NOT committed to version control
+(see .gitignore / DATA_PRIVACY.md's "regenerate, don't retain" policy for
+data-derived artifacts); only each model's config.json (pure policy
+thresholds, no data-derived numbers) is committed. 6 of the remaining 10
+onboarding-eligible bundles are still blocked -- not by this script, but
+by 2 missing real raw tables (previous_application.csv,
+installments_payments.csv) that their feature engineering depends on; see
+MONITORING.md's "Still blocked" table for the exact list. Extending this
+script to Mega Project 1 Problem 1 (this suite's flagship model) and any
+other still-eligible model is unchanged: point --bundle/--reference-csv at
+that model's real artifact + real feature-engineered training split.
 
 Usage (against a real bundle + your own real, locally-downloaded Kaggle
 training split):
@@ -27,13 +41,12 @@ training split):
         --top-n-features 5 \
         --out-baseline 01_mega_project_1_underwriting_approval/monitoring/mp1_01_baseline.json
 
-This script cannot be run against real Home Credit data in this build
-environment (no Kaggle data is downloaded here -- see DATA_PRIVACY.md /
-.gitignore's data/raw/ exclusion), so it is verified structurally in
+This script's logic is verified structurally in
 src/tests/test_generate_monitoring_baseline.py against a small, clearly
-synthetic bundle + CSV -- proving the script's logic is correct, not that
-it has been run on real data yet. That real run is a step for whoever
-next re-trains Notebook 01 against the real dataset.
+synthetic bundle + CSV -- that test proves the script's logic is correct
+independent of any specific real dataset; the real runs against real
+Home Credit data (see STATUS above) are the separate, additional proof
+that it also works end-to-end against the real thing.
 """
 
 from __future__ import annotations

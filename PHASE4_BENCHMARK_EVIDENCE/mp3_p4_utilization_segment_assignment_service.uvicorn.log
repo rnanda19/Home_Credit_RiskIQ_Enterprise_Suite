@@ -1,0 +1,924 @@
+INFO:     Started server process [4109]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18910 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33770 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /token HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:149: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  return self._jws.encode(
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /token HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:149: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  return self._jws.encode(
+INFO:     127.0.0.1:33848 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /token HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+/usr/local/lib/python3.13/dist-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 31 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33808 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33830 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33816 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33780 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33772 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33838 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33796 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:33848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33782 - "POST /score HTTP/1.1" 429 Too Many Requests
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4109]

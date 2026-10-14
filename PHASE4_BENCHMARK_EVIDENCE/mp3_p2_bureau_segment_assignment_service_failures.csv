@@ -1,0 +1,2 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+POST,/score,HTTPError('429 Client Error: Too Many Requests for url: /score'),583,2026-10-14T09:55:36Z,2026-10-14T09:55:58Z
