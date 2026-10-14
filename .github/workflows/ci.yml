@@ -146,7 +146,7 @@ jobs:
           elif [ "$code" -eq 2 ]; then
             echo "::warning::Validation gate BLOCKED (not FAILED) -- expected on a CI runner with no real .joblib bundles present. See validation-results.json for the exact check(s) blocked."
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: validation-results
