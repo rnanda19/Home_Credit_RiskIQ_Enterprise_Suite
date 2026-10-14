@@ -6,7 +6,7 @@
 # defensively (not required by MP1 Problem 1's own champion, which has
 # been LightGBM on real reruns so far) in case a future rerun picks a
 # different champion model class.
-streamlit>=1.32
+streamlit>=1.65.0
 scikit-learn>=1.4
 xgboost>=2.0
 lightgbm>=4.3
