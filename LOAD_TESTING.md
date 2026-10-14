@@ -140,6 +140,8 @@ Extended past the 2 services above as part of Phase 4.1 (Production Reliability 
 
 476 of 656 `/score/{scenario}` calls returned `429` (rate limiter) -- 0 other failures.
 
+**Flagged on review, see "Acceptance thresholds" below**: 180 of 656 calls succeeded here (27.4%) versus ~9% on every other service -- confirmed by a live follow-up test to be a real rate-limiter keying gap specific to this path-parameterized endpoint (each of `/score/Baseline`, `/score/Adverse`, `/score/Severely Adverse` gets its own independent 60/minute bucket instead of sharing one), not a measurement artifact.
+
 ### MP3 Problem 1 -- Risk Tier Assignment (`risk_tier_assignment_service.py`)
 
 | Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
@@ -230,7 +232,45 @@ Extended past the 2 services above as part of Phase 4.1 (Production Reliability 
 
 589 of 649 `/score` calls returned `429` (rate limiter) -- 0 other failures.
 
+## Acceptance thresholds (derived from the measured baseline, 2026-10-14)
+
+Per your own standing rule: these thresholds are **measured first, then set from that measurement plus an explicit margin** -- never invented ahead of having real numbers. The margin applied throughout is **1.5x** on every latency ceiling and **0.7x** (a 30% floor) on throughput -- picked to tolerate normal run-to-run variance (this suite's own re-runs already show the same service's p99 moving by 2-3x between runs just from local machine jitter) without being so loose that a real 2x regression would still pass.
+
+**Important measurement caveat, found by reviewing the data, not assumed:** in every run, roughly 9% of `/score` calls succeeded and ~91% were fast `429` rejections (the rate limiter rejects before the real scoring/model work ever runs). Because successes are such a small slice, they concentrate in the upper percentiles -- **p95-p99-max are the real proxy for genuine scoring latency here; the median is actually measuring the rate limiter's own fast-reject path, not model inference.** Thresholds below are set on p95/p99/max for exactly this reason.
+
+**A real, disclosed finding from this review, not a code change yet**: MP2 Problem 2 (`stress_testing_service.py`) shows 180 successes (27.4%) instead of the ~60 (9%) every other service shows. Verified directly, not inferred -- a live test against a real local instance confirms the rate limiter's 60/minute limit is keyed in a way that gives each literal `/score/{scenario}` path (`/score/Baseline`, `/score/Adverse`, `/score/Severely Adverse`) its own independent bucket: exhausting `Baseline`'s 60 calls still leaves `Adverse` returning `200`. **Net effect: this one endpoint's real enforced limit is 180/minute, not the intended 60/minute** -- a 3x gap specific to path-parameterized routes, worth a real fix (e.g. an explicit `scope=` on the limiter decorator, or moving `scenario` to the request body instead of the path) as part of Phase 4.2's resilience work. Not fixed in this pass -- flagged for the next one.
+
+### Error-rate threshold (applies to all 15 services)
+
+**0% non-rate-limit failures** -- hard requirement. Measured: 0 genuine `5xx`/timeout/connection failures across all 15 services, ~9,900 total requests. `429` responses are explicitly excluded from this threshold (they are the rate limiter working as designed, not a failure) and are reported separately.
+
+### Per-service latency and throughput thresholds
+
+| Service | Measured p95 | Measured p99 | Measured max | Measured throughput | **p95 ceiling** | **p99 ceiling** | **max ceiling** | **throughput floor** |
+|---|---|---|---|---|---|---|---|---|
+| MP1 P1 `credit_default_scoring_service` | 31 ms | 110 ms | 168 ms | 25.4 req/s | 50 ms | 165 ms | 260 ms | 17.7 req/s |
+| MP1 P2 `loan_approval_scoring_service` | 21 ms | 75 ms | 125 ms | 25.7 req/s | 35 ms | 115 ms | 190 ms | 17.9 req/s |
+| MP1 P3 `credit_score_service` | 22 ms | 76 ms | 107 ms | 26.8 req/s | 35 ms | 115 ms | 170 ms | 18.7 req/s |
+| MP1 P4 `repayment_capacity_service` | 7 ms | 10 ms | 25 ms | 27.1 req/s | 15 ms | 15 ms | 40 ms | 18.9 req/s |
+| MP2 P1 `capital_requirement_service` | 7 ms | 10 ms | 42 ms | 26.7 req/s | 15 ms | 15 ms | 70 ms | 18.6 req/s |
+| MP2 P2 `stress_testing_service` | 8 ms | 12 ms | 67 ms | 27.4 req/s | 15 ms | 20 ms | 110 ms | 19.1 req/s |
+| MP3 P1 `risk_tier_assignment_service` | 7 ms | 10 ms | 13 ms | 27.0 req/s | 15 ms | 15 ms | 30 ms | 18.8 req/s |
+| MP3 P2 `bureau_segment_assignment_service` | 8 ms | 15 ms | 206 ms | 26.8 req/s | 15 ms | 25 ms | 310 ms | 18.7 req/s |
+| MP3 P3 `repayment_segment_assignment_service` | 8 ms | 20 ms | 195 ms | 26.6 req/s | 15 ms | 30 ms | 300 ms | 18.5 req/s |
+| MP3 P4 `utilization_segment_assignment_service` | 10 ms | 120 ms | 192 ms | 26.2 req/s | 15 ms | 180 ms | 290 ms | 18.3 req/s |
+| MP4 P1 `early_delinquency_scoring_service` | 20 ms | 76 ms | 113 ms | 26.9 req/s | 30 ms | 115 ms | 170 ms | 18.8 req/s |
+| MP4 P2 `payment_pattern_assignment_service` | 7 ms | 40 ms | 194 ms | 26.9 req/s | 15 ms | 60 ms | 300 ms | 18.8 req/s |
+| MP4 P3 `revolving_distress_scoring_service` | 21 ms | 76 ms | 82 ms | 27.3 req/s | 35 ms | 115 ms | 130 ms | 19.0 req/s |
+| MP4 P4 `pos_cash_trajectory_scoring_service` | 23 ms | 83 ms | 100 ms | 26.9 req/s | 35 ms | 125 ms | 150 ms | 18.8 req/s |
+| MP5 P1 `prepayment_segment_assignment_service` | 7 ms | 18 ms | 188 ms | 27.0 req/s | 15 ms | 30 ms | 290 ms | 18.9 req/s |
+
+**Why the ceilings differ so much per service even though the margin rule is the same**: they're not supposed to be uniform -- each service's own measured number drives its own ceiling. MP3 P4's p99 ceiling (180ms) is wide specifically because its own measured p99 (120ms) was already an outlier versus its sibling segmentation services (15-30ms range); that's the methodology correctly reflecting a real per-service difference rather than a copy-pasted number across all 15.
+
+**What these thresholds are, and are not, good for**: they're real regression gates for *this exact test profile* (25s, 10 users, ramp 5/s, CI fixture bundle, one machine) -- a future run under this same profile that blows past a ceiling is a real signal something got slower or broke. They are **not** a production SLA and should not be read as one: a different load profile (sustained/peak, real trained bundles, multiple source IPs) would produce different real numbers and needs its own measured baseline before it gets its own thresholds, per the same rule this section follows.
+
 ## Honest scope: what Phase 4.1 covers today, and what it doesn't yet
 
 All 15 of this suite's real, deployable FastAPI services now have a real, executed load-testing run (up from 2). Every run above is real synthetic/local load from one machine against the real CI fixture bundle (or, for MP1 P4/MP2 P2/MP3 P1, the real deterministic formula/tiering path with no bundle at all) -- not genuine, unpredictable production traffic, and not yet run against any real production-trained `.joblib` bundle (those are `.gitignore`d, see DATA_PRIVACY.md, and would need a locally re-trained notebook to supply). It also does not yet cover: peak/sustained load beyond the 25s/10-user profile used here, CPU/memory usage under load (not captured by Locust itself -- a separate `psutil`/container-stats pass), or multi-tenant throughput from more than one source IP (see the MP1 P1 run's own caveat above, which still applies to every run in this document equally). These are real, disclosed extensions for a follow-up pass, not silently completed here.
+
+One more open item surfaced by this same review, not yet fixed: MP2 Problem 2's rate-limiter keying gap (see "Acceptance thresholds" above) -- real, reproduced live, and left for Phase 4.2 rather than patched silently mid-benchmark-review.
 
