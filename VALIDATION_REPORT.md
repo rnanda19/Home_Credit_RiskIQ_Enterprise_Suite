@@ -3,6 +3,21 @@
 **Audited:** 2026-10-14 · **Commit audited:** `5f89bb63` ("Add system architecture diagram to README introduction") · **Branch:** `main`
 **Method:** Independent, hands-on verification against the local clone — not a re-read of README claims. Every number below came from a command actually run during this audit (pytest, grep, git, file inspection), not from documentation.
 
+**Status note (2026-10-14, later same day):** this report is a point-in-time
+snapshot pinned to commit `5f89bb63` and is deliberately left unedited below
+so it stays an honest record of what was true at that commit — it is not a
+living document. Two of its findings are now superseded by real work done
+in later commits the same day: section 7 ("Load testing — 1 of 15
+services") is superseded by `LOAD_TESTING.md`, which now covers all 15
+services with explicit acceptance thresholds (commits `ec188e2`, `f0d07e9`,
+and the `8442087`/`c1b3ee5` rate-limiter fix); section 6's monitoring note
+is superseded by `MONITORING.md`, which now has 4 of 10 eligible models
+onboarded, up from 1 (commit `5653f6c`). Everything else below (test
+counts, dependency pinning, the 6 stray root files, the empty `tests/`
+directory) was re-verified as still accurate as of 2026-10-14 — see
+`CHANGELOG.md` [2.3.0] for the full detail of what changed and what
+didn't.
+
 This report follows one rule throughout: a README claim, a green CI badge, or a committed report file is a *claim*, not *proof*. Proof is a test that was actually executed, a file that was actually inspected, or a scan that was actually run. Findings are grouped by capability, each tagged:
 
 - ✅ **VERIFIED** — independently reproduced, right now, with evidence shown.

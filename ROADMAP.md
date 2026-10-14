@@ -138,11 +138,18 @@ Immediate next steps below).
   until a real `docker build`/`docker run` was performed against it for
   the first time. Fixed; all 5 Mega Projects now build, run, and pass
   their `/health` check in CI.
-- **Production drift monitoring**: done for one flagship model -- see
-  `MONITORING.md` for the real job, the real baseline generator, and the
-  honest scope of what's covered so far (Mega Project 1 Problem 1 only;
-  extending to the other 24 problems is unstarted, same shape of gap the
-  AMEX platform discloses for its own monitoring job).
+- **Production drift monitoring**: extended from 1 of 10 eligible models
+  to 4 of 10 (2026-10-14) -- see `MONITORING.md` for the real job, the
+  real baseline generator (now handling both classifier and `KMeans`
+  bundles), and the honest current scope: MP3 Problems 2/4 and MP4
+  Problems 3/4 have real PSI + data-quality baselines against real
+  Kaggle-trained bundles, with the drift `ALERT` path live-verified on
+  2 of them. 6 of 10 eligible models remain `BLOCKED`, disclosed, not
+  silently skipped -- pending 2 missing raw tables
+  (`previous_application.csv`, `installments_payments.csv`). The other
+  15 problems in the suite either have no trained bundle to monitor or
+  are out of this item's current scope -- same shape of gap the AMEX
+  platform discloses for its own monitoring job, narrower than before.
 - **Real API hardening -- rate limiting + TLS termination**: done.
   `src/serving/rate_limit_common.py` adds real, tested, per-process
   slowapi rate limiting to every `/token`, `/schema`, `/score` (and MP2's
@@ -160,16 +167,21 @@ Immediate next steps below).
   port, plus a shared `scripts/generate_local_tls_cert.sh`. See `TLS.md`
   for the current honest scope (self-signed only, no automatic renewal --
   both disclosed, open items).
-- **Real load testing**: done for one flagship service (MP1 Problem 1) --
-  see `LOAD_TESTING.md`. A real Locust load test
-  (`01_mega_project_1_underwriting_approval/loadtest/locustfile.py`) run
-  against a real live instance of the real service surfaced a real,
-  interesting finding: the rate limiter added above correctly rejects
-  requests past 60/minute even under real concurrent load (677 of 737
-  `/score` calls got a real `429` in one real run), with real measured
-  latency for the accepted requests (median 5ms, p99 110ms). Honest scope
-  in `LOAD_TESTING.md`: one service, synthetic local load from one
-  machine, not genuine unpredictable production traffic.
+- **Real load testing**: extended from 1 of 15 services to all 15
+  (2026-10-14) -- see `LOAD_TESTING.md`. Every real, deployable service
+  now has its own bespoke, real Locust load test run against a real
+  live instance; every failure across all 15 runs was confirmed to be
+  the rate limiter's own `429` (zero `5xx`/timeout/connection errors
+  suite-wide). Explicit p95/p99/max latency ceilings and a throughput
+  floor are now set per service, derived from the measured 15-run
+  baseline plus an explicit margin (never invented ahead of the data).
+  The review also found and fixed a real rate-limiter keying bug
+  specific to MP2 Problem 2's path-parameterized endpoint (see
+  `CHANGELOG.md` [2.3.0] and `LOAD_TESTING.md`'s own writeup). Honest
+  scope unchanged in one respect: every run is synthetic local load
+  from one machine, not genuine unpredictable production traffic, and
+  not yet a sustained/soak or multi-source-IP profile -- see
+  `LOAD_TESTING.md`'s "Honest scope" section.
 
 - **Real ECOA/Reg B adverse-action notices**: done -- see
   `ADVERSE_ACTION.md`. `src/serving/adverse_action_common.py` turns this
@@ -201,6 +213,24 @@ Immediate next steps below).
 
 1. Extend Mega Project 5 Notebook 4's hardcoded-`SUITE_ROOT` path-resolution
    fix (2026-09-10) to the remaining 28 notebooks in the suite, closing the
-   same disclosed Downloads-fallback risk everywhere, not just here.
-2. Revisit the deferred items above (Kaggle packaging) once the above is
-   complete.
+   same disclosed Downloads-fallback risk everywhere, not just here. Still
+   open as of 2026-10-14 -- 94 files in the suite still reference
+   `_find_suite_root()`/the Downloads-folder fallback candidate, verified
+   directly, not assumed.
+2. **Added 2026-10-14, current priority order (see `LOAD_TESTING.md`,
+   `MONITORING.md`):**
+   1. Resilience/failure-recovery tests (auth-expiry, malformed-request,
+      dependency-failure, timeout, restart/recovery) -- the single
+      largest untested dimension now that load-test breadth is complete.
+   2. Observability + SLOs (structured logs, request IDs, a
+      machine-readable cross-service health report) -- needed before any
+      unified release gate can mean anything.
+   3. The 2 missing raw tables (`previous_application.csv`,
+      `installments_payments.csv`) -- the one blocker genuinely outside
+      this repo's own code, needed to move monitoring onboarding past
+      4 of 10.
+   4. Repo hygiene cleanup (6 stray `commit_msg*.txt` files at the repo
+      root, an empty root `tests/` directory) -- low effort, already
+      identified in `VALIDATION_REPORT.md`, still open.
+3. Revisit the deferred items above (Kaggle packaging, the `SUITE_ROOT`
+   extension) once the above is complete.

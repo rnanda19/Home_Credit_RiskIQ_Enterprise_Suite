@@ -86,8 +86,9 @@ files, or Mega Projects 1 and 3's new tests within their existing files.
   partial rollout. What it does NOT additionally re-prove: rate-limiting
   behavior under load (see `src/tests/test_rate_limit_common.py`'s real
   end-to-end 429 proof) or real concurrent-load latency (see
-  `LOAD_TESTING.md`'s real Locust run, currently one flagship service only)
-  — those are separate, disclosed scope boundaries, not gaps in this file.
+  `LOAD_TESTING.md`'s real Locust runs — extended 2026-10-14 to all 15
+  services, with explicit acceptance thresholds) — those are separate,
+  disclosed scope boundaries, not gaps in this file.
 - Each test spins up and tears down a real subprocess per test function
   (via a pytest fixture) — real, measurable overhead per test (roughly
   2-5 real seconds of `uvicorn` startup each), which is why the full

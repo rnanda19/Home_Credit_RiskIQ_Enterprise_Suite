@@ -3,6 +3,68 @@
 All notable changes to this repository are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.3.0] - 2026-10-14
+
+### Monitoring onboarding, full 15/15 load-test coverage, acceptance thresholds, resilience fix
+
+Closes the Phase 3/Phase 4.1/Phase 4.2 priorities set after [2.2.0]:
+real monitoring baselines for the models the repo's own real data
+actually supports, load-testing coverage extended from 2 of 15 services
+to all 15, explicit acceptance thresholds derived from that evidence,
+and a real rate-limiter bug the threshold review itself surfaced.
+
+- **Monitoring onboarding extended from 1 of 10 to 4 of 10 eligible
+  models** (commit `5653f6c`) -- real PSI + data-quality baselines
+  generated against real Kaggle-trained bundles for MP3 Problem 2
+  (Bureau Behavioral Segmentation), MP3 Problem 4 (Revolving
+  Utilization Segmentation), MP4 Problem 3 (Revolving Distress
+  Scoring), and MP4 Problem 4 (POS/Cash Trajectory Scoring). Required
+  fixing `generate_monitoring_baseline.py` to handle `KMeans`-based
+  bundles (it previously assumed a classifier). The drift `ALERT` path
+  was verified live on deliberately shifted data for 2 of the 4.
+  6 of 10 eligible models remain `BLOCKED` -- disclosed in
+  `MONITORING.md`, not silently skipped -- pending 2 missing raw
+  tables (`previous_application.csv`, `installments_payments.csv`)
+  this build environment does not have.
+- **`MONITORING.md` self-correction** (commit `bed9848`) -- fixed an
+  overclaim that baselines are committed to the repo; they are
+  `.gitignore`d by design (`DATA_PRIVACY.md`'s "regenerate, don't
+  retain" policy), only each model's `config.json` is.
+- **Load-test coverage extended from 2 of 15 to 15 of 15 real,
+  deployable services** (commit `ec188e2`) -- 13 new bespoke
+  locustfiles (field names matched to each service's own real request
+  schema), each run as a real `uvicorn` subprocess, one at a time.
+  Every failure across all 13 runs was confirmed (via each run's own
+  `*_failures.csv`, not inferred) to be a `429` from the existing
+  rate limiter -- zero `5xx`/timeout/connection errors suite-wide. Also
+  fixed a stale docstring in `scripts/generate_monitoring_baseline.py`
+  that still said real data was unavailable and the generator was
+  wired for one flagship model only.
+- **Explicit acceptance thresholds set from the measured 15/15
+  baseline** (commit `f0d07e9`) -- p95/p99/max latency ceilings (1.5x
+  measured, rounded to a clean step) and a throughput floor (0.7x
+  measured) per service, plus a hard 0%-non-rate-limit-failure
+  requirement suite-wide. This review also surfaced a real finding:
+  MP2 Problem 2 (`stress_testing_service.py`) showed 180 successes
+  (27.4%) instead of the ~60 (9%) every other service showed --
+  flagged, not yet explained at the time.
+- **MP2 Problem 2 rate-limiter keying bug found and fixed** (commits
+  `8442087`, `c1b3ee5`) -- root cause: `install_rate_limiting()` left
+  slowapi's `key_style` at its default (`"url"`), which keys buckets
+  by literal request path rather than view-function identity.
+  `stress_testing_service.py`'s one `@app.post("/score/{scenario}")`
+  view serves three literal paths (`Baseline`/`Adverse`/`Severely
+  Adverse`), so each got its own independent 60/minute bucket -- a
+  180/minute effective limit instead of 60/minute. Fixed with
+  `key_style="endpoint"`; verified live before and after the fix
+  (exhausting one scenario's limit now correctly blocks the others),
+  then re-benchmarked for real (581/641 `/score/{scenario}` calls now
+  rejected, 90.6%, matching every other service's ~91% pattern, down
+  from 476/656, 72.6%). Added a regression test confirmed to fail
+  against the pre-fix code and pass against the fix. The other 14
+  services were unaffected by the bug (one path per limited view
+  function each).
+
 ## [2.2.0] - 2026-10-14
 
 ### Dependency reproducibility, python-jose CVE fix, automated validation gate, monitoring automation, 2nd load-test service

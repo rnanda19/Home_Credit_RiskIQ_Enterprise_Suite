@@ -89,7 +89,7 @@ full disclosure).
 | Statistical rigor | Chi-square association testing, multinomial-resampled bootstrap significance (not naive resampling — see `BENCHMARKS.md`), confidence-interval-based robustness gates distinct from structural checks |
 | Explainable AI | SHAP (global importance + beeswarm) and LIME (per-instance) explanations shipped with every trained model, not added after the fact |
 | Model risk & governance | Per-problem `MODEL_CARD.md`, two independent check families per run, honest "not recommended for production" verdicts when a robustness gate fails — see [below](#model-risk--governance) |
-| MLOps / deployment | 15 deployable FastAPI scoring services across all 5 Mega Projects (4 + 2 + 4 + 4 + 1), every one requiring real authentication (an `X-API-Key` header **or** an OAuth2/JWT Bearer token from the service's own `POST /token`) with real per-request explainability and ECOA/Reg B-style adverse-action notices (see `ADVERSE_ACTION.md`), real end-to-end integration tests against live subprocess-launched services (see `E2E_TESTING.md`), Docker Compose orchestration per Mega Project (non-root containers + real health checks), pytest coverage (bit-identical service verification), 2-workflow CI (GitHub Actions) |
+| MLOps / deployment | 15 deployable FastAPI scoring services across all 5 Mega Projects (4 + 2 + 4 + 4 + 1), every one requiring real authentication (an `X-API-Key` header **or** an OAuth2/JWT Bearer token from the service's own `POST /token`) with real per-request explainability and ECOA/Reg B-style adverse-action notices (see `ADVERSE_ACTION.md`), real end-to-end integration tests against live subprocess-launched services (see `E2E_TESTING.md`), Docker Compose orchestration per Mega Project (non-root containers + real health checks), pytest coverage (bit-identical service verification), 4-workflow CI (GitHub Actions) |
 | Software engineering | Shared library (`src/`) instead of copy-pasted logic across problems, enforced resource ceilings before any heavy import, fixed-seed reproducibility, a real verification protocol (below) — not "it ran on my machine" |
 | Communication | Executive rollup in HTML + Word + Excel per Mega Project, SMART-format insights, one model card per problem written for a non-modeler to read |
 
@@ -187,7 +187,7 @@ GitHub Actions workflows — no manual step required:
 | Workflow | What it verifies |
 |---|---|
 | [`CI`](.github/workflows/ci.yml) | Every notebook is well-formed (`nbformat`); HYPER shared-component tests (`src/tests/`); a 5-project matrix of real `pytest` runs against every Mega Project's `tests/` — including the real end-to-end tests that launch a live `uvicorn` service and hit it over real HTTP (see [E2E_TESTING.md](E2E_TESTING.md)) |
-| [`Code Quality`](.github/workflows/code-quality.yml) | `pyflakes` + `black --check` (blocking), `bandit` security scan (blocking) |
+| [`Code Quality`](.github/workflows/code-quality.yml) | `pyflakes` + `black --check` (blocking), `bandit` security scan (blocking), `pip-audit` dependency-vulnerability scan against `constraints.txt` (blocking, added 2026-10-14) |
 | [`Docker Build & Run Verification`](.github/workflows/docker-build-verify.yml) | A real `docker build` + `docker run` + `/health` check per Mega Project, plus a 5-project TLS-termination matrix (real nginx + real self-signed cert + real HTTPS, all 15 services — see [TLS.md](TLS.md)) |
 | `CodeQL` | Static security analysis on every push |
 

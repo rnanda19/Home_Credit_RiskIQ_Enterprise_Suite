@@ -82,16 +82,25 @@ finished in minutes at real production scale rather than hours.
   performs a real `docker build`/`docker run` for all 5 Mega Projects on
   GitHub Actions' own `ubuntu-latest` runners on every push, including a
   real TLS-termination check (self-signed cert + nginx + HTTPS curl) for
-  one flagship service — see `ROADMAP.md`'s "Fixed since" section and
-  `TLS.md`. What's still missing is build-time/runtime *resource usage*
-  timing specifically, not build/run correctness.
-- **FastAPI service latency/throughput under load** — still true suite-wide
-  for the pytest tests themselves (`test_scoring_services.py` verifies
-  correctness, not latency/concurrency), but no longer true for every
-  service: a real Locust load test against MP1 Problem 1's live service
-  produced real measured latency (median 5ms, p90 10ms, p99 110ms) and
-  surfaced a real rate-limiter interaction under concurrent load — see
-  `LOAD_TESTING.md`. The other 14 services remain unmeasured under load.
+  all 15 services (extended 2026-09-10 from one flagship service) — see
+  `ROADMAP.md`'s "Fixed since" section and `TLS.md`. What's still missing
+  is build-time/runtime *resource usage* timing specifically, not
+  build/run correctness.
+- **FastAPI service latency/throughput under load** — no longer a gap at
+  all as of 2026-10-14: all 15 of this suite's real, deployable services
+  now have a real, executed Locust load-test run (started with MP1
+  Problem 1's real measured latency of median 5ms/p90 10ms/p99 110ms;
+  extended to the remaining 14 on 2026-10-14) — see `LOAD_TESTING.md`
+  for every service's own results table and the explicit p95/p99/max
+  latency ceilings + throughput floor now set from that measured
+  baseline. The review also found and fixed a real rate-limiter keying
+  bug specific to MP2 Problem 2 (see `LOAD_TESTING.md`'s own writeup).
+  What's still a real gap, disclosed in `LOAD_TESTING.md`'s own "Honest
+  scope" section rather than implied as done here: every run so far is
+  a single 25-second/10-user profile from one machine, not sustained or
+  peak load, not multi-source-IP, and not yet against a real
+  production-trained bundle (those are `.gitignore`d by design — see
+  `DATA_PRIVACY.md`).
 - **Real wall-clock for every other notebook in the suite** — only the
   figures in the table above have been reported back by the user so far;
   every other notebook's real-data runtime is still unmeasured. Add real
