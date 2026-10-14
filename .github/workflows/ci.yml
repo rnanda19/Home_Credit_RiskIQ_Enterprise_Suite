@@ -124,7 +124,28 @@ jobs:
       - name: Install test dependencies (pinned)
         run: pip install -c constraints.txt pytest httpx requests joblib numpy scikit-learn pandas polars fastapi "uvicorn[standard]" pydantic pyjwt python-multipart slowapi
       - name: Run validation gate (skips pip-audit -- see dependency-audit job; skips per-project live-service tests -- those need real .joblib bundles this CI runner does not have)
-        run: python scripts/run_validation_gate.py --skip-pip-audit --skip-project-tests
+        # 2026-10-14 fix: run_validation_gate.py now exits 0 (PASS), 1
+        # (FAIL -- a check actually ran and found a real problem), or 2
+        # (BLOCKED, no FAIL -- every check either passed or could not run
+        # for a reason outside this suite's own code). Before this fix the
+        # script exited 1 for BOTH FAIL and BLOCKED, and on a fresh CI
+        # checkout check_bundle_sklearn_version() is ALWAYS BLOCKED (the
+        # real .joblib bundles it loads are gitignored and never present
+        # here) -- so this job failed on every single run regardless of
+        # whether anything was actually broken. Exit code 2 is now a
+        # warning annotation, not a build failure; validation-results.json
+        # (uploaded below) still records BLOCKED truthfully either way.
+        run: |
+          set +e
+          python scripts/run_validation_gate.py --skip-pip-audit --skip-project-tests
+          code=$?
+          set -e
+          if [ "$code" -eq 1 ]; then
+            echo "::error::Validation gate FAILED -- see validation-results.json"
+            exit 1
+          elif [ "$code" -eq 2 ]; then
+            echo "::warning::Validation gate BLOCKED (not FAILED) -- expected on a CI runner with no real .joblib bundles present. See validation-results.json for the exact check(s) blocked."
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

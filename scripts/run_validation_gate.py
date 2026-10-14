@@ -27,6 +27,21 @@ status to make a run look better than it was):
                --skip-pip-audit was passed, or no network for pip-audit
                to query its vulnerability feed).
 
+EXIT CODE (2026-10-14: now 3-valued, not a PASS/non-PASS boolean -- see
+the comment above the return statement in main() for why. The original
+"0 if PASS else 1" collapsed BLOCKED into the same code as FAIL, which
+made the CI validation-gate job fail on every single run: on a fresh CI
+checkout the real .joblib bundles are gitignored and simply do not
+exist, so check_bundle_sklearn_version() is BLOCKED there by design,
+forever. A CI step should fail the build on FAIL, not on BLOCKED):
+    0 -- overall PASS.
+    1 -- overall FAIL (at least one check actually ran and found a real
+         problem). This is the only code that should block a CI build.
+    2 -- overall BLOCKED, no FAIL (every check either passed or could
+         not run for a reason outside this suite's own code).
+         validation-results.json still records BLOCKED truthfully --
+         only the exit code treats it as non-fatal to the build.
+
 This script does not invent new test assertions -- it is a runner and
 aggregator around the suite's existing real pytest suites, the real
 .joblib bundles on disk, and pip-audit, all of which can be independently
@@ -278,7 +293,27 @@ def main() -> int:
         print(f"  [{c['status']:<8}] {c['name']}")
     print(f"\nWrote {out_path}")
 
-    return 0 if result["summary"]["overall"] == "PASS" else 1
+    # Exit codes are deliberately 3-valued, not a PASS/non-PASS boolean:
+    #   0 -- PASS: every attempted check succeeded.
+    #   1 -- FAIL: at least one check actually ran and found a real problem.
+    #      This is the only code a CI step should treat as "block the build".
+    #   2 -- BLOCKED, no FAIL: every check either passed or could not run for
+    #      a reason outside this suite's own code (most commonly: real
+    #      .joblib bundles are gitignored and simply do not exist on a fresh
+    #      CI checkout -- see check_bundle_sklearn_version()'s own docstring).
+    #      Added 2026-10-14 after the validation-gate CI job was found to
+    #      fail on every single run for exactly this reason, even when
+    #      nothing was actually broken: collapsing BLOCKED into the same
+    #      exit code as FAIL made the gate permanently red and therefore
+    #      meaningless as a signal. BLOCKED is still never silently reported
+    #      as PASS in validation-results.json -- only the exit code, which a
+    #      CI step uses to decide whether to block the build, treats it
+    #      differently from a genuine FAIL.
+    if result["summary"]["overall"] == "PASS":
+        return 0
+    if result["summary"]["overall"] == "FAIL":
+        return 1
+    return 2
 
 
 if __name__ == "__main__":

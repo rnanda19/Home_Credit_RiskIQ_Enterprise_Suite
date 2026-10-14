@@ -117,9 +117,7 @@ def test_decode_rejects_a_token_signed_with_a_different_algorithm(monkeypatch):
     (including CVE-2026-85394's specific DER-key-as-HMAC-secret variant)."""
     monkeypatch.setenv("JWT_SECRET_KEY", REAL_SECRET)
     assert JWT_ALGORITHM == "HS256"
-    other_alg_token = pyjwt.encode(
-        {"sub": "x", "scopes": [API_ACCESS_SCOPE]}, REAL_SECRET, algorithm="HS512"
-    )
+    other_alg_token = pyjwt.encode({"sub": "x", "scopes": [API_ACCESS_SCOPE]}, REAL_SECRET, algorithm="HS512")
     assert _decode_bearer_token(other_alg_token) is None
 
 
@@ -181,9 +179,7 @@ def test_require_auth_rejects_an_algorithm_confused_token_end_to_end(monkeypatch
     the decode helper directly."""
     monkeypatch.setenv("API_KEY", "a-real-configured-key")
     monkeypatch.setenv("JWT_SECRET_KEY", REAL_SECRET)
-    other_alg_token = pyjwt.encode(
-        {"sub": "x", "scopes": [API_ACCESS_SCOPE]}, REAL_SECRET, algorithm="HS512"
-    )
+    other_alg_token = pyjwt.encode({"sub": "x", "scopes": [API_ACCESS_SCOPE]}, REAL_SECRET, algorithm="HS512")
     client = TestClient(_tiny_authenticated_app())
     resp = client.get("/protected", headers={"Authorization": f"Bearer {other_alg_token}"})
     assert resp.status_code == 401
