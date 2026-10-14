@@ -181,7 +181,5 @@ def test_path_parameterized_endpoint_shares_one_bucket_across_distinct_paths():
     # same bucket -- it must already be rate-limited, not get its own fresh 3.
     resp_other_path = client.post("/score/Adverse")
     assert resp_other_path.status_code == 429, (
-        "a second literal path value got its own independent bucket -- "
-        "the keying bug has regressed"
+        "a second literal path value got its own independent bucket -- " "the keying bug has regressed"
     )
-
