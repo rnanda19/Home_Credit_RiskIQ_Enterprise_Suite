@@ -36,21 +36,39 @@ is only known for certain by whoever last ran that notebook. The Promotion
 Log below exists to capture that fact every time it happens, rather than
 this file asserting something that can silently go stale.
 
-## Owned Model Artifacts (6 across the suite)
+## Owned Model Artifacts (10 across the suite)
+
+**Correction (2026-10-14, caught cross-checking against `MONITORING.md`'s
+own "10 real trained bundles across MP1/MP3/MP4/MP5" count rather than
+re-reading this file's old total): this table previously listed only 6.
+MP3 Problems 2/3/4's own K-Means segmentation bundles and MP5 Problem 4's
+own segmentation bundle were missed by the 2026-09-08 extraction pass —
+each one's own `MODEL_CARD.md` documents its real `.joblib` path in prose
+rather than a top-line `Bundle:` field, which is why the automated-style
+extraction skipped them. All 4 are real, independently verified to exist
+on disk, and already tracked correctly in `MONITORING.md`.**
 
 These are the only notebooks that persist their own trained bundle. Every
 other problem either reuses one of these, is a pure statistical/portfolio
 analysis with no model to persist, or writes a CSV/report output instead
-of a model bundle (see the per-Mega-Project tables further down).
+of a model bundle (see the per-Mega-Project tables further down). Note
+that MP3 Problems 2-4 do both: they take their Mega Project's own
+Notebook 01 CSV output as a hard dependency (unsupervised clustering
+never re-scores PD) AND separately persist their own real K-Means bundle
+-- the CSV dependency and the owned bundle are not mutually exclusive.
 
 | Artifact ID | Owning Mega Project / Problem | Path (gitignored, regenerated on notebook run) |
 |---|---|---|
 | `MP1-01` | MP1 Problem 1 — Credit Default Prediction | `01_mega_project_1_underwriting_approval/decision_engine/artifacts/notebook_01_champion_model.joblib` |
 | `MP1-02` | MP1 Problem 2 — Loan Application Approval | `01_mega_project_1_underwriting_approval/decision_engine/artifacts/notebook_02_champion_model.joblib` |
+| `MP3-02` | MP3 Problem 2 — Credit Bureau Behavioral Segmentation | `03_mega_project_3_risk_segmentation/decision_engine/artifacts/notebook_02_segment_model.joblib` (K-Means) |
+| `MP3-03` | MP3 Problem 3 — Repayment Behavior Segmentation | `03_mega_project_3_risk_segmentation/decision_engine/artifacts/notebook_03_segment_model.joblib` (K-Means) |
+| `MP3-04` | MP3 Problem 4 — Revolving Credit Utilization Segmentation | `03_mega_project_3_risk_segmentation/decision_engine/artifacts/notebook_04_segment_model.joblib` (K-Means) |
 | `MP4-01` | MP4 Problem 1 — Early Delinquency Risk Scoring | `04_mega_project_4_delinquency_prevention/decision_engine/artifacts/notebook_01_champion_model.joblib` |
 | `MP4-02` | MP4 Problem 2 — Installment Payment Behavior Detection | `04_mega_project_4_delinquency_prevention/decision_engine/artifacts/notebook_02_kmeans_model.joblib` |
 | `MP4-03` | MP4 Problem 3 — Revolving/Credit-Card Distress Early Warning | `04_mega_project_4_delinquency_prevention/decision_engine/artifacts/notebook_03_champion_model.joblib` |
 | `MP4-04` | MP4 Problem 4 — POS/Cash Loan Delinquency Trajectory | `04_mega_project_4_delinquency_prevention/decision_engine/artifacts/notebook_04_champion_model.joblib` |
+| `MP5-04` | MP5 Problem 4 — Prepayment / Early-Repayment Segmentation | `05_mega_project_5_liquidity_cashflow/decision_engine/artifacts/notebook_04_segment_model.joblib` (K-Means) |
 
 ### Known cross-Mega-Project consumers of `MP1-01`
 
@@ -105,9 +123,9 @@ is no MLflow/model-registry service running for this portfolio project.
 | Problem | Notebook | Artifact / Bundle | Type |
 |---|---|---|---|
 | 1. Data-Driven Risk Tier Construction | `notebooks/01_data_driven_risk_tier_construction.ipynb` | `MP1-01` (hard dependency) | Depends on MP1's champion; also soft-depends on MP2-01's output CSV |
-| 2. Credit Bureau Behavioral Segmentation | `notebooks/02_credit_bureau_behavioral_segmentation.ipynb` | `notebook_01_risk_tiers.csv` (hard dependency, this repo's own output) | Depends on this Mega Project's own Problem 1 output |
-| 3. Repayment Behavior Segmentation | `notebooks/03_repayment_behavior_segmentation.ipynb` | `notebook_01_risk_tiers.csv` (hard) + `notebook_02_bureau_segments.csv` (soft) | Chained dependency within MP3 |
-| 4. Revolving Credit Utilization Segmentation | `notebooks/04_revolving_credit_utilization_segmentation.ipynb` | `notebook_01_risk_tiers.csv` (hard dependency) | Chained dependency within MP3 |
+| 2. Credit Bureau Behavioral Segmentation | `notebooks/02_credit_bureau_behavioral_segmentation.ipynb` | `notebook_01_risk_tiers.csv` (hard dependency) + owns `MP3-02` (K-Means) | Depends on this Mega Project's own Problem 1 output; also persists its own clustering bundle |
+| 3. Repayment Behavior Segmentation | `notebooks/03_repayment_behavior_segmentation.ipynb` | `notebook_01_risk_tiers.csv` (hard) + `notebook_02_bureau_segments.csv` (soft) + owns `MP3-03` (K-Means) | Chained dependency within MP3; also persists its own clustering bundle |
+| 4. Revolving Credit Utilization Segmentation | `notebooks/04_revolving_credit_utilization_segmentation.ipynb` | `notebook_01_risk_tiers.csv` (hard dependency) + owns `MP3-04` (K-Means) | Chained dependency within MP3; also persists its own clustering bundle |
 | 5. Cross-Axis Risk-Return Synthesis | `notebooks/05_cross_axis_risk_return_synthesis.ipynb` | none declared beyond upstream MP3 outputs | Synthesis notebook |
 | 6. Executive Rollup | `notebooks/06_mp3_executive_report.ipynb` | none | Consolidation report |
 
@@ -129,7 +147,7 @@ is no MLflow/model-registry service running for this portfolio project.
 | 1. Portfolio Cashflow Timing & Reliability | `notebooks/01_portfolio_cashflow_timing_reliability.ipynb` | `decision_engine/reports/notebook_01_*` | Report outputs only, no model bundle |
 | 2. Cash-Flow-at-Risk (CFaR) Rolling Forecast | `notebooks/02_cash_flow_at_risk_rolling_forecast.ipynb` | `decision_engine/reports/notebook_02_*` | Report outputs only |
 | 3. Retail Liquidity Coverage Proxy | `notebooks/03_retail_liquidity_coverage_proxy.ipynb` | `decision_engine/reports/notebook_03_*` | Report outputs only |
-| 4. Prepayment / Early-Repayment Segmentation | `notebooks/04_prepayment_early_repayment_segmentation.ipynb` | `decision_engine/reports/notebook_04_*` | Report outputs only |
+| 4. Prepayment / Early-Repayment Segmentation | `notebooks/04_prepayment_early_repayment_segmentation.ipynb` | owns `MP5-04` (K-Means) | Owned bundle -- real `.joblib` produced 2026-09-08, verified against the deployable service (see `ROADMAP.md`) |
 | 5. Macro Cashflow Stress Test | `notebooks/05_macro_cashflow_stress_test.ipynb` | `decision_engine/reports/notebook_05_*` | Report outputs only |
 | 6. Executive Rollup | `notebooks/06_mp5_executive_rollup.ipynb` | `decision_engine/reports/notebook_06_*` | Consolidation report |
 
