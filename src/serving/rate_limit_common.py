@@ -68,7 +68,7 @@ def install_rate_limiting(app: FastAPI) -> Limiter:
     the wrapped function's signature for exactly that) -- see each call
     site for how this suite's existing `request: <PydanticModel>` request
     bodies were renamed to avoid the collision."""
-    limiter = Limiter(key_func=get_remote_address)
+    limiter = Limiter(key_func=get_remote_address, key_style="endpoint")
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
     app.add_middleware(SlowAPIMiddleware)

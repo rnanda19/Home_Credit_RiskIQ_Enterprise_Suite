@@ -1,2 +1,2 @@
 Method,Name,Error,Occurrences,First Seen,Last Seen
-POST,/score/{scenario},HTTPError('429 Client Error: Too Many Requests for url: /score/{scenario}'),476,2026-10-14T10:00:27Z,2026-10-14T10:00:44Z
+POST,/score/{scenario},HTTPError('429 Client Error: Too Many Requests for url: /score/{scenario}'),581,2026-10-14T11:15:59Z,2026-10-14T11:16:20Z

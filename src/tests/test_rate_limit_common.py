@@ -146,3 +146,42 @@ def test_require_auth_dependency_still_runs_before_rate_limiting_denies_bad_cred
 
     resp = client.post("/score", json={"f1": 1.0, "f2": 2.0})
     assert resp.status_code == 401
+
+
+def test_path_parameterized_endpoint_shares_one_bucket_across_distinct_paths():
+    """Regression test for a real keying bug found during Phase 4.1 benchmark
+    review and fixed in Phase 4.2 (2026-10-14): slowapi's `Limiter` defaults to
+    `key_style="url"`, which keys each rate-limit bucket by the literal resolved
+    request path. A single decorated view function serving multiple literal
+    paths via a path parameter (exactly MP2 Problem 2's real
+    `@app.post("/score/{scenario}")` in stress_testing_service.py) then gets one
+    independent bucket per literal path instead of one shared bucket per view
+    function -- silently multiplying the real enforced limit by the number of
+    distinct path values actually exercised (3x for stress_testing_service.py's
+    three scenarios). install_rate_limiting() now passes `key_style="endpoint"`
+    specifically to prevent this. This test fails against the old
+    `Limiter(key_func=get_remote_address)` (no `key_style`) and passes with the
+    fix."""
+    app = FastAPI()
+    limiter = install_rate_limiting(app)
+
+    @app.post("/score/{scenario}")
+    @limiter.limit("3/minute")
+    def score(scenario: str, request: Request):
+        return {"scenario": scenario}
+
+    client = TestClient(app)
+
+    # Exhaust the limit against one literal path value.
+    codes_a = [client.post("/score/Baseline").status_code for _ in range(3)]
+    assert codes_a == [200, 200, 200], codes_a
+    assert client.post("/score/Baseline").status_code == 429
+
+    # A different literal path through the SAME view function must share that
+    # same bucket -- it must already be rate-limited, not get its own fresh 3.
+    resp_other_path = client.post("/score/Adverse")
+    assert resp_other_path.status_code == 429, (
+        "a second literal path value got its own independent bucket -- "
+        "the keying bug has regressed"
+    )
+

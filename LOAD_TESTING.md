@@ -132,15 +132,15 @@ Extended past the 2 services above as part of Phase 4.1 (Production Reliability 
 
 ### MP2 Problem 2 -- Macro Stress Testing (`stress_testing_service.py`)
 
+**Re-run 2026-10-14 (Phase 4.2) after the rate-limiter keying fix below.** The original run (656 requests, 476 failures, 180 successes -- kept in git history at commit `f0d07e9` for the record) is superseded by this one.
+
 | Endpoint | Requests | Failures | Median | p90 | p95 | p99 | Max | Throughput |
 |---|---|---|---|---|---|---|---|---|
-| `GET /health` | 129 | 0 | 2 ms | 4 ms | 5 ms | 6 ms | 8 ms | 5.4 req/s |
-| `POST /score/{scenario}` | 656 | 476 | 4 ms | 7 ms | 8 ms | 12 ms | 67 ms | 27.4 req/s |
-| `POST /token` | 10 | 0 | 16 ms | 22 ms | 22 ms | 22 ms | 22 ms | 0.4 req/s |
+| `GET /health` | 135 | 0 | 3 ms | 4 ms | 5 ms | 10 ms | 65 ms | 5.6 req/s |
+| `POST /score/{scenario}` | 641 | 581 | 4 ms | 7 ms | 8 ms | 19 ms | 50 ms | 26.8 req/s |
+| `POST /token` | 10 | 0 | 24 ms | 26 ms | 26 ms | 26 ms | 26 ms | 0.4 req/s |
 
-476 of 656 `/score/{scenario}` calls returned `429` (rate limiter) -- 0 other failures.
-
-**Flagged on review, see "Acceptance thresholds" below**: 180 of 656 calls succeeded here (27.4%) versus ~9% on every other service -- confirmed by a live follow-up test to be a real rate-limiter keying gap specific to this path-parameterized endpoint (each of `/score/Baseline`, `/score/Adverse`, `/score/Severely Adverse` gets its own independent 60/minute bucket instead of sharing one), not a measurement artifact.
+581 of 641 `/score/{scenario}` calls returned `429` (rate limiter) -- 0 other failures. 90.6% rejected, matching the ~91% pattern every other service in this document shows -- confirming the fix below closed the gap (the pre-fix run rejected only 72.6%, i.e. let 3x too many `/score/{scenario}` calls through).
 
 ### MP3 Problem 1 -- Risk Tier Assignment (`risk_tier_assignment_service.py`)
 
@@ -238,7 +238,7 @@ Per your own standing rule: these thresholds are **measured first, then set from
 
 **Important measurement caveat, found by reviewing the data, not assumed:** in every run, roughly 9% of `/score` calls succeeded and ~91% were fast `429` rejections (the rate limiter rejects before the real scoring/model work ever runs). Because successes are such a small slice, they concentrate in the upper percentiles -- **p95-p99-max are the real proxy for genuine scoring latency here; the median is actually measuring the rate limiter's own fast-reject path, not model inference.** Thresholds below are set on p95/p99/max for exactly this reason.
 
-**A real, disclosed finding from this review, not a code change yet**: MP2 Problem 2 (`stress_testing_service.py`) shows 180 successes (27.4%) instead of the ~60 (9%) every other service shows. Verified directly, not inferred -- a live test against a real local instance confirms the rate limiter's 60/minute limit is keyed in a way that gives each literal `/score/{scenario}` path (`/score/Baseline`, `/score/Adverse`, `/score/Severely Adverse`) its own independent bucket: exhausting `Baseline`'s 60 calls still leaves `Adverse` returning `200`. **Net effect: this one endpoint's real enforced limit is 180/minute, not the intended 60/minute** -- a 3x gap specific to path-parameterized routes, worth a real fix (e.g. an explicit `scope=` on the limiter decorator, or moving `scenario` to the request body instead of the path) as part of Phase 4.2's resilience work. Not fixed in this pass -- flagged for the next one.
+**Fixed in Phase 4.2, 2026-10-14 -- see "MP2 Problem 2 rate-limiter keying fix" below for the full root cause, live verification, and before/after evidence.** MP2 Problem 2 (`stress_testing_service.py`) originally showed 180 successes (27.4%) instead of the ~60 (9%) every other service shows, because the shared rate limiter (`src/serving/rate_limit_common.py`) keyed its buckets by literal URL path rather than by endpoint identity, so `/score/Baseline`, `/score/Adverse`, and `/score/Severely Adverse` each got their own independent 60/minute bucket (180/minute effective limit) instead of sharing one. Fixed by passing `key_style="endpoint"` to the `Limiter()` constructor. Re-verified live and re-benchmarked above: the re-run now shows the same ~9%-success / ~91%-429 pattern as every other service.
 
 ### Error-rate threshold (applies to all 15 services)
 
@@ -253,7 +253,7 @@ Per your own standing rule: these thresholds are **measured first, then set from
 | MP1 P3 `credit_score_service` | 22 ms | 76 ms | 107 ms | 26.8 req/s | 35 ms | 115 ms | 170 ms | 18.7 req/s |
 | MP1 P4 `repayment_capacity_service` | 7 ms | 10 ms | 25 ms | 27.1 req/s | 15 ms | 15 ms | 40 ms | 18.9 req/s |
 | MP2 P1 `capital_requirement_service` | 7 ms | 10 ms | 42 ms | 26.7 req/s | 15 ms | 15 ms | 70 ms | 18.6 req/s |
-| MP2 P2 `stress_testing_service` | 8 ms | 12 ms | 67 ms | 27.4 req/s | 15 ms | 20 ms | 110 ms | 19.1 req/s |
+| MP2 P2 `stress_testing_service` | 8 ms | 19 ms | 50 ms | 26.8 req/s | 15 ms | 30 ms | 80 ms | 18.7 req/s |
 | MP3 P1 `risk_tier_assignment_service` | 7 ms | 10 ms | 13 ms | 27.0 req/s | 15 ms | 15 ms | 30 ms | 18.8 req/s |
 | MP3 P2 `bureau_segment_assignment_service` | 8 ms | 15 ms | 206 ms | 26.8 req/s | 15 ms | 25 ms | 310 ms | 18.7 req/s |
 | MP3 P3 `repayment_segment_assignment_service` | 8 ms | 20 ms | 195 ms | 26.6 req/s | 15 ms | 30 ms | 300 ms | 18.5 req/s |
@@ -268,9 +268,21 @@ Per your own standing rule: these thresholds are **measured first, then set from
 
 **What these thresholds are, and are not, good for**: they're real regression gates for *this exact test profile* (25s, 10 users, ramp 5/s, CI fixture bundle, one machine) -- a future run under this same profile that blows past a ceiling is a real signal something got slower or broke. They are **not** a production SLA and should not be read as one: a different load profile (sustained/peak, real trained bundles, multiple source IPs) would produce different real numbers and needs its own measured baseline before it gets its own thresholds, per the same rule this section follows.
 
+## MP2 Problem 2 rate-limiter keying fix (Phase 4.2, 2026-10-14)
+
+**Root cause.** `src/serving/rate_limit_common.py`'s `install_rate_limiting()` constructs `slowapi.Limiter(key_func=get_remote_address)` without setting `key_style`. slowapi's own default for that parameter is `"url"` (confirmed by reading the installed library source, `slowapi/extension.py`): `_check_request_limit()` keys each rate-limit bucket by the literal resolved request path (`endpoint_url`) when `key_style="url"`, rather than by the view function's identity. Every other service in this suite has exactly one `/score` path per process, so this default was invisible -- one path, one bucket, no difference from `key_style="endpoint"`. `stress_testing_service.py`'s `/score/{scenario}` is the one exception: it is a single decorated view function serving three distinct literal paths (`/score/Baseline`, `/score/Adverse`, `/score/Severely Adverse`), so `key_style="url"` silently gave each of those three literal paths its own independent 60/minute bucket -- a 180/minute effective limit instead of the intended 60/minute, a real, unintentional 3x capacity gap specific to this one path-parameterized endpoint.
+
+**Live verification before fixing.** Confirmed by direct reproduction, not inferred from reading code alone: against a real local instance, exhausting `/score/Baseline`'s 60-call budget (60 successes, then `429`s) still left `/score/Adverse` returning `200` -- proof the two literal paths did not share a bucket.
+
+**Fix.** One line in `src/serving/rate_limit_common.py`: `Limiter(key_func=get_remote_address)` -> `Limiter(key_func=get_remote_address, key_style="endpoint")`. This keys every bucket by view-function identity instead of literal path, so all three `/score/{scenario}` paths now correctly share one 60/minute bucket. Verified to have no effect on the other 14 services, which each expose only one path per limited view function -- `key_style="endpoint"` and `key_style="url"` are equivalent for them by construction.
+
+**Live verification after fixing.** Re-ran the same live reproduction against the patched code: exhausting `/score/Baseline`'s 60-call budget now correctly returns `429` on the very next `/score/Adverse` call, confirming the shared bucket. Then re-ran the full Locust benchmark (same profile as every other service: 25s, 10 users, ramp 5/s) -- see the updated MP2 Problem 2 results table above. Before: 656 requests, 476 failures (72.6% rejected). After: 641 requests, 581 failures (90.6% rejected) -- now matching the ~91%-rejected pattern every other service in this document shows. Updated evidence (`*.uvicorn.log`, `*_stats.csv`, `*_failures.csv`, `*_stats_history.csv`, `*_exceptions.csv`, and `all_results.json`) replaces the pre-fix files in `PHASE4_BENCHMARK_EVIDENCE/`; the pre-fix numbers remain visible in git history at commit `f0d07e9` rather than being silently erased.
+
+**Scope of this fix.** It closes the specific keying gap found during Phase 4.1's benchmark review. It does not change the rate limiter's other already-disclosed scope limitations (in-memory/per-process storage, no cross-replica coordination) -- those remain out of scope here, as before.
+
 ## Honest scope: what Phase 4.1 covers today, and what it doesn't yet
 
 All 15 of this suite's real, deployable FastAPI services now have a real, executed load-testing run (up from 2). Every run above is real synthetic/local load from one machine against the real CI fixture bundle (or, for MP1 P4/MP2 P2/MP3 P1, the real deterministic formula/tiering path with no bundle at all) -- not genuine, unpredictable production traffic, and not yet run against any real production-trained `.joblib` bundle (those are `.gitignore`d, see DATA_PRIVACY.md, and would need a locally re-trained notebook to supply). It also does not yet cover: peak/sustained load beyond the 25s/10-user profile used here, CPU/memory usage under load (not captured by Locust itself -- a separate `psutil`/container-stats pass), or multi-tenant throughput from more than one source IP (see the MP1 P1 run's own caveat above, which still applies to every run in this document equally). These are real, disclosed extensions for a follow-up pass, not silently completed here.
 
-One more open item surfaced by this same review, not yet fixed: MP2 Problem 2's rate-limiter keying gap (see "Acceptance thresholds" above) -- real, reproduced live, and left for Phase 4.2 rather than patched silently mid-benchmark-review.
+MP2 Problem 2's rate-limiter keying gap, surfaced by this same review, is now fixed -- see "Acceptance thresholds" above and "MP2 Problem 2 rate-limiter keying fix" below for the full writeup.
 
