@@ -72,7 +72,24 @@ baseline** — real feature engineering (via this suite's own
 `src/features/*.py` functions, never re-derived), real quantile bin
 edges, verified end-to-end against both a real holdout slice of the same
 population (confirmed `OK`, PSI ≈ 0) and a clearly-labeled synthetic
-shifted copy of it (confirmed real `ALERT`, never silently passed):
+shifted copy of it (confirmed real `ALERT`, never silently passed).
+
+**Correction (2026-10-14, caught reviewing the actual commit diff rather
+than assuming the files landed):** these 4 `*_baseline.json` files are
+**not committed to git** — `.gitignore` line 64
+(`**/monitoring/*_baseline.json`) excludes every monitoring baseline,
+and per `DATA_PRIVACY.md` that is the correct, intentional policy, not a
+gap: a baseline is a statistical artifact derived from the full real
+training data, in the same "regenerate, don't retain" category this repo
+already applies to `data/raw/` and every trained `.joblib` bundle. Each
+model's `config.json` (pure policy thresholds, no data-derived numbers)
+*is* committed; its `*_baseline.json` lives only in the local working
+copy that generated it and is reproduced with the one real command shown
+in the table's own feature-source column, exactly like re-running a
+notebook regenerates its bundle. A fresh clone — including a CI
+runner — will correctly see these 4 models as `NOT_ONBOARDED` until
+someone with the real raw data regenerates their baselines locally; that
+is expected behavior, not a bug in `run_all_monitoring_jobs.py`.
 
 | Model | Bundle | Feature source | Table(s) used |
 |---|---|---|---|
@@ -119,7 +136,13 @@ correct on the 4 models above.
 
 ## Honest scope: coverage across the suite's 25 problems
 
-**Onboarded (real config + real baseline, both committed): 4 of 25.**
+**Onboarded in a local working copy that has run the real data through
+the real generator: 4 of 25.** Only each model's `config.json` is
+committed to git; its `baseline.json` is a regenerable local artifact
+(see the correction note above) — so "4 onboarded" describes a build
+that has the real Kaggle data and has run
+`generate_monitoring_baseline.py`, not a property of the git history
+itself.
 **Eligible but not a trained-model problem / not yet wired: the
 remaining MP1/MP3/MP4/MP5 problems above are either BLOCKED (6, see
 table) or not yet given a `config.json` at all.** Extending coverage to
