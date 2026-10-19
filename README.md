@@ -134,7 +134,7 @@ flag), these are real, live, rendered pages — not raw source:
 - **[Live site index](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/)**
 
 **Mega Project 1 — Underwriting & Approval Intelligence**
-- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp1_executive_dashboard.html)
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp1_executive_dashboard.html) · [Executive Report (Word)](01_mega_project_1_underwriting_approval/sample_reports/mp1_executive_report.docx) · [Executive Workbook (Excel)](01_mega_project_1_underwriting_approval/sample_reports/mp1_executive_report.xlsx)
 - [Problem 1 — Credit Default Prediction](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_01_dashboard.html)
 - [Problem 2 — Loan Application Approval](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_02_dashboard.html)
 - [Problem 3 — Credit Score Estimation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_03_dashboard.html)
@@ -142,7 +142,7 @@ flag), these are real, live, rendered pages — not raw source:
 - [Problem 5 — Previous Application Outcomes](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/notebook_05_dashboard.html)
 
 **Mega Project 2 — Regulatory Capital & Stress Testing**
-- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_executive_dashboard.html)
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_executive_dashboard.html) · [Executive Report (Word)](02_mega_project_2_regulatory_capital/sample_reports/mp2_executive_report.docx) · [Executive Workbook (Excel)](02_mega_project_2_regulatory_capital/sample_reports/mp2_executive_report.xlsx)
 - [Problem 1 — Expected Loss & Capital Requirement](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_01_dashboard.html)
 - [Problem 2 — Basel RWA Portfolio Analytics](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_02_dashboard.html)
 - [Problem 3 — Economic Capital & Unexpected Loss](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_03_dashboard.html)
@@ -150,7 +150,7 @@ flag), these are real, live, rendered pages — not raw source:
 - [Problem 5 — Capital Concentration by Segment](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp2_notebook_05_dashboard.html)
 
 **Mega Project 3 — Risk Segmentation**
-- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_executive_dashboard.html)
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_executive_dashboard.html) · [Executive Report (Word)](03_mega_project_3_risk_segmentation/sample_reports/mp3_executive_report.docx) · [Executive Workbook (Excel)](03_mega_project_3_risk_segmentation/sample_reports/mp3_executive_report.xlsx)
 - [Problem 1 — Data-Driven Risk Tier Construction](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_01_dashboard.html)
 - [Problem 2 — Credit Bureau Behavioral Segmentation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_02_dashboard.html)
 - [Problem 3 — Repayment Behavior Segmentation](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_03_dashboard.html)
@@ -158,7 +158,7 @@ flag), these are real, live, rendered pages — not raw source:
 - [Problem 5 — Cross-Axis Risk-Return Synthesis](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp3_notebook_05_dashboard.html)
 
 **Mega Project 4 — Delinquency Prevention**
-- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_executive_dashboard.html)
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_executive_dashboard.html) · [Executive Report (Word)](04_mega_project_4_delinquency_prevention/sample_reports/mp4_executive_report.docx) · [Executive Workbook (Excel)](04_mega_project_4_delinquency_prevention/sample_reports/mp4_executive_report.xlsx)
 - [Problem 1 — Early Delinquency Risk Scoring](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_01_dashboard.html)
 - [Problem 2 — Installment Payment Behavior Detection](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_02_dashboard.html)
 - [Problem 3 — Revolving/Credit-Card Distress Early Warning](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_03_dashboard.html)
@@ -166,7 +166,7 @@ flag), these are real, live, rendered pages — not raw source:
 - [Problem 5 — Early-Warning Intervention Ranking](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp4_notebook_05_dashboard.html)
 
 **Mega Project 5 — Liquidity & Cashflow**
-- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_executive_dashboard.html)
+- [Executive Rollup Dashboard](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_executive_dashboard.html) · [Executive Report (Word)](05_mega_project_5_liquidity_cashflow/sample_reports/notebook_06_report.docx) · [Executive Workbook (Excel)](05_mega_project_5_liquidity_cashflow/sample_reports/notebook_06_workbook.xlsx)
 - [Problem 1 — Portfolio Cashflow Timing & Reliability](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_01_dashboard.html)
 - [Problem 2 — Cash-Flow-at-Risk (CFaR) Rolling Forecast](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_02_dashboard.html)
 - [Problem 3 — Retail Liquidity Coverage Proxy (LCR-adapted)](https://rnanda19.github.io/Home_Credit_RiskIQ_Enterprise_Suite/dashboards/mp5_notebook_03_dashboard.html)
