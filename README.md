@@ -342,15 +342,15 @@ unprefixed.
 
 ## System Architecture
 
-The suite-wide view: real Kaggle data in, the shared `src/` HYPER library
-used by all 5 Mega Projects, each Mega Project's real recommended/total
-problem count, all 15 deployable services behind real nginx TLS
-termination, the CI that verifies all of it on every push, and the real
-suite-wide executive rollup (`00_suite_executive_summary.json` — 24/25
-recommended, $951,500,234 illustrative annual benefit) that consolidates
-every Mega Project's results.
-
-![System Architecture Diagram](docs/system_architecture_flow.png)
+See the [System Architecture (At a Glance)](#system-architecture-at-a-glance)
+diagram at the top of this README for the suite-wide view: real Kaggle
+data in, the shared `src/` HYPER library used by all 5 Mega Projects,
+each Mega Project's real recommended/total problem count, all 15
+deployable services behind real nginx TLS termination, the CI that
+verifies all of it on every push, and the real suite-wide executive
+rollup (`00_suite_executive_summary.json` — 24/25 recommended,
+$951,500,234 illustrative annual benefit) that consolidates every Mega
+Project's results.
 
 Mermaid source: [`docs/system_architecture_flow.mmd`](docs/system_architecture_flow.mmd).
 
