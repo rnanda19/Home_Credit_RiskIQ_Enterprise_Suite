@@ -82,4 +82,4 @@ httpx==0.28.1
 requests==2.34.2
 
 # --- Build tooling (2026-10-14: setuptools<83 carries PYSEC-2026-3447) ---
-setuptools==84.0.0
+setuptools==84.2.1
