@@ -77,7 +77,7 @@ slowapi==0.1.10
 pyjwt==2.15.1
 
 # --- Test/CI-time only (not installed into any deployed service image) ---
-pytest==9.1.1
+pytest==9.2.0
 httpx==0.28.1
 requests==2.34.2
 
